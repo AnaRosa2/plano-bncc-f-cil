@@ -63,8 +63,3 @@ A separação em camadas permite fácil manutenção, testes independentes e fut
 
 ---
 
-## 💡 Contexto
-
-Este projeto foi inicialmente desenvolvido durante um **hackathon educacional** e está sendo continuamente aprimorado. É open source e aberto a contribuições de educadores, desenvolvedores e entusiastas da inovação na educação.
-
-> **"Tecnologia a serviço da educação — não o contrário."**
