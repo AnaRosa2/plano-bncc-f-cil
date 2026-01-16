@@ -1,3 +1,4 @@
+import { gerarUnidade } from '@/services/api';
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Save, X, FileText, Sparkles } from 'lucide-react';
@@ -55,25 +56,36 @@ const NovaUnidade: React.FC = () => {
     navigate(`/disciplina/${disciplina.id}`);
   };
 
-  const handleGerarTemaIA = () => {
-    // Simulação de geração de tema pela IA
-    const temasExemplo = [
-      'Pensamento Computacional na Prática',
-      'Ética e Privacidade Digital',
-      'Produção de Conteúdo Digital',
-      'Robótica e Programação Básica',
-      'Redes Sociais e Comunicação',
-    ];
-    const temaAleatorio = temasExemplo[Math.floor(Math.random() * temasExemplo.length)];
-    setTema(temaAleatorio);
-    setObjetivoGeral(
-      `Desenvolver competências relacionadas a ${temaAleatorio.toLowerCase()}, promovendo o uso consciente e criativo das tecnologias digitais.`
-    );
+  const handleGerarTemaIA = async () => {
+  if (!tema.trim()) {
     toast({
-      title: 'Tema sugerido!',
-      description: 'A IA sugeriu um tema. Você pode editá-lo conforme necessário.',
+      title: 'Informe um tema',
+      description: 'Digite um tema base para a geração com IA.',
+      variant: 'destructive',
     });
-  };
+    return;
+  }
+
+  try {
+    const resultado = await gerarUnidade(
+      disciplina.nome,
+      tema
+    );
+
+    setObjetivoGeral(resultado.planoDeAula);
+
+    toast({
+      title: 'Conteúdo gerado com IA',
+      description: 'O plano de aula foi gerado automaticamente.',
+    });
+  } catch (error) {
+    toast({
+      title: 'Erro ao gerar conteúdo',
+      description: 'Não foi possível gerar o conteúdo com IA.',
+      variant: 'destructive',
+    });
+  }
+};
 
   return (
     <PageContainer
