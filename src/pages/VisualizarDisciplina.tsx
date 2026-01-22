@@ -66,17 +66,9 @@ const VisualizarDisciplina: React.FC = () => {
   }
 
   const handleSugerirUnidades = async () => {
-    try {
-      const resultado = await sugerirUnidades(disciplina.id);
-      setSugestoes(resultado);
-      setShowSugestoes(true);
-    } catch (error) {
-      toast({
-        title: 'Erro ao sugerir unidades',
-        description: error instanceof Error ? error.message : 'Tente novamente mais tarde.',
-        variant: 'destructive',
-      });
-    }
+    const resultado = await sugerirUnidades(disciplina.id);
+    setSugestoes(resultado);
+    setShowSugestoes(true);
   };
 
   const handleAdicionarSugestao = (sugestao: { tema: string; objetivo: string }) => {

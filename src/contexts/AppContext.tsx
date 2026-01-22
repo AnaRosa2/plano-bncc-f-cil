@@ -5,8 +5,10 @@ import {
   unidadesIniciais,
   planosAulaIniciais,
   atividadesAvaliativasIniciais,
+  templatesPlanoAula,
+  templatesAtividade,
+  sugestoesUnidades,
 } from '@/data/mockData';
-import { gerarPlanoAulaIA, gerarAtividadeIA, sugerirUnidadesIA } from '@/services/aiService';
 
 interface AppContextType {
   // Estados
@@ -65,6 +67,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   // Gerar ID único simples
   const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
 
+  // Simular delay de IA
+  const simulateAIDelay = () => new Promise(resolve => setTimeout(resolve, 1500));
+
   // === DISCIPLINAS ===
   const addDisciplina = useCallback((data: Omit<Disciplina, 'id' | 'criadoEm'>) => {
     const novaDisciplina: Disciplina = {
@@ -120,72 +125,43 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const sugerirUnidades = useCallback(async (disciplinaId: string) => {
     setIsLoading(true);
+    await simulateAIDelay();
     
-    try {
-      const disciplina = disciplinas.find(d => d.id === disciplinaId);
-      if (!disciplina) {
-        throw new Error('Disciplina não encontrada');
-      }
-      
-      const sugestoes = await sugerirUnidadesIA({
-        disciplina: disciplina.nome,
-        anoSerie: disciplina.anoSerie,
-      });
-      
-      setIsLoading(false);
-      return sugestoes;
-    } catch (error) {
-      console.error('Erro ao sugerir unidades:', error);
-      setIsLoading(false);
-      throw error;
-    }
+    const disciplina = disciplinas.find(d => d.id === disciplinaId);
+    const sugestoes = sugestoesUnidades[disciplina?.nome as keyof typeof sugestoesUnidades] || sugestoesUnidades.default;
+    
+    setIsLoading(false);
+    return sugestoes;
   }, [disciplinas]);
 
   // === PLANOS DE AULA ===
   const gerarPlanoAula = useCallback(async (unidadeId: string): Promise<PlanoAula> => {
     setIsLoading(true);
+    await simulateAIDelay();
     
-    try {
-      const unidade = unidades.find(u => u.id === unidadeId);
-      const disciplina = disciplinas.find(d => d.id === unidade?.disciplinaId);
-      
-      if (!unidade) {
-        throw new Error('Unidade não encontrada');
-      }
-      
-      const resultado = await gerarPlanoAulaIA({
-        tema: unidade.tema,
-        disciplina: disciplina?.nome || 'Cultura Digital',
-        anoSerie: disciplina?.anoSerie || 'Ensino Fundamental',
-        objetivo: unidade.objetivoGeral,
-        habilidadesBNCC: unidade.habilidadesBNCC,
-      });
-      
-      const novoPlano: PlanoAula = {
-        id: generateId(),
-        unidadeId,
-        objetivos: resultado.objetivos,
-        conteudos: resultado.conteudos,
-        metodologia: resultado.metodologia,
-        recursosDidaticos: resultado.recursosDidaticos,
-        avaliacao: resultado.avaliacao,
-        tempoEstimado: resultado.tempoEstimado,
-        geradoPorIA: true,
-      };
-      
-      setPlanosAula(prev => {
-        const filtered = prev.filter(p => p.unidadeId !== unidadeId);
-        return [...filtered, novoPlano];
-      });
-      
-      setIsLoading(false);
-      return novoPlano;
-    } catch (error) {
-      console.error('Erro ao gerar plano de aula:', error);
-      setIsLoading(false);
-      throw error;
-    }
-  }, [unidades, disciplinas]);
+    const unidade = unidades.find(u => u.id === unidadeId);
+    const tema = unidade?.tema || 'Cultura Digital';
+    
+    const novoPlano: PlanoAula = {
+      id: generateId(),
+      unidadeId,
+      objetivos: templatesPlanoAula.objetivos(tema),
+      conteudos: templatesPlanoAula.conteudos(tema),
+      metodologia: templatesPlanoAula.metodologia(),
+      recursosDidaticos: templatesPlanoAula.recursosDidaticos(),
+      avaliacao: templatesPlanoAula.avaliacao(),
+      tempoEstimado: templatesPlanoAula.tempoEstimado(),
+      geradoPorIA: true,
+    };
+    
+    setPlanosAula(prev => {
+      const filtered = prev.filter(p => p.unidadeId !== unidadeId);
+      return [...filtered, novoPlano];
+    });
+    
+    setIsLoading(false);
+    return novoPlano;
+  }, [unidades]);
 
   const updatePlanoAula = useCallback((id: string, data: Partial<PlanoAula>) => {
     setPlanosAula(prev => prev.map(p => (p.id === id ? { ...p, ...data, geradoPorIA: false } : p)));
@@ -198,40 +174,29 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   // === ATIVIDADES AVALIATIVAS ===
   const gerarAtividadeAvaliativa = useCallback(async (unidadeId: string, tipo: TipoAtividade): Promise<AtividadeAvaliativa> => {
     setIsLoading(true);
+    await simulateAIDelay();
     
-    try {
-      const unidade = unidades.find(u => u.id === unidadeId);
-      
-      if (!unidade) {
-        throw new Error('Unidade não encontrada');
-      }
-      
-      const resultado = await gerarAtividadeIA({
-        tema: unidade.tema,
-        tipoAtividade: tipo,
-      });
-      
-      const novaAtividade: AtividadeAvaliativa = {
-        id: generateId(),
-        unidadeId,
-        enunciado: resultado.enunciado,
-        tipo,
-        criteriosAvaliacao: resultado.criteriosAvaliacao,
-        geradoPorIA: true,
-      };
-      
-      setAtividadesAvaliativas(prev => {
-        const filtered = prev.filter(a => a.unidadeId !== unidadeId);
-        return [...filtered, novaAtividade];
-      });
-      
-      setIsLoading(false);
-      return novaAtividade;
-    } catch (error) {
-      console.error('Erro ao gerar atividade:', error);
-      setIsLoading(false);
-      throw error;
-    }
+    const unidade = unidades.find(u => u.id === unidadeId);
+    const tema = unidade?.tema || 'Cultura Digital';
+    
+    const template = templatesAtividade[tipo](tema);
+    
+    const novaAtividade: AtividadeAvaliativa = {
+      id: generateId(),
+      unidadeId,
+      enunciado: template.enunciado,
+      tipo,
+      criteriosAvaliacao: template.criteriosAvaliacao,
+      geradoPorIA: true,
+    };
+    
+    setAtividadesAvaliativas(prev => {
+      const filtered = prev.filter(a => a.unidadeId !== unidadeId);
+      return [...filtered, novaAtividade];
+    });
+    
+    setIsLoading(false);
+    return novaAtividade;
   }, [unidades]);
 
   const updateAtividadeAvaliativa = useCallback((id: string, data: Partial<AtividadeAvaliativa>) => {

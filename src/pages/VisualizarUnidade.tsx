@@ -96,35 +96,19 @@ const VisualizarUnidade: React.FC = () => {
   }
 
   const handleGerarPlano = async () => {
-    try {
-      await gerarPlanoAula(unidade.id);
-      toast({
-        title: 'Plano de aula gerado!',
-        description: 'A IA criou um plano de aula baseado no tema da unidade.',
-      });
-    } catch (error) {
-      toast({
-        title: 'Erro ao gerar plano',
-        description: error instanceof Error ? error.message : 'Tente novamente mais tarde.',
-        variant: 'destructive',
-      });
-    }
+    await gerarPlanoAula(unidade.id);
+    toast({
+      title: 'Plano de aula gerado!',
+      description: 'A IA criou um plano de aula baseado no tema da unidade.',
+    });
   };
 
   const handleGerarAtividade = async () => {
-    try {
-      await gerarAtividadeAvaliativa(unidade.id, tipoAtividade);
-      toast({
-        title: 'Atividade gerada!',
-        description: 'A IA criou uma atividade avaliativa para esta unidade.',
-      });
-    } catch (error) {
-      toast({
-        title: 'Erro ao gerar atividade',
-        description: error instanceof Error ? error.message : 'Tente novamente mais tarde.',
-        variant: 'destructive',
-      });
-    }
+    await gerarAtividadeAvaliativa(unidade.id, tipoAtividade);
+    toast({
+      title: 'Atividade gerada!',
+      description: 'A IA criou uma atividade avaliativa para esta unidade.',
+    });
   };
 
   const handleEditarPlano = () => {
