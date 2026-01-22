@@ -16,6 +16,9 @@ import {
   CheckCircle,
   Save,
   X,
+  Download,
+  Presentation,
+  ExternalLink,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -37,6 +40,8 @@ import SectionCard from '@/components/shared/SectionCard';
 import { useApp } from '@/contexts/AppContext';
 import { useToast } from '@/hooks/use-toast';
 import { TipoAtividade, TIPOS_ATIVIDADE } from '@/types';
+import { gerarPDFPlanoAula, gerarPDFAtividade } from '@/services/pdfService';
+import { abrirCanvaApresentacao, copiarConteudoSlides, gerarEstruturaSlides } from '@/services/canvaService';
 
 const VisualizarUnidade: React.FC = () => {
   const { id: disciplinaId, unidadeId } = useParams<{ id: string; unidadeId: string }>();
