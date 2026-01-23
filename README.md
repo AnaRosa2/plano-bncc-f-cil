@@ -1,65 +1,73 @@
-# 📘 Plano BNCC com IA
+# Welcome to your Lovable project
 
-Uma ferramenta inteligente para ajudar professores a criarem planos de aula alinhados à **Base Nacional Comum Curricular (BNCC)** — com apoio de **Inteligência Artificial**.
+## Project info
 
----
+**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
 
-## 🎯 O Que é?
+## How can I edit this code?
 
-O **Plano BNCC com IA** é uma aplicação web voltada para educadores que desejam planejar suas aulas de forma rápida, coerente e pedagogicamente sólida. Ao informar apenas a **disciplina** e o **tema da aula**, o sistema gera automaticamente:
+There are several ways of editing your application.
 
-- ✍️ Um plano de aula completo  
-- 🎯 Objetivo geral alinhado à BNCC  
-- 📚 Metodologia didática sugerida  
-- 📝 Atividade avaliativa contextualizada  
+**Use Lovable**
 
-Tudo isso com o objetivo de **reduzir a burocracia docente** e **potencializar o tempo de ensino**.
+Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
 
----
+Changes made via Lovable will be committed automatically to this repo.
 
-## 🔁 Fluxo da Aplicação
+**Use your preferred IDE**
 
-1. **Usuário acessa a interface web** e seleciona:
-   - A disciplina (ex: Matemática, História)
-   - O tema da aula (ex: “Frações”, “Revolução Francesa”)
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-2. **Frontend envia os dados** para a API (backend) via requisição HTTP.
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-3. **Backend processa a solicitação** e repassa as informações para o módulo de geração de conteúdo.
+Follow these steps:
 
-4. **Módulo de IA (simulado)** produz um plano de aula estruturado com base em regras pedagógicas pré-definidas.
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
-5. **Resposta é retornada ao frontend**, onde o plano gerado é exibido de forma clara e editável.
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
 
-> ⚠️ **Atualmente**, a IA é simulada por um serviço interno. A arquitetura já está preparada para substituir esse módulo por uma integração real com LLMs (ex: OpenAI, Azure, etc.).
+# Step 3: Install the necessary dependencies.
+npm i
 
----
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
+```
 
-## 🧱 Arquitetura
+**Edit a file directly in GitHub**
 
-O sistema é dividido em três camadas principais:
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-| Camada       | Tecnologias                     | Responsabilidade |
-|--------------|----------------------------------|------------------|
-| **Frontend** | React, TypeScript, Vite, Tailwind CSS | Interface do usuário |
-| **Backend**  | Node.js, Express, TypeScript, CORS | Lógica de negócio e comunicação com a IA |
-| **IA**       | Serviço interno (simulado)       | Geração automática de conteúdo pedagógico |
+**Use GitHub Codespaces**
 
-A separação em camadas permite fácil manutenção, testes independentes e futuras evoluções — como autenticação, banco de dados ou integração com modelos de linguagem reais.
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
----
+## What technologies are used for this project?
 
-## 🚀 Status Atual
+This project is built with:
 
-- ✅ Interface funcional e responsiva  
-- ✅ Backend estruturado em TypeScript  
-- ✅ Comunicação front ↔ back funcionando  
-- 🟡 Geração de conteúdo simulada (pronta para migração para IA real)  
-- 🔜 Próximas etapas:  
-  - Persistência com banco de dados  
-  - Deploy em nuvem  
-  - Integração com LLMs  
-  - Suporte a múltiplos usuários e salvamento de planos
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
----
+## How can I deploy this project?
 
+Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+
+## Can I connect a custom domain to my Lovable project?
+
+Yes, you can!
+
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)

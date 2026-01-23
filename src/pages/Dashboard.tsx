@@ -53,11 +53,6 @@ const Dashboard: React.FC = () => {
           icon={BookOpen}
           title="Nenhuma disciplina cadastrada"
           description="Comece criando sua primeira disciplina para organizar suas aulas de Cultura Digital."
-          action={{
-            label: 'Criar Primeira Disciplina',
-            onClick: () => navigate('/disciplina/nova'),
-            icon: Plus,
-          }}
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -107,17 +102,7 @@ const Dashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Dica BNCC */}
-      {disciplinas.length > 0 && (
-        <div className="mt-8">
-          <GuidanceMessage variant="bncc">
-            <strong>Sobre a BNCC e Cultura Digital:</strong>
-            <br />A Base Nacional Comum Curricular estabelece competências digitais como essenciais
-            para a formação integral dos estudantes, incluindo pensamento computacional, mundo
-            digital e cultura digital.
-          </GuidanceMessage>
-        </div>
-      )}
+
     </PageContainer>
   );
 };

@@ -12,6 +12,8 @@ const GuidanceMessage: React.FC<GuidanceMessageProps> = ({
   variant = 'info',
   className = '',
 }) => {
+  // Não renderizar variantes BNCC por padrão — removido conforme solicitação do usuário
+  if (variant === 'bncc') return null;
   const icons = {
     info: Info,
     tip: Lightbulb,

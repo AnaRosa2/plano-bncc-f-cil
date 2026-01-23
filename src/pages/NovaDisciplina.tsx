@@ -54,6 +54,8 @@ const NovaDisciplina: React.FC = () => {
     navigate('/');
   };
 
+
+
   return (
     <PageContainer breadcrumbs={[{ label: 'Nova Disciplina' }]}>
       <div className="max-w-2xl mx-auto">

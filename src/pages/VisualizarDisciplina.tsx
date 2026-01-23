@@ -203,11 +203,6 @@ const VisualizarDisciplina: React.FC = () => {
           icon={FileText}
           title="Nenhuma unidade cadastrada"
           description="Crie sua primeira unidade de ensino ou use a IA para sugerir temas relevantes para esta disciplina."
-          action={{
-            label: 'Criar Primeira Unidade',
-            onClick: () => navigate(`/disciplina/${disciplina.id}/unidade/nova`),
-            icon: Plus,
-          }}
         />
       ) : (
         <div className="space-y-3">

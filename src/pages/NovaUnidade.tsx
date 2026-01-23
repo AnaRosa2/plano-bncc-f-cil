@@ -1,4 +1,4 @@
-import { gerarUnidade } from '@/services/api';
+import { gerarPlanoDeAula } from '@/services/api';
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Save, X, FileText, Sparkles } from 'lucide-react';
@@ -67,7 +67,7 @@ const NovaUnidade: React.FC = () => {
   }
 
   try {
-    const resultado = await gerarUnidade(
+    const resultado = await gerarPlanoDeAula(
       disciplina.nome,
       tema
     );

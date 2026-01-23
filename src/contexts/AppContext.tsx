@@ -10,6 +10,8 @@ import {
   sugestoesUnidades,
 } from '@/data/mockData';
 
+import { gerarAtividade } from '@/services/api';
+
 interface AppContextType {
   // Estados
   disciplinas: Disciplina[];
@@ -38,9 +40,10 @@ interface AppContextType {
   getPlanoAula: (unidadeId: string) => PlanoAula | undefined;
 
   // Ações para Atividades Avaliativas
-  gerarAtividadeAvaliativa: (unidadeId: string, tipo: TipoAtividade) => Promise<AtividadeAvaliativa>;
+  gerarAtividadeAvaliativa: (unidadeId: string, tipo: TipoAtividade, quantidade?: number) => Promise<AtividadeAvaliativa[]>;
   updateAtividadeAvaliativa: (id: string, data: Partial<AtividadeAvaliativa>) => void;
   getAtividadeAvaliativa: (unidadeId: string) => AtividadeAvaliativa | undefined;
+  getAtividadesByUnidade: (unidadeId: string) => AtividadeAvaliativa[];
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -125,13 +128,19 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const sugerirUnidades = useCallback(async (disciplinaId: string) => {
     setIsLoading(true);
-    await simulateAIDelay();
-    
-    const disciplina = disciplinas.find(d => d.id === disciplinaId);
-    const sugestoes = sugestoesUnidades[disciplina?.nome as keyof typeof sugestoesUnidades] || sugestoesUnidades.default;
-    
-    setIsLoading(false);
-    return sugestoes;
+    try {
+      const disciplina = disciplinas.find(d => d.id === disciplinaId);
+      if (!disciplina) throw new Error('Disciplina não encontrada');
+
+      // Use the API helper to call backend
+      const resultado = await import('@/services/api').then(m => m.sugerirTema(disciplina.nome));
+      return Array.isArray(resultado) ? resultado : sugestoesUnidades.default;
+    } catch (error) {
+      console.error('Erro ao solicitar sugestões de unidades:', error);
+      return sugestoesUnidades.default;
+    } finally {
+      setIsLoading(false);
+    }
   }, [disciplinas]);
 
   // === PLANOS DE AULA ===
@@ -172,39 +181,50 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   }, [planosAula]);
 
   // === ATIVIDADES AVALIATIVAS ===
-  const gerarAtividadeAvaliativa = useCallback(async (unidadeId: string, tipo: TipoAtividade): Promise<AtividadeAvaliativa> => {
+  const gerarAtividadeAvaliativa = useCallback(async (unidadeId: string, tipo: TipoAtividade, quantidade = 1): Promise<AtividadeAvaliativa[]> => {
     setIsLoading(true);
-    await simulateAIDelay();
-    
-    const unidade = unidades.find(u => u.id === unidadeId);
-    const tema = unidade?.tema || 'Cultura Digital';
-    
-    const template = templatesAtividade[tipo](tema);
-    
-    const novaAtividade: AtividadeAvaliativa = {
-      id: generateId(),
-      unidadeId,
-      enunciado: template.enunciado,
-      tipo,
-      criteriosAvaliacao: template.criteriosAvaliacao,
-      geradoPorIA: true,
-    };
-    
-    setAtividadesAvaliativas(prev => {
-      const filtered = prev.filter(a => a.unidadeId !== unidadeId);
-      return [...filtered, novaAtividade];
-    });
-    
-    setIsLoading(false);
-    return novaAtividade;
-  }, [unidades]);
+    try {
+      const unidade = unidades.find(u => u.id === unidadeId);
+      const disciplina = disciplinas.find(d => d.id === unidade?.disciplinaId);
+      const anoSerie = disciplina?.anoSerie;
+
+      const resultado = await gerarAtividade(unidade!.tema, tipo, anoSerie, quantidade);
+
+      const itens = Array.isArray(resultado) ? resultado : [resultado];
+
+      const novas = itens.map((it: any) => ({
+        id: generateId(),
+        unidadeId,
+        enunciado: it.enunciado,
+        tipo,
+        criteriosAvaliacao: it.criteriosAvaliacao,
+        geradoPorIA: true,
+      }));
+
+      setAtividadesAvaliativas(prev => {
+        const filtered = prev.filter(a => a.unidadeId !== unidadeId);
+        return [...filtered, ...novas];
+      });
+
+      return novas;
+    } catch (error) {
+      console.error('Erro ao gerar atividade via API:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [unidades, disciplinas]);
 
   const updateAtividadeAvaliativa = useCallback((id: string, data: Partial<AtividadeAvaliativa>) => {
     setAtividadesAvaliativas(prev => prev.map(a => (a.id === id ? { ...a, ...data, geradoPorIA: false } : a)));
   }, []);
 
+  const getAtividadesByUnidade = useCallback((unidadeId: string) => {
+    return atividadesAvaliativas.filter(a => a.unidadeId === unidadeId);
+  }, [atividadesAvaliativas]);
+
   const getAtividadeAvaliativa = useCallback((unidadeId: string) => {
-    return atividadesAvaliativas.find(a => a.unidadeId === unidadeId);
+    return [...atividadesAvaliativas].reverse().find(a => a.unidadeId === unidadeId);
   }, [atividadesAvaliativas]);
 
   const value: AppContextType = {
@@ -229,6 +249,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     gerarAtividadeAvaliativa,
     updateAtividadeAvaliativa,
     getAtividadeAvaliativa,
+    getAtividadesByUnidade,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -47,6 +47,7 @@ const VisualizarUnidade: React.FC = () => {
     getUnidade,
     getPlanoAula,
     getAtividadeAvaliativa,
+    getAtividadesByUnidade,
     gerarPlanoAula,
     gerarAtividadeAvaliativa,
     updatePlanoAula,
@@ -58,6 +59,7 @@ const VisualizarUnidade: React.FC = () => {
   const [editingPlano, setEditingPlano] = useState(false);
   const [editingAtividade, setEditingAtividade] = useState(false);
   const [tipoAtividade, setTipoAtividade] = useState<TipoAtividade>('discursiva');
+  const [atividadesQuantidade, setAtividadesQuantidade] = useState<number>(1);
 
   // Estados de edição
   const [planoEditado, setPlanoEditado] = useState({
@@ -73,11 +75,13 @@ const VisualizarUnidade: React.FC = () => {
     enunciado: '',
     criteriosAvaliacao: '',
   });
+  const [selectedAtividadeId, setSelectedAtividadeId] = useState<string | null>(null);
 
   const disciplina = getDisciplina(disciplinaId || '');
   const unidade = getUnidade(unidadeId || '');
   const planoAula = getPlanoAula(unidadeId || '');
   const atividadeAvaliativa = getAtividadeAvaliativa(unidadeId || '');
+  const atividades = getAtividadesByUnidade(unidade.id);
 
   if (!disciplina || !unidade) {
     return (
@@ -104,10 +108,10 @@ const VisualizarUnidade: React.FC = () => {
   };
 
   const handleGerarAtividade = async () => {
-    await gerarAtividadeAvaliativa(unidade.id, tipoAtividade);
+    await gerarAtividadeAvaliativa(unidade.id, tipoAtividade, atividadesQuantidade);
     toast({
-      title: 'Atividade gerada!',
-      description: 'A IA criou uma atividade avaliativa para esta unidade.',
+      title: 'Atividades geradas!',
+      description: `A IA criou ${atividadesQuantidade} atividade(s) avaliativas para esta unidade.`,
     });
   };
 
@@ -136,20 +140,23 @@ const VisualizarUnidade: React.FC = () => {
     }
   };
 
-  const handleEditarAtividade = () => {
-    if (atividadeAvaliativa) {
+  const handleEditarAtividade = (atividade?: any) => {
+    const toEdit = atividade || getAtividadeAvaliativa(unidade.id);
+    if (toEdit) {
+      setSelectedAtividadeId(toEdit.id);
       setAtividadeEditada({
-        enunciado: atividadeAvaliativa.enunciado,
-        criteriosAvaliacao: atividadeAvaliativa.criteriosAvaliacao,
+        enunciado: toEdit.enunciado,
+        criteriosAvaliacao: toEdit.criteriosAvaliacao,
       });
       setEditingAtividade(true);
     }
   };
 
   const handleSalvarAtividade = () => {
-    if (atividadeAvaliativa) {
-      updateAtividadeAvaliativa(atividadeAvaliativa.id, atividadeEditada);
+    if (selectedAtividadeId) {
+      updateAtividadeAvaliativa(selectedAtividadeId, atividadeEditada);
       setEditingAtividade(false);
+      setSelectedAtividadeId(null);
       toast({
         title: 'Atividade atualizada!',
         description: 'Suas alterações foram salvas.',
@@ -351,15 +358,15 @@ const VisualizarUnidade: React.FC = () => {
 
           {/* Tab: Atividade Avaliativa */}
           <TabsContent value="atividade" className="space-y-4">
-            {!atividadeAvaliativa ? (
+            {atividades.length === 0 ? (
               <Card className="edu-card">
                 <CardContent className="pt-6">
                   <div className="text-center mb-6">
                     <ClipboardCheck className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                     <h3 className="text-lg font-semibold mb-2">Nenhuma atividade avaliativa</h3>
                     <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">
-                      Escolha o tipo de atividade e gere uma avaliação coerente com o tema da
-                      unidade.
+                      Escolha o tipo e a quantidade de atividades que deseja gerar para esta
+                      unidade. A IA irá produzir atividades coerentes com o tema e a BNCC.
                     </p>
                   </div>
 
@@ -382,9 +389,26 @@ const VisualizarUnidade: React.FC = () => {
                         </SelectContent>
                       </Select>
                     </div>
+
+                    <div className="space-y-2">
+                      <Label>Quantidade</Label>
+                      <Select value={String(atividadesQuantidade)} onValueChange={(v) => setAtividadesQuantidade(parseInt(v))}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {[1, 2, 3, 5].map((q) => (
+                            <SelectItem key={q} value={String(q)}>
+                              {q}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
                     <Button variant="ai" className="w-full" onClick={handleGerarAtividade}>
                       <Sparkles className="h-4 w-4" />
-                      Gerar Atividade com IA
+                      Gerar Atividades com IA
                     </Button>
                   </div>
                 </CardContent>
@@ -442,48 +466,44 @@ const VisualizarUnidade: React.FC = () => {
                     <div>
                       <CardTitle className="flex items-center gap-2">
                         <ClipboardCheck className="h-5 w-5 text-primary" />
-                        Atividade Avaliativa
+                        Atividades Avaliativas
                       </CardTitle>
                       <CardDescription className="flex items-center gap-2">
-                        <span className="capitalize">
-                          {TIPOS_ATIVIDADE.find((t) => t.value === atividadeAvaliativa.tipo)?.label}
-                        </span>
-                        {atividadeAvaliativa.geradoPorIA && (
-                          <span className="flex items-center gap-1 text-bncc">
-                            <Sparkles className="h-3 w-3" />
-                            IA
-                          </span>
-                        )}
+                        <span className="text-muted-foreground">{atividades.length} atividade(s)</span>
                       </CardDescription>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={handleEditarAtividade}>
+                      <Button variant="outline" size="sm" onClick={() => handleEditarAtividade(atividades[0])}>
                         <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          handleCopiar(
-                            `ATIVIDADE AVALIATIVA: ${unidade.tema}\n\n${atividadeAvaliativa.enunciado}\n\nCRITÉRIOS DE AVALIAÇÃO:\n${atividadeAvaliativa.criteriosAvaliacao}`
-                          )
-                        }
-                      >
-                        <Copy className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <SectionCard title="Enunciado" icon={MessageSquare}>
-                    {atividadeAvaliativa.enunciado}
-                  </SectionCard>
-                  <SectionCard title="Critérios de Avaliação" icon={CheckCircle}>
-                    {atividadeAvaliativa.criteriosAvaliacao}
-                  </SectionCard>
+                  {atividades.map((ativ, idx) => (
+                    <div key={ativ.id} className="space-y-3">
+                      <SectionCard title={`Atividade ${idx + 1}`} icon={MessageSquare}>
+                        <div className="prose">
+                          {ativ.enunciado}
+                        </div>
+                      </SectionCard>
+                      <SectionCard title="Critérios de Avaliação" icon={CheckCircle}>
+                        {ativ.criteriosAvaliacao}
+                      </SectionCard>
+                      <div className="flex gap-2 justify-end">
+                        <Button variant="outline" size="sm" onClick={() => handleCopiar(`ATIVIDADE ${idx + 1}: ${ativ.enunciado}\n\nCRITÉRIOS:\n${ativ.criteriosAvaliacao}`)}>
+                          <Copy className="h-4 w-4" />
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleEditarAtividade(ativ)}>
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <hr />
+                    </div>
+                  ))}
 
                   <GuidanceMessage variant="tip">
-                    <strong>Personalize!</strong> Adapte a atividade ao nível da sua turma e aos
+                    <strong>Personalize!</strong> Adapte as atividades ao nível da sua turma e aos
                     recursos disponíveis na sua escola.
                   </GuidanceMessage>
                 </CardContent>
@@ -546,22 +566,26 @@ const VisualizarUnidade: React.FC = () => {
               </Card>
             )}
 
-            {/* Atividade Avaliativa Completa */}
-            {atividadeAvaliativa && (
+            {/* Atividades Avaliativas Completas */}
+            {atividades.length > 0 && (
               <Card className="edu-card">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <ClipboardCheck className="h-5 w-5 text-primary" />
-                    Atividade Avaliativa
+                    Atividades Avaliativas
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <SectionCard title="Enunciado" icon={MessageSquare}>
-                    {atividadeAvaliativa.enunciado}
-                  </SectionCard>
-                  <SectionCard title="Critérios de Avaliação" icon={CheckCircle}>
-                    {atividadeAvaliativa.criteriosAvaliacao}
-                  </SectionCard>
+                  {atividades.map((ativ, idx) => (
+                    <div key={ativ.id} className="space-y-4">
+                      <SectionCard title={`Atividade ${idx + 1}`} icon={MessageSquare}>
+                        <div className="prose">{ativ.enunciado}</div>
+                      </SectionCard>
+                      <SectionCard title="Critérios de Avaliação" icon={CheckCircle}>
+                        {ativ.criteriosAvaliacao}
+                      </SectionCard>
+                    </div>
+                  ))}
                 </CardContent>
               </Card>
             )}
