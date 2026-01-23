@@ -1,0 +1,216 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Sistema de Design Educacional - Cultura Digital BNCC */
+
+@layer base {
+  :root {
+    /* Cores principais - Azul educacional transmite confiança e profissionalismo */
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Azul educacional como cor primária */
+    --primary: 217 91% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Verde suave para ações secundárias e sucesso */
+    --secondary: 152 44% 96%;
+    --secondary-foreground: 152 60% 25%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Âmbar para elementos de destaque e AI */
+    --accent: 38 92% 50%;
+    --accent-foreground: 38 92% 15%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 45%;
+
+    --radius: 0.75rem;
+
+    /* Cores específicas do sistema educacional */
+    --bncc: 262 83% 58%;
+    --bncc-foreground: 0 0% 100%;
+    
+    --ai-gradient-start: 217 91% 45%;
+    --ai-gradient-end: 262 83% 58%;
+    
+    --success: 152 60% 42%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 92% 15%;
+
+    /* Sidebar */
+    --sidebar-background: 217 91% 45%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 217 91% 45%;
+    --sidebar-accent: 217 91% 55%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 217 91% 55%;
+    --sidebar-ring: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 222 47% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 8%;
+
+    --secondary: 152 44% 15%;
+    --secondary-foreground: 152 60% 80%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 38 92% 55%;
+    --accent-foreground: 38 92% 10%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+
+    --bncc: 262 83% 65%;
+    --bncc-foreground: 0 0% 100%;
+    
+    --success: 152 60% 50%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 55%;
+    --warning-foreground: 38 92% 10%;
+
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 222 47% 8%;
+    --sidebar-accent: 217 33% 20%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  /* Gradiente AI para botões de geração */
+  .ai-gradient {
+    @apply bg-gradient-to-r from-primary to-[hsl(var(--bncc))];
+  }
+
+  /* Gradiente BNCC para badges e destaques */
+  .bncc-gradient {
+    @apply bg-gradient-to-r from-[hsl(var(--bncc))] to-primary;
+  }
+
+  /* Card educacional com hover suave */
+  .edu-card {
+    @apply bg-card rounded-xl border shadow-sm transition-all duration-200 hover:shadow-md hover:border-primary/20;
+  }
+
+  /* Badge BNCC */
+  .bncc-badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[hsl(var(--bncc)/0.1)] text-[hsl(var(--bncc))];
+  }
+
+  /* Seção de conteúdo */
+  .content-section {
+    @apply bg-muted/50 rounded-lg p-4 border border-border/50;
+  }
+
+  /* Botão AI com brilho */
+  .ai-button {
+    @apply relative overflow-hidden ai-gradient text-white font-medium;
+  }
+
+  .ai-button::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Mensagem orientadora */
+  .guidance-message {
+    @apply bg-primary/5 border-l-4 border-primary p-4 rounded-r-lg;
+  }
+
+  /* Loading spinner */
+  .loading-spinner {
+    @apply animate-spin rounded-full border-2 border-current border-t-transparent;
+  }
+}
+
+@layer utilities {
+  /* Animação shimmer para botões AI */
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Animação fade in */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  /* Animação pulse suave */
+  @keyframes pulse-soft {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+}
