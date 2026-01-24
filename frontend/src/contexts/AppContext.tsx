@@ -5,10 +5,8 @@ import {
   unidadesIniciais,
   planosAulaIniciais,
   atividadesAvaliativasIniciais,
-  templatesPlanoAula,
-  templatesAtividade,
-  sugestoesUnidades,
 } from '@/data/mockData';
+import { gerarPlanoAulaAPI, gerarAtividadeAPI, sugerirUnidadesAPI } from '@/services/apiService';
 
 interface AppContextType {
   // Estados
@@ -125,43 +123,65 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const sugerirUnidades = useCallback(async (disciplinaId: string) => {
     setIsLoading(true);
-    await simulateAIDelay();
-    
-    const disciplina = disciplinas.find(d => d.id === disciplinaId);
-    const sugestoes = sugestoesUnidades[disciplina?.nome as keyof typeof sugestoesUnidades] || sugestoesUnidades.default;
-    
-    setIsLoading(false);
-    return sugestoes;
+
+    try {
+      const disciplina = disciplinas.find(d => d.id === disciplinaId);
+      if (!disciplina) {
+        setIsLoading(false);
+        return [];
+      }
+
+      const sugestoes = await sugerirUnidadesAPI(disciplina.nome, disciplina.anoSerie, 3);
+      setIsLoading(false);
+      return sugestoes;
+    } catch (error) {
+      console.error('Erro ao sugerir unidades:', error);
+      setIsLoading(false);
+      return [];
+    }
   }, [disciplinas]);
 
   // === PLANOS DE AULA ===
   const gerarPlanoAula = useCallback(async (unidadeId: string): Promise<PlanoAula> => {
     setIsLoading(true);
-    await simulateAIDelay();
-    
-    const unidade = unidades.find(u => u.id === unidadeId);
-    const tema = unidade?.tema || 'Cultura Digital';
-    
-    const novoPlano: PlanoAula = {
-      id: generateId(),
-      unidadeId,
-      objetivos: templatesPlanoAula.objetivos(tema),
-      conteudos: templatesPlanoAula.conteudos(tema),
-      metodologia: templatesPlanoAula.metodologia(),
-      recursosDidaticos: templatesPlanoAula.recursosDidaticos(),
-      avaliacao: templatesPlanoAula.avaliacao(),
-      tempoEstimado: templatesPlanoAula.tempoEstimado(),
-      geradoPorIA: true,
-    };
-    
-    setPlanosAula(prev => {
-      const filtered = prev.filter(p => p.unidadeId !== unidadeId);
-      return [...filtered, novoPlano];
-    });
-    
-    setIsLoading(false);
-    return novoPlano;
-  }, [unidades]);
+
+    try {
+      const unidade = unidades.find(u => u.id === unidadeId);
+      if (!unidade) {
+        throw new Error('Unidade não encontrada');
+      }
+
+      const disciplina = disciplinas.find(d => d.id === unidade.disciplinaId);
+      const nomeDisciplina = disciplina?.nome || 'Disciplina';
+
+      // Chamar API real para gerar plano com IA
+      const planoAPI = await gerarPlanoAulaAPI(nomeDisciplina, unidade.tema);
+
+      const novoPlano: PlanoAula = {
+        id: generateId(),
+        unidadeId,
+        objetivos: planoAPI.objetivo,
+        conteudos: planoAPI.meta,
+        metodologia: planoAPI.metodologia,
+        recursosDidaticos: planoAPI.atividade,
+        avaliacao: 'Avaliação conforme atividade gerada',
+        tempoEstimado: '4 a 6 aulas de 50 minutos',
+        geradoPorIA: true,
+      };
+
+      setPlanosAula(prev => {
+        const filtered = prev.filter(p => p.unidadeId !== unidadeId);
+        return [...filtered, novoPlano];
+      });
+
+      setIsLoading(false);
+      return novoPlano;
+    } catch (error) {
+      console.error('Erro ao gerar plano de aula:', error);
+      setIsLoading(false);
+      throw error;
+    }
+  }, [unidades, disciplinas]);
 
   const updatePlanoAula = useCallback((id: string, data: Partial<PlanoAula>) => {
     setPlanosAula(prev => prev.map(p => (p.id === id ? { ...p, ...data, geradoPorIA: false } : p)));
@@ -174,30 +194,41 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   // === ATIVIDADES AVALIATIVAS ===
   const gerarAtividadeAvaliativa = useCallback(async (unidadeId: string, tipo: TipoAtividade): Promise<AtividadeAvaliativa> => {
     setIsLoading(true);
-    await simulateAIDelay();
-    
-    const unidade = unidades.find(u => u.id === unidadeId);
-    const tema = unidade?.tema || 'Cultura Digital';
-    
-    const template = templatesAtividade[tipo](tema);
-    
-    const novaAtividade: AtividadeAvaliativa = {
-      id: generateId(),
-      unidadeId,
-      enunciado: template.enunciado,
-      tipo,
-      criteriosAvaliacao: template.criteriosAvaliacao,
-      geradoPorIA: true,
-    };
-    
-    setAtividadesAvaliativas(prev => {
-      const filtered = prev.filter(a => a.unidadeId !== unidadeId);
-      return [...filtered, novaAtividade];
-    });
-    
-    setIsLoading(false);
-    return novaAtividade;
-  }, [unidades]);
+
+    try {
+      const unidade = unidades.find(u => u.id === unidadeId);
+      if (!unidade) {
+        throw new Error('Unidade não encontrada');
+      }
+
+      const disciplina = disciplinas.find(d => d.id === unidade.disciplinaId);
+      const anoSerie = disciplina?.anoSerie;
+
+      // Chamar API real para gerar atividade com IA
+      const atividadeAPI = await gerarAtividadeAPI(unidade.tema, tipo, anoSerie);
+
+      const novaAtividade: AtividadeAvaliativa = {
+        id: generateId(),
+        unidadeId,
+        enunciado: atividadeAPI.enunciado,
+        tipo,
+        criteriosAvaliacao: atividadeAPI.criteriosAvaliacao,
+        geradoPorIA: true,
+      };
+
+      setAtividadesAvaliativas(prev => {
+        const filtered = prev.filter(a => a.unidadeId !== unidadeId);
+        return [...filtered, novaAtividade];
+      });
+
+      setIsLoading(false);
+      return novaAtividade;
+    } catch (error) {
+      console.error('Erro ao gerar atividade avaliativa:', error);
+      setIsLoading(false);
+      throw error;
+    }
+  }, [unidades, disciplinas]);
 
   const updateAtividadeAvaliativa = useCallback((id: string, data: Partial<AtividadeAvaliativa>) => {
     setAtividadesAvaliativas(prev => prev.map(a => (a.id === id ? { ...a, ...data, geradoPorIA: false } : a)));
