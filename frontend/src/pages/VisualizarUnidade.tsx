@@ -38,6 +38,9 @@ import { useApp } from '@/contexts/AppContext';
 import { useToast } from '@/hooks/use-toast';
 import { TipoAtividade, TIPOS_ATIVIDADE } from '@/types';
 
+import { generateUnitPDF } from '@/utils/pdfGenerator';
+import { Download } from 'lucide-react';
+
 const VisualizarUnidade: React.FC = () => {
   const { id: disciplinaId, unidadeId } = useParams<{ id: string; unidadeId: string }>();
   const navigate = useNavigate();
@@ -197,6 +200,10 @@ const VisualizarUnidade: React.FC = () => {
             <Button variant="outline" size="sm" onClick={handleImprimir}>
               <Printer className="h-4 w-4" />
               <span className="hidden sm:inline">Imprimir</span>
+            </Button>
+            <Button size="sm" onClick={() => generateUnitPDF(unidade, disciplina, planoAula, atividadeAvaliativa)}>
+              <Download className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Baixar PDF</span>
             </Button>
           </div>
         </div>
