@@ -1,4 +1,10 @@
-// src/services/geracao.service.ts - Adicionar ao final do arquivo
+// src/services/geracao.service.slides.ts
+import { gerarTextoComIA } from './ai-gemini.service';
+import { getBnccText } from '../utils/bncc';
+
+async function getBnccSnippet() {
+    return await getBnccText();
+}
 
 /**
  * RF06 - Gerar slides para unidade de ensino
