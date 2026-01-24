@@ -23,14 +23,17 @@ O **Plano BNCC** é uma aplicação web desenvolvida para apoiar professores do 
 - 📝 **Planos de aula** completos e alinhados à BNCC
 - 📊 **Atividades avaliativas** (objetivas, discursivas e práticas)
 - 💡 **Sugestões de unidades temáticas** contextualizadas
+- 🎬 **Slides educacionais** (RF06 - Opcional implementado!)
 - 📄 **Exportação em PDF** de todo o material gerado
 
 ### Diferenciais
 
 - ✅ **100% funcional com IA real** - Não usa templates mockados
-- ✅ **RAG com BNCC** - IA treinada com documento oficial de 1.1MB
+- ✅ **RAG com BNCC (100KB)** - IA treinada com documento oficial
+- ✅ **RF06 Implementado** - Geração de slides educacionais
 - ✅ **Exportação PDF** - Gera documentos profissionais prontos para uso
 - ✅ **Interface moderna** - Design responsivo e intuitivo
+- ✅ **Testes unitários** - 23 testes passando com Vitest
 - ✅ **Single-user** - Sem necessidade de autenticação
 
 ---
@@ -46,7 +49,7 @@ O **Plano BNCC** é uma aplicação web desenvolvida para apoiar professores do 
 | **RF03** | Sugestão automática de unidades via IA | ✅ Implementado |
 | **RF04** | Geração automática de plano de aula | ✅ Implementado |
 | **RF05** | Geração automática de atividade avaliativa | ✅ Implementado |
-| **RF06** | Geração de slides por unidade | ⏳ Opcional (não implementado) |
+| **RF06** | Geração de slides por unidade | ✅ Implementado |
 
 ### Funcionalidades Adicionais
 
@@ -54,6 +57,8 @@ O **Plano BNCC** é uma aplicação web desenvolvida para apoiar professores do 
 - 📥 **Exportação em PDF** - Baixe materiais formatados profissionalmente
 - 🔄 **Integração completa** - Frontend ↔ Backend ↔ IA
 - 💬 **Feedback visual** - Loading states e toasts informativos
+- 📱 **Totalmente responsivo** - Funciona em desktop, tablet e mobile
+- 🧪 **Testes unitários** - 23 testes com Vitest
 
 ---
 
@@ -77,8 +82,13 @@ O **Plano BNCC** é uma aplicação web desenvolvida para apoiar professores do 
 
 ### IA e RAG
 - **Google Gemini 1.5** - Modelo de linguagem
-- **RAG** - Retrieval-Augmented Generation
-- **BNCC completa** - Base de conhecimento (1.1MB)
+- **RAG (100KB)** - Retrieval-Augmented Generation otimizado
+- **BNCC completa** - Base de conhecimento oficial
+
+### Testes
+- **Vitest** - Framework de testes
+- **Testing Library** - Testes de componentes React
+- **23 testes** - Cobertura de serviços, componentes e tipos
 
 ---
 
@@ -209,13 +219,16 @@ plano-bncc-f-cil/
 │   │   ├── pages/           # Páginas da aplicação
 │   │   ├── services/        # Serviço de comunicação com API
 │   │   ├── utils/           # Utilitários (geração de PDF)
-│   │   └── types/           # Tipos TypeScript
+│   │   ├── types/           # Tipos TypeScript
+│   │   └── test/            # Testes unitários (Vitest)
 │   └── package.json
 │
 ├── backend/                  # API Node.js + Express
 │   ├── src/
 │   │   ├── routes/          # Rotas da API
 │   │   ├── services/        # Lógica de negócio e IA
+│   │   ├── middlewares/     # Tratamento de erros
+│   │   ├── validators/      # Validações de entrada
 │   │   ├── utils/           # Utilitários (BNCC, RAG)
 │   │   └── server.ts        # Entrada da aplicação
 │   └── package.json
@@ -294,10 +307,19 @@ Este projeto foi desenvolvido para fins educacionais no contexto do Hackathon IF
 
 ### Próximos Passos (Opcional)
 
-- [ ] Implementar RF06 (geração de slides)
+- [x] ~~Implementar RF06 (geração de slides)~~ ✅
+- [x] ~~Testes automatizados~~ ✅
 - [ ] Melhorar RAG com embeddings semânticos
 - [ ] Adicionar histórico de gerações
-- [ ] Testes automatizados
+
+### Executar Testes
+
+```bash
+cd frontend
+npm run test
+```
+
+**Resultado**: 23 testes passando ✅
 
 ---
 
