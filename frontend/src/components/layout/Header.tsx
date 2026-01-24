@@ -21,12 +21,12 @@ const Header: React.FC<HeaderProps> = ({ breadcrumbs = [] }) => {
       <div className="container flex h-16 items-center justify-between">
         {/* Logo e Nome */}
         <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <BookOpen className="h-5 w-5" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg ai-gradient text-white shadow-md">
+            <span className="font-heading font-bold text-sm">BC</span>
           </div>
           <div className="hidden sm:block">
-            <h1 className="text-lg font-semibold text-foreground">Cultura Digital</h1>
-            <p className="text-xs text-muted-foreground">Planejamento BNCC</p>
+            <h1 className="text-lg font-heading font-semibold text-foreground">Plano BNCC</h1>
+            <p className="text-xs text-muted-foreground">Sistema de Planejamento</p>
           </div>
         </Link>
 
