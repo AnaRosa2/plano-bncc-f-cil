@@ -637,77 +637,159 @@ const VisualizarUnidade: React.FC = () => {
                 </CardContent>
               </Card>
             ) : (
-              <div className="space-y-4">
-                {/* Slide Atual */}
-                <Card className="edu-card min-h-[400px] flex flex-col">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="flex items-center gap-2">
-                        <Presentation className="h-5 w-5 text-primary" />
-                        Slide {currentSlide + 1} de {slides.length}
-                      </CardTitle>
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded capitalize">
-                        {slides[currentSlide]?.tipo}
-                      </span>
+              <div className="space-y-6">
+                {/* Slide Atual - Design Profissional */}
+                <div className="relative">
+                  {/* Container do Slide com aspecto 16:9 */}
+                  <div
+                    className="relative w-full overflow-hidden rounded-2xl shadow-2xl"
+                    style={{ aspectRatio: '16/9' }}
+                  >
+                    {/* Background Gradiente baseado no tipo do slide */}
+                    <div className={`absolute inset-0 ${slides[currentSlide]?.tipo === 'titulo'
+                        ? 'bg-gradient-to-br from-primary via-primary/90 to-primary/70'
+                        : slides[currentSlide]?.tipo === 'questao'
+                          ? 'bg-gradient-to-br from-amber-500 via-orange-500 to-red-500'
+                          : slides[currentSlide]?.tipo === 'conclusao'
+                            ? 'bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500'
+                            : 'bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900'
+                      }`} />
+
+                    {/* Padrão decorativo */}
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full -translate-y-1/2 translate-x-1/2" />
+                      <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full translate-y-1/2 -translate-x-1/2" />
                     </div>
-                  </CardHeader>
-                  <CardContent className="flex-1 flex flex-col justify-center">
-                    <div className="text-center space-y-4">
-                      <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+
+                    {/* Conteúdo do Slide */}
+                    <div className="relative h-full flex flex-col justify-center p-8 md:p-12 lg:p-16 text-white">
+                      {/* Badge do tipo */}
+                      <div className="absolute top-4 right-4 md:top-6 md:right-6">
+                        <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium uppercase tracking-wider">
+                          {slides[currentSlide]?.tipo === 'titulo' && '🎯 Título'}
+                          {slides[currentSlide]?.tipo === 'conteudo' && '📚 Conteúdo'}
+                          {slides[currentSlide]?.tipo === 'questao' && '❓ Reflexão'}
+                          {slides[currentSlide]?.tipo === 'conclusao' && '✅ Conclusão'}
+                        </span>
+                      </div>
+
+                      {/* Número do slide */}
+                      <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6">
+                        <span className="text-white/60 text-sm font-medium">
+                          {currentSlide + 1} / {slides.length}
+                        </span>
+                      </div>
+
+                      {/* Logo/Marca */}
+                      <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6">
+                        <span className="text-white/40 text-xs font-medium">
+                          Plano BNCC • Cultura Digital
+                        </span>
+                      </div>
+
+                      {/* Título do Slide */}
+                      <h2 className={`font-bold mb-6 leading-tight ${slides[currentSlide]?.tipo === 'titulo'
+                          ? 'text-3xl md:text-5xl lg:text-6xl text-center'
+                          : 'text-2xl md:text-3xl lg:text-4xl'
+                        }`}>
                         {slides[currentSlide]?.titulo}
                       </h2>
-                      <p className="text-lg text-muted-foreground whitespace-pre-line max-w-2xl mx-auto">
-                        {slides[currentSlide]?.conteudo}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
 
-                {/* Navegação dos Slides */}
-                <div className="flex items-center justify-center gap-4">
+                      {/* Conteúdo do Slide */}
+                      <div className={`text-white/90 ${slides[currentSlide]?.tipo === 'titulo' ? 'text-center' : ''
+                        }`}>
+                        {slides[currentSlide]?.conteudo.split('\\n').map((line, idx) => {
+                          const cleanLine = line.trim();
+                          if (!cleanLine) return <div key={idx} className="h-3" />;
+
+                          // Formatar bullet points
+                          if (cleanLine.startsWith('-') || cleanLine.startsWith('•')) {
+                            return (
+                              <div key={idx} className="flex items-start gap-3 mb-3">
+                                <span className="w-2 h-2 mt-2 rounded-full bg-white/80 flex-shrink-0" />
+                                <span className="text-lg md:text-xl lg:text-2xl">
+                                  {cleanLine.replace(/^[-•]\s*/, '')}
+                                </span>
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <p key={idx} className="text-lg md:text-xl lg:text-2xl mb-2">
+                              {cleanLine}
+                            </p>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Controles de Navegação */}
+                <div className="flex items-center justify-center gap-6">
                   <Button
                     variant="outline"
+                    size="lg"
                     onClick={() => setCurrentSlide(prev => Math.max(0, prev - 1))}
                     disabled={currentSlide === 0}
+                    className="gap-2"
                   >
-                    <ChevronLeft className="h-4 w-4 mr-1" />
+                    <ChevronLeft className="h-5 w-5" />
                     Anterior
                   </Button>
 
-                  <div className="flex gap-1">
-                    {slides.map((_, index) => (
+                  {/* Indicadores de Slide */}
+                  <div className="flex gap-2">
+                    {slides.map((slide, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentSlide(index)}
-                        className={`w-3 h-3 rounded-full transition-colors ${index === currentSlide
-                            ? 'bg-primary'
-                            : 'bg-muted hover:bg-muted-foreground/30'
+                        className={`w-10 h-2 rounded-full transition-all duration-300 ${index === currentSlide
+                            ? 'bg-primary scale-110'
+                            : 'bg-muted hover:bg-muted-foreground/50'
                           }`}
+                        title={`Slide ${index + 1}: ${slide.titulo}`}
                       />
                     ))}
                   </div>
 
                   <Button
                     variant="outline"
+                    size="lg"
                     onClick={() => setCurrentSlide(prev => Math.min(slides.length - 1, prev + 1))}
                     disabled={currentSlide === slides.length - 1}
+                    className="gap-2"
                   >
                     Próximo
-                    <ChevronRight className="h-4 w-4 ml-1" />
+                    <ChevronRight className="h-5 w-5" />
                   </Button>
                 </div>
 
-                {/* Botão para regenerar */}
-                <div className="flex justify-center">
+                {/* Ações */}
+                <div className="flex flex-wrap justify-center gap-3">
                   <Button variant="outline" onClick={handleGerarSlides}>
                     <Sparkles className="h-4 w-4 mr-2" />
                     Gerar Novos Slides
                   </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      const slidesText = slides.map((s, i) =>
+                        `SLIDE ${i + 1} - ${s.titulo}\n${s.conteudo.replace(/\\n/g, '\n')}`
+                      ).join('\n\n---\n\n');
+                      navigator.clipboard.writeText(slidesText);
+                      toast({ title: 'Slides copiados!', description: 'Cole no Canva ou PowerPoint.' });
+                    }}
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copiar para Canva/PPT
+                  </Button>
                 </div>
 
                 <GuidanceMessage variant="tip">
-                  <strong>Dica:</strong> Use as setas do teclado ou clique nos botões para navegar entre os slides.
-                  Você pode projetar esta tela em sala de aula!
+                  <strong>Dica:</strong> Clique em "Copiar para Canva/PPT" e cole o conteúdo em
+                  qualquer ferramenta de apresentação. Você também pode projetar esta tela
+                  diretamente em sala de aula!
                 </GuidanceMessage>
               </div>
             )}
