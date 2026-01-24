@@ -16,7 +16,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import PageContainer from '@/components/layout/PageContainer';
 import GuidanceMessage from '@/components/shared/GuidanceMessage';
 import { useApp } from '@/contexts/AppContext';
-import { ANOS_SERIES } from '@/types';
+import { ANOS_SERIES, DISCIPLINAS_SUGERIDAS } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 
 const NovaDisciplina: React.FC = () => {
@@ -27,6 +27,17 @@ const NovaDisciplina: React.FC = () => {
   const [nome, setNome] = useState('');
   const [anoSerie, setAnoSerie] = useState('');
   const [descricao, setDescricao] = useState('');
+  const [mostrarInputCustom, setMostrarInputCustom] = useState(false);
+
+  const handleDisciplinaChange = (value: string) => {
+    if (value === 'outro') {
+      setMostrarInputCustom(true);
+      setNome('');
+    } else {
+      setMostrarInputCustom(false);
+      setNome(value);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,13 +85,43 @@ const NovaDisciplina: React.FC = () => {
               {/* Nome da Disciplina */}
               <div className="space-y-2">
                 <Label htmlFor="nome">Nome da Disciplina *</Label>
-                <Input
-                  id="nome"
-                  placeholder="Ex: Cultura Digital, Tecnologia e Sociedade..."
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  className="bg-background"
-                />
+                {mostrarInputCustom ? (
+                  <div className="space-y-2">
+                    <Input
+                      id="nome"
+                      placeholder="Digite o nome da disciplina..."
+                      value={nome}
+                      onChange={(e) => setNome(e.target.value)}
+                      className="bg-background"
+                      autoFocus
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setMostrarInputCustom(false);
+                        setNome('');
+                      }}
+                    >
+                      ← Voltar para lista
+                    </Button>
+                  </div>
+                ) : (
+                  <Select value={nome} onValueChange={handleDisciplinaChange}>
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder="Selecione uma disciplina" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DISCIPLINAS_SUGERIDAS.map((disc) => (
+                        <SelectItem key={disc} value={disc}>
+                          {disc}
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="outro">✏️ Outra disciplina...</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
 
               {/* Ano/Série */}
