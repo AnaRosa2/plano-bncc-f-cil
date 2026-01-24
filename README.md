@@ -271,9 +271,8 @@ _(Adicionar screenshots aqui antes da apresentação)_
 
 ## 👥 Equipe
 
-- **Líder:** [Nome do Líder]
-- **Integrante 2:** [Nome]
-- **Integrante 3:** [Nome]
+- **Líder:** [Nilson Rodrigo](https://github.com/Nilson-Rodrigo)
+- **Integrante:** [Ana Rosa](https://github.com/AnaRosa2)
 
 **Curso:** Tecnologia em Análise e Desenvolvimento de Sistemas (TADS)  
 **Instituição:** IFPI Campus Piripiri  
@@ -326,8 +325,8 @@ npm run test
 ## 📞 Contato
 
 Para dúvidas sobre o projeto:
-- **GitHub:** [AnaRosa2/plano-bncc-f-cil](https://github.com/AnaRosa2/plano-bncc-f-cil)
-- **E-mail:** [email-do-lider@example.com]
+- **GitHub (Líder):** [Nilson-Rodrigo](https://github.com/Nilson-Rodrigo)
+- **GitHub (Repositório):** [AnaRosa2/plano-bncc-f-cil](https://github.com/AnaRosa2/plano-bncc-f-cil)
 
 ---
 
