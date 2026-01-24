@@ -13,139 +13,131 @@ export async function gerarConteudo(disciplina: string, tema: string) {
 ${bncc}
 
 === CONTEXTO ===
-Você é um PEDAGOGO ESPECIALISTA com 20 anos de experiência em educação básica brasileira, especializado em Cultura Digital e tecnologias educacionais. Você domina profundamente a BNCC e metodologias ativas de aprendizagem.
+Você é um PROFESSOR EXPERIENTE com 20 anos de sala de aula. Você cria planos de aula que realmente funcionam na prática, são engajadores e desenvolvem competências essenciais nos alunos.
 
 === MISSÃO ===
-Crie um PLANO DE AULA COMPLETO, PROFUNDO E PRÁTICO sobre "${tema}" para a disciplina "${disciplina}".
+Crie um PLANO DE AULA COMPLETO E PRÁTICO sobre "${tema}" para a disciplina "${disciplina}".
 
-=== REQUISITOS OBRIGATÓRIOS ===
-1. ALINHAMENTO BNCC: Cite explicitamente códigos de habilidades (ex: EF06LP01, EM13CHS502) quando aplicável
-2. PROFUNDIDADE: Cada seção deve ter conteúdo substancial e detalhado
-3. APLICABILIDADE: O plano deve ser imediatamente utilizável por qualquer professor
-4. PROGRESSÃO: Considere diferentes níveis de aprendizagem dos alunos
-5. AVALIAÇÃO FORMATIVA: Inclua momentos de verificação durante a aula
+=== REQUISITOS ===
+1. FOCO NO TEMA: O plano deve ser sobre "${tema}", não sobre teoria pedagógica
+2. PRÁTICO: Deve ser imediatamente utilizável por qualquer professor
+3. PROFUNDO: Conteúdo substancial, não genérico
+4. PROGRESSIVO: Considerando diferentes níveis de aprendizagem
+5. CONTEXTUALIZADO: Situações reais que os alunos vivenciam
 
 === ESTRUTURA DO JSON ===
-RETORNE APENAS UM OBJETO JSON com esta estrutura exata:
 {
-  "objetivo": "OBJETIVOS DE APRENDIZAGEM (mínimo 4 parágrafos):
-    - Objetivo geral da aula
-    - 3-4 objetivos específicos mensuráveis (verbos de Bloom: analisar, criar, avaliar, aplicar)
-    - Competências BNCC desenvolvidas com códigos específicos
-    - Conexões interdisciplinares possíveis",
+  "objetivo": "OBJETIVOS DE APRENDIZAGEM (3-4 parágrafos):
+    - Objetivo geral claro e mensurável
+    - 3-4 objetivos específicos (o que os alunos vão SABER FAZER ao final)
+    - Competências desenvolvidas (pensamento crítico, criatividade, colaboração, etc.)
+    - Conexões com outras disciplinas ou temas",
     
-  "metodologia": "METODOLOGIA DETALHADA (mínimo 6 parágrafos):
-    - MOMENTO 1 (10 min): Acolhimento e sensibilização - como engajar os alunos
-    - MOMENTO 2 (15 min): Problematização - situação-problema que desperte curiosidade
-    - MOMENTO 3 (20 min): Desenvolvimento - exposição dialogada com recursos multimídia
-    - MOMENTO 4 (25 min): Prática - atividade hands-on colaborativa
-    - MOMENTO 5 (15 min): Sistematização - síntese coletiva do aprendizado
-    - MOMENTO 6 (5 min): Encerramento - conexão com próxima aula e tarefas",
+  "metodologia": "METODOLOGIA DETALHADA (6 momentos):
+    - MOMENTO 1 (10 min): Como iniciar e engajar os alunos
+    - MOMENTO 2 (15 min): Situação-problema ou desafio instigante
+    - MOMENTO 3 (20 min): Desenvolvimento do conteúdo com exemplos práticos
+    - MOMENTO 4 (25 min): Atividade prática colaborativa
+    - MOMENTO 5 (15 min): Síntese e consolidação do aprendizado
+    - MOMENTO 6 (5 min): Fechamento e conexão com próxima aula",
     
-  "meta": "METAS PEDAGÓGICAS E COMPETÊNCIAS BNCC (mínimo 3 parágrafos):
-    - Competências gerais da BNCC desenvolvidas (citar números e descrições)
-    - Habilidades específicas trabalhadas com códigos
-    - Indicadores de sucesso observáveis
-    - Relação com os pilares da educação: aprender a conhecer, fazer, conviver, ser",
+  "meta": "METAS E COMPETÊNCIAS (2-3 parágrafos):
+    - Principais habilidades desenvolvidas na aula
+    - Como isso prepara os alunos para a vida real
+    - Indicadores de que a aula foi bem-sucedida",
     
-  "atividade": "ATIVIDADE PRÁTICA DETALHADA (mínimo 5 parágrafos):
-    - Descrição completa passo a passo da atividade principal
+  "atividade": "ATIVIDADE PRÁTICA PRINCIPAL (detalhamento completo):
+    - Descrição passo a passo da atividade
     - Materiais necessários (digitais e físicos)
-    - Organização da turma (individual, duplas, grupos)
+    - Como organizar a turma (individual, duplas, grupos)
     - Roteiro de execução com tempos
-    - Variações para diferentes níveis de dificuldade
-    - Critérios de avaliação da atividade
-    - Produto final esperado dos alunos"
+    - Adaptações para diferentes níveis
+    - Como avaliar o aprendizado
+    - Produto final que os alunos criam"
 }
 
 === EXEMPLO DE QUALIDADE ===
-Para "Segurança Digital" em "Cultura Digital - 8º ano":
+Para "Segurança Digital":
 {
-  "objetivo": "OBJETIVO GERAL: Desenvolver consciência crítica sobre práticas seguras no ambiente digital, capacitando os estudantes a proteger sua privacidade e identificar ameaças online.
+  "objetivo": "OBJETIVO GERAL: Capacitar os alunos a proteger sua privacidade online e identificar ameaças digitais comuns.
 
 OBJETIVOS ESPECÍFICOS:
-• Analisar diferentes tipos de ameaças digitais (phishing, malware, engenharia social) e seus mecanismos de funcionamento
-• Avaliar a segurança de senhas pessoais e criar estratégias de proteção de dados
-• Criar um guia prático de boas práticas de segurança digital para compartilhar com familiares
-• Sintetizar conhecimentos sobre direitos digitais previstos na LGPD e Marco Civil da Internet
+• Reconhecer diferentes tipos de golpes digitais (phishing, perfis falsos, links maliciosos)
+• Criar senhas seguras e entender a importância da autenticação
+• Desenvolver senso crítico para não cair em armadilhas online
+• Produzir um guia de segurança para compartilhar com a família
 
-COMPETÊNCIAS BNCC:
-• Competência 1: Valorizar conhecimentos sobre proteção digital para entender a realidade
-• Competência 5: Compreender, utilizar e criar tecnologias digitais de forma crítica e ética
-• Habilidades: EF89LP27 (argumentar sobre temas controversos), EF09LI19 (discutir questões éticas em ambientes virtuais)
+COMPETÊNCIAS: Pensamento crítico, resolução de problemas, responsabilidade digital e comunicação
 
-CONEXÕES INTERDISCIPLINARES: Matemática (criptografia básica), Língua Portuguesa (interpretação de termos de uso), Sociologia (impactos sociais)",
+CONEXÕES: Língua Portuguesa (interpretação de mensagens suspeitas), Matemática (probabilidade de ataques), Sociologia (impactos na sociedade)",
 
-  "metodologia": "MOMENTO 1 - ACOLHIMENTO (10 min):
-Iniciar com uma enquete interativa usando Mentimeter ou formulário: 'Você já teve alguma conta hackeada ou conhece alguém?'. Compartilhar estatísticas reais de crimes cibernéticos no Brasil (dados da SaferNet). Estabelecer acordo de confidencialidade para relatos pessoais.
+  "metodologia": "MOMENTO 1 - ENGAJAMENTO (10 min):
+Perguntar: 'Quem aqui já clicou em um link e depois pensou: será que era seguro?' Enquete rápida no celular sobre experiências com segurança digital. Compartilhar manchetes recentes de vazamentos de dados que afetaram milhões de pessoas.
 
-MOMENTO 2 - PROBLEMATIZAÇÃO (15 min):
-Apresentar caso real (notícia recente) de vazamento de dados ou golpe digital. Dividir a turma em grupos de 4-5 alunos para discutir: 'Como isso poderia ter sido evitado?'. Cada grupo anota 3 hipóteses em post-its virtuais (Padlet ou Jamboard).
+MOMENTO 2 - DESAFIO (15 min):
+Mostrar 3 emails/mensagens reais (1 legítimo, 2 golpes). Desafiar a turma: 'Qual você confiaria?' Dividir em grupos para analisar. Discussão: por que alguns golpes são tão convincentes?
 
 MOMENTO 3 - DESENVOLVIMENTO (20 min):
-Exposição dialogada com apresentação visual sobre: tipos de ameaças (phishing, ransomware, fake perfis), anatomia de um ataque, pirâmide de segurança digital. Demonstração prática: como verificar se um link é seguro, como identificar email falso, como checar vazamento de senhas (haveibeenpwned).
+Demonstração prática ao vivo: como verificar se um link é seguro, onde olhar sinais de alerta em emails, como checar se suas senhas vazaram. Apresentar ferramentas gratuitas que eles podem usar (haveibeenpwned, verificadores de vírus).
 
 MOMENTO 4 - PRÁTICA (25 min):
-ATIVIDADE 'DETETIVE DIGITAL': Cada grupo recebe 5 cenários simulados (emails, mensagens, sites) e deve classificar como seguro/suspeito, justificando. Usam checklist de verificação criado coletivamente. Grupos apresentam descobertas com evidências.
+ATIVIDADE 'CAÇADORES DE GOLPES': Cada grupo recebe 5 cenários (emails, mensagens, posts) e precisa identificar os riscos, explicar por quê, e dizer o que fariam. Compartilhamento: grupos apresentam os casos mais interessantes.
 
-MOMENTO 5 - SISTEMATIZAÇÃO (15 min):
-Construção coletiva de um 'Decálogo da Segurança Digital' no quadro/lousa digital. Cada grupo contribui com uma regra baseada nos aprendizados. Professor complementa com aspectos legais (LGPD, direitos do consumidor digital).
+MOMENTO 5 - CONSOLIDAÇÃO (15 min):
+Construir juntos a 'Lista de Ouro da Segurança Digital' - 10 regras essenciais. Cada grupo contribui com uma regra baseada no que descobriu. Professor complementa com pontos-chave.
 
-MOMENTO 6 - ENCERRAMENTO (5 min):
-Desafio para casa: auditar a segurança digital da família (senhas, configurações de privacidade) usando checklist fornecido. Conexão com próxima aula: 'Na próxima aula, vamos criar nosso próprio gerenciador de senhas!'",
+MOMENTO 6 - FECHAMENTO (5 min):
+Missão para casa: fazer um 'check-up de segurança' na família usando a Lista de Ouro. Próxima aula: vamos aprender a criar um sistema de senhas pessoal super seguro.",
 
-  "meta": "COMPETÊNCIAS GERAIS BNCC DESENVOLVIDAS:
-• CG1 (Conhecimento): Compreensão dos mecanismos técnicos e sociais de ameaças digitais
-• CG2 (Pensamento Científico): Investigação e análise crítica de cenários de risco
-• CG5 (Cultura Digital): Uso crítico e responsável de tecnologias para proteção pessoal
-• CG7 (Argumentação): Formulação de argumentos sobre práticas seguras baseados em evidências
+  "meta": "HABILIDADES PRINCIPAIS:
+• Análise crítica de informações online
+• Tomada de decisões seguras no ambiente digital
+• Comunicação clara sobre riscos e proteções
+• Capacidade de ensinar outros (ao compartilhar com família)
 
-HABILIDADES ESPECÍFICAS:
-• EF89LP27: Argumentar sobre questões de segurança digital com base em dados
-• EF67LP11: Produzir textos instrucionais (guia de segurança)
-• EF09LI19: Discutir questões éticas no uso de tecnologias
+PREPARAÇÃO PARA A VIDA REAL:
+Esta aula dá ferramentas concretas que os alunos usarão todos os dias: verificar links antes de clicar, criar senhas fortes, proteger dados pessoais. São habilidades de sobrevivência no mundo digital.
 
 INDICADORES DE SUCESSO:
-• Aluno identifica corretamente 80% das ameaças nos cenários apresentados
-• Aluno cria senha forte seguindo critérios técnicos aprendidos
-• Aluno explica para um colega pelo menos 3 estratégias de proteção",
+• Alunos conseguem identificar golpes com confiança
+• Sabem explicar por que algo é suspeito
+• Compartilham dicas de segurança com colegas e família",
 
-  "atividade": "ATIVIDADE: AUDITORIA DE SEGURANÇA DIGITAL FAMILIAR
+  "atividade": "ATIVIDADE: CHECK-UP DE SEGURANÇA FAMILIAR
 
-DESCRIÇÃO: Os alunos realizarão uma auditoria completa das práticas de segurança digital em suas casas, aplicando os conhecimentos aprendidos e criando um relatório com recomendações.
+DESCRIÇÃO: Alunos fazem uma auditoria de segurança digital em casa, conversam com a família e criam um plano de melhorias.
 
 MATERIAIS:
-• Checklist de auditoria (fornecido pelo professor - impresso ou digital)
-• Acesso a smartphone/computador familiar
+• Checklist de verificação (fornecido pelo professor)
+• Smartphone ou computador
 • Caderno para anotações
-• Modelo de relatório
 
-ORGANIZAÇÃO: Individual, com compartilhamento familiar
+ORGANIZAÇÃO: Individual, com apoio familiar
 
-ROTEIRO DE EXECUÇÃO:
-1. (5 min) Explicação da atividade e distribuição do checklist
-2. (Em casa - 30 min) Verificação de: senhas fracas, autenticação de dois fatores, permissões de apps, configurações de privacidade em redes sociais, emails suspeitos na caixa de entrada
-3. (Em casa - 20 min) Preenchimento do relatório com descobertas e recomendações
-4. (Próxima aula - 15 min) Compartilhamento anônimo de descobertas mais interessantes
+PASSO A PASSO:
+1. (5 min) Professor explica a missão e distribui checklist
+2. (Em casa - 30 min) Aluno verifica: senhas fracas? 2FA ativado? Apps com permissões excessivas? Configurações de privacidade nas redes?
+3. (Em casa - 20 min) Conversa com a família sobre descobertas, cria lista de 3 melhorias prioritárias
+4. (Próxima aula - 15 min) Compartilhamento: quais descobertas mais surpreenderam? O que vão mudar?
 
-NÍVEIS DE DIFICULDADE:
-• Básico: Verificar apenas senhas e configurações de privacidade
-• Intermediário: Adicionar análise de permissões de aplicativos
-• Avançado: Incluir verificação de vazamentos e análise de emails suspeitos
+ADAPTAÇÕES:
+• Iniciante: Focar só em senhas e configurações básicas
+• Intermediário: Adicionar análise de apps e permissões
+• Avançado: Verificar vazamentos de dados e analisar histórico de navegação
 
-CRITÉRIOS DE AVALIAÇÃO:
-• Completude do checklist (30%): Todos os itens verificados
-• Qualidade das recomendações (40%): Relevância e viabilidade
-• Engajamento familiar (20%): Evidência de conversa com familiares
-• Reflexão pessoal (10%): Insights sobre próprias práticas
+AVALIAÇÃO:
+• Completou o checklist? (3 pontos)
+• Qualidade das recomendações? (4 pontos)
+• Evidência de conversa familiar? (2 pontos)
+• Reflexão sobre aprendizados? (1 ponto)
 
-PRODUTO FINAL: Relatório de auditoria + 3 ações concretas de melhoria implementadas"
+PRODUTO FINAL: Relatório do check-up + 3 ações concretas implementadas"
 }
 
 IMPORTANTE: 
-- Seu conteúdo deve ter esta mesma profundidade e detalhamento
-- Adapte ao tema "${tema}" e disciplina "${disciplina}" solicitados
-- NÃO seja superficial - professores precisam de orientações completas
+- Foque no CONTEÚDO do tema "${tema}", não em explicar teoria pedagógica
+- Seja prático e direto - professor quer usar isso amanhã na sala
+- Mencione competências naturalmente, quando relevante (não force)
 - APENAS JSON, sem texto adicional:
 `;
 
@@ -287,40 +279,39 @@ export async function gerarAtividade(tema: string, tipo: string, anoSerie?: stri
 ${bncc}
 
 === CONTEXTO ===
-Você é um AVALIADOR PEDAGÓGICO ESPECIALISTA com experiência em elaboração de instrumentos avaliativos alinhados à BNCC. Você cria atividades que realmente medem aprendizagem significativa.
+Você é um PROFESSOR AVALIADOR com experiência em criar instrumentos que realmente medem o aprendizado dos alunos.
 
 === MISSÃO ===
 Crie ${quantidade} ATIVIDADE(S) AVALIATIVA(S) do tipo ${tipo.toUpperCase()} sobre "${tema}".
 Ano/Série: ${anoSerie || 'Ensino Fundamental/Médio'}
 
-=== REQUISITOS OBRIGATÓRIOS ===
+=== REQUISITOS ===
 ${instrucoesDetalhadas[tipo] || instrucoesDetalhadas['discursiva']}
 
-=== ESTRUTURA OBRIGATÓRIA ===
+=== ESTRUTURA ===
 Para CADA atividade, o enunciado DEVE conter:
-1. CONTEXTUALIZAÇÃO: Situação real ou simulada que introduz o problema
-2. INSTRUÇÕES CLARAS: O que o aluno deve fazer exatamente
-3. QUESTÕES/TAREFAS: Detalhamento completo do que será avaliado
-4. ORIENTAÇÕES: Tempo sugerido, recursos permitidos, formato de resposta
+1. CONTEXTUALIZAÇÃO: Situação real que introduz o problema
+2. INSTRUÇÕES CLARAS: O que o aluno deve fazer
+3. QUESTÕES/TAREFAS: Detalhamento do que será avaliado
+4. ORIENTAÇÕES: Tempo, recursos, formato de resposta
 
 Os CRITÉRIOS DE AVALIAÇÃO devem incluir:
-1. DIMENSÕES AVALIADAS: Conhecimento, habilidades, atitudes
-2. NÍVEIS DE DESEMPENHO: Excelente, Satisfatório, Em desenvolvimento, Insuficiente
-3. DISTRIBUIÇÃO DE PONTOS: Peso de cada critério
-4. INDICADORES OBSERVÁVEIS: O que caracteriza cada nível
-5. ALINHAMENTO BNCC: Competências e habilidades avaliadas
+1. DIMENSÕES: O que está sendo avaliado
+2. NÍVEIS: Excelente, Satisfatório, Em desenvolvimento, Insuficiente
+3. PONTOS: Peso de cada critério
+4. INDICADORES: O que caracteriza cada nível
 
-=== EXEMPLO DE QUALIDADE PARA TIPO DISCURSIVA ===
+=== EXEMPLO DE QUALIDADE ===
 {
-  "enunciado": "ATIVIDADE AVALIATIVA: ANÁLISE CRÍTICA DE FAKE NEWS\\n\\n📌 CONTEXTUALIZAÇÃO:\\nDurante as eleições de 2022, uma imagem circulou nas redes sociais mostrando supostas urnas eletrônicas sendo transportadas em um carro particular. A legenda afirmava que as urnas estavam sendo 'manipuladas'. A imagem foi compartilhada milhares de vezes antes de agências de checagem desmentirem: tratava-se de urnas de TREINAMENTO sendo levadas para capacitação de mesários.\\n\\n📝 INSTRUÇÕES:\\nLeia o caso acima e responda às questões de forma dissertativa, fundamentando suas respostas com argumentos e exemplos.\\n\\n❓ QUESTÕES:\\n\\n1. ANÁLISE (2 pontos):\\nIdentifique pelo menos 3 elementos que poderiam levantar suspeitas sobre a veracidade dessa notícia ANTES de uma verificação formal. Justifique cada elemento.\\n\\n2. INVESTIGAÇÃO (2 pontos):\\nDescreva um passo a passo de como você verificaria a veracidade dessa informação usando ferramentas disponíveis na internet. Cite pelo menos 2 ferramentas específicas.\\n\\n3. IMPACTO SOCIAL (3 pontos):\\nAnalise os possíveis impactos sociais da disseminação de fake news sobre processos eleitorais. Considere aspectos como: confiança nas instituições, polarização política e participação democrática.\\n\\n4. AÇÃO CIDADÃ (3 pontos):\\nElabore um breve guia (5-7 tópicos) que você compartilharia com sua família sobre como identificar e não disseminar fake news. Seja prático e use linguagem acessível.\\n\\n⏰ TEMPO: 45 minutos\\n📋 FORMATO: Respostas dissertativas, mínimo 8 linhas por questão",
+  "enunciado": "ATIVIDADE: ANÁLISE CRÍTICA DE FAKE NEWS\\n\\n📌 CONTEXTO:\\nEm 2022, uma imagem de urnas sendo transportadas em carro particular viralizou com a legenda 'urnas sendo manipuladas'. Milhares compartilharam antes de descobrir: eram urnas de TREINAMENTO para capacitação.\\n\\n📝 INSTRUÇÕES:\\nAnalise o caso e responda de forma fundamentada.\\n\\n❓ QUESTÕES:\\n\\n1. ANÁLISE (2 pts): Identifique 3 elementos suspeitos sobre essa notícia. Justifique.\\n\\n2. INVESTIGAÇÃO (2 pts): Como você verificaria usando ferramentas online? Cite 2 ferramentas.\\n\\n3. IMPACTO (3 pts): Analise os impactos sociais da disseminação de fake news sobre eleições.\\n\\n4. AÇÃO PRÁTICA (3 pts): Crie um guia (5-7 tópicos) para sua família sobre como identificar fake news.\\n\\n⏰ TEMPO: 45 min\\n📋 FORMATO: Respostas dissertativas, mín 8 linhas",
   
-  "criteriosAvaliacao": "📊 CRITÉRIOS DE AVALIAÇÃO - TOTAL: 10 PONTOS\\n\\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n🎯 DIMENSÃO 1: ANÁLISE CRÍTICA (4 pontos)\\n\\nEXCELENTE (4): Identifica elementos suspeitos com precisão, fundamenta com clareza, demonstra pensamento crítico apurado\\nSATISFATÓRIO (3): Identifica elementos corretamente, fundamentação parcial\\nEM DESENVOLVIMENTO (2): Identificação superficial, pouca fundamentação\\nINSUFICIENTE (0-1): Não identifica elementos ou fundamentação inadequada\\n\\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n🔍 DIMENSÃO 2: INVESTIGAÇÃO E MÉTODO (2 pontos)\\n\\nEXCELENTE (2): Descreve processo sistemático, cita ferramentas corretas com uso adequado\\nSATISFATÓRIO (1.5): Processo razoável, ferramentas citadas\\nEM DESENVOLVIMENTO (1): Processo vago, ferramentas genéricas\\nINSUFICIENTE (0-0.5): Não demonstra conhecimento de verificação\\n\\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n📢 DIMENSÃO 3: CONSCIÊNCIA SOCIAL (2 pontos)\\n\\nEXCELENTE (2): Análise profunda dos impactos, múltiplas perspectivas, reflexão madura\\nSATISFATÓRIO (1.5): Análise adequada, algumas perspectivas\\nEM DESENVOLVIMENTO (1): Análise superficial, visão limitada\\nINSUFICIENTE (0-0.5): Não demonstra compreensão dos impactos\\n\\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n✅ DIMENSÃO 4: APLICAÇÃO PRÁTICA (2 pontos)\\n\\nEXCELENTE (2): Guia claro, prático, linguagem adequada, dicas relevantes e aplicáveis\\nSATISFATÓRIO (1.5): Guia útil, maioria das dicas aplicáveis\\nEM DESENVOLVIMENTO (1): Guia genérico, poucas dicas práticas\\nINSUFICIENTE (0-0.5): Guia confuso ou inaplicável\\n\\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n📚 COMPETÊNCIAS BNCC AVALIADAS:\\n• CG2: Pensamento científico, crítico e criativo\\n• CG5: Cultura digital\\n• CG7: Argumentação\\n• EF89LP27: Argumentar sobre temas controversos\\n• EF89LP02: Analisar diferentes práticas de curadoria"
+  "criteriosAvaliacao": "📊 AVALIAÇÃO - TOTAL: 10 PONTOS\\n\\n🎯 ANÁLISE CRÍTICA (4 pts)\\nEXCELENTE (4): Identifica com precisão, fundamenta claramente\\nSATISFATÓRIO (3): Identifica corretamente, fundamentação parcial\\nEM DESENVOLVIMENTO (2): Identificação superficial\\nINSUFICIENTE (0-1): Não identifica adequadamente\\n\\n🔍 INVESTIGAÇÃO (2 pts)\\nEXCELENTE (2): Processo sistemático, ferramentas corretas\\nSATISFATÓRIO (1.5): Processo razoável\\nEM DESENVOLVIMENTO (1): Processo vago\\nINSUFICIENTE (0-0.5): Sem conhecimento de verificação\\n\\n📢 CONSCIÊNCIA SOCIAL (2 pts)\\nEXCELENTE (2): Análise profunda, múltiplas perspectivas\\nSATISFATÓRIO (1.5): Análise adequada\\nEM DESENVOLVIMENTO (1): Análise superficial\\nINSUFICIENTE (0-0.5): Não demonstra compreensão\\n\\n✅ APLICAÇÃO PRÁTICA (2 pts)\\nEXCELENTE (2): Guia claro, prático, aplicável\\nSATISFATÓRIO (1.5): Guia útil\\nEM DESENVOLVIMENTO (1): Guia genérico\\nINSUFICIENTE (0-0.5): Guia confuso"
 }
 
 IMPORTANTE:
-- Crie conteúdo com ESTE nível de detalhamento e profundidade
-- Adapte ao tema "${tema}" e ao tipo "${tipo}" solicitado
-- NÃO seja superficial - professores precisam de instrumentos completos
+- Foque no CONTEÚDO do tema "${tema}", não em teoria pedagógica
+- Seja prático - professor vai usar isto para avaliar alunos reais
+- Crie atividades desafiadoras mas viáveis
 - APENAS JSON (ARRAY), sem texto adicional:
 `;
 
