@@ -112,13 +112,45 @@ const NovaDisciplina: React.FC = () => {
                     <SelectTrigger className="bg-background">
                       <SelectValue placeholder="Selecione uma disciplina" />
                     </SelectTrigger>
-                    <SelectContent>
-                      {DISCIPLINAS_SUGERIDAS.map((disc) => (
-                        <SelectItem key={disc} value={disc}>
-                          {disc}
-                        </SelectItem>
-                      ))}
-                      <SelectItem value="outro">✏️ Outra disciplina...</SelectItem>
+                    <SelectContent className="max-h-[300px]">
+                      {/* Disciplinas Principais */}
+                      <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                        Principais
+                      </div>
+                      <SelectItem value="Cultura Digital">Cultura Digital</SelectItem>
+                      <SelectItem value="Português">Português</SelectItem>
+                      <SelectItem value="Matemática">Matemática</SelectItem>
+
+                      {/* Ciências Humanas */}
+                      <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+                        Ciências Humanas
+                      </div>
+                      <SelectItem value="História">História</SelectItem>
+                      <SelectItem value="Geografia">Geografia</SelectItem>
+                      <SelectItem value="Filosofia">Filosofia</SelectItem>
+                      <SelectItem value="Sociologia">Sociologia</SelectItem>
+
+                      {/* Ciências da Natureza */}
+                      <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+                        Ciências da Natureza
+                      </div>
+                      <SelectItem value="Ciências">Ciências</SelectItem>
+                      <SelectItem value="Biologia">Biologia</SelectItem>
+                      <SelectItem value="Física">Física</SelectItem>
+                      <SelectItem value="Química">Química</SelectItem>
+
+                      {/* Outras */}
+                      <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+                        Outras
+                      </div>
+                      <SelectItem value="Artes">Artes</SelectItem>
+                      <SelectItem value="Educação Física">Educação Física</SelectItem>
+                      <SelectItem value="Inglês">Inglês</SelectItem>
+
+                      {/* Personalizada */}
+                      <div className="border-t mt-2 pt-2">
+                        <SelectItem value="outro">✏️ Outra disciplina...</SelectItem>
+                      </div>
                     </SelectContent>
                   </Select>
                 )}
@@ -131,12 +163,28 @@ const NovaDisciplina: React.FC = () => {
                   <SelectTrigger className="bg-background">
                     <SelectValue placeholder="Selecione o ano ou série" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {ANOS_SERIES.map((ano) => (
-                      <SelectItem key={ano} value={ano}>
-                        {ano}
-                      </SelectItem>
-                    ))}
+                  <SelectContent className="max-h-[300px]">
+                    {/* Ensino Fundamental */}
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                      Ensino Fundamental
+                    </div>
+                    <SelectItem value="1º ano EF">1º ano</SelectItem>
+                    <SelectItem value="2º ano EF">2º ano</SelectItem>
+                    <SelectItem value="3º ano EF">3º ano</SelectItem>
+                    <SelectItem value="4º ano EF">4º ano</SelectItem>
+                    <SelectItem value="5º ano EF">5º ano</SelectItem>
+                    <SelectItem value="6º ano EF">6º ano</SelectItem>
+                    <SelectItem value="7º ano EF">7º ano</SelectItem>
+                    <SelectItem value="8º ano EF">8º ano</SelectItem>
+                    <SelectItem value="9º ano EF">9º ano</SelectItem>
+
+                    {/* Ensino Médio */}
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+                      Ensino Médio
+                    </div>
+                    <SelectItem value="1º ano EM">1º ano</SelectItem>
+                    <SelectItem value="2º ano EM">2º ano</SelectItem>
+                    <SelectItem value="3º ano EM">3º ano</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
