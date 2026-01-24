@@ -227,16 +227,6 @@ const VisualizarUnidade: React.FC = () => {
               </p>
             )}
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={handleImprimir}>
-              <Printer className="h-4 w-4" />
-              <span className="hidden sm:inline">Imprimir</span>
-            </Button>
-            <Button size="sm" onClick={() => generateUnitPDF(unidade, disciplina, planoAula, atividadeAvaliativa)}>
-              <Download className="h-4 w-4 mr-2" />
-              <span className="hidden sm:inline">Baixar PDF</span>
-            </Button>
-          </div>
         </div>
       </div>
 
@@ -663,15 +653,6 @@ const VisualizarUnidade: React.FC = () => {
 
                     {/* Conteúdo do Slide */}
                     <div className="relative h-full flex flex-col justify-center p-8 md:p-12 lg:p-16 text-white">
-                      {/* Badge do tipo */}
-                      <div className="absolute top-4 right-4 md:top-6 md:right-6">
-                        <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium uppercase tracking-wider">
-                          {slides[currentSlide]?.tipo === 'titulo' && '🎯 Título'}
-                          {slides[currentSlide]?.tipo === 'conteudo' && '📚 Conteúdo'}
-                          {slides[currentSlide]?.tipo === 'questao' && '❓ Reflexão'}
-                          {slides[currentSlide]?.tipo === 'conclusao' && '✅ Conclusão'}
-                        </span>
-                      </div>
 
                       {/* Número do slide */}
                       <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6">
@@ -771,45 +752,7 @@ const VisualizarUnidade: React.FC = () => {
                     <Sparkles className="h-4 w-4 mr-2" />
                     Gerar Novos Slides
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      const slidesText = slides.map((s, i) =>
-                        `SLIDE ${i + 1} - ${s.titulo}\n${s.conteudo.replace(/\\n/g, '\n')}`
-                      ).join('\n\n---\n\n');
-                      navigator.clipboard.writeText(slidesText);
-                      toast({ title: 'Slides copiados!', description: 'Cole no Canva ou PowerPoint.' });
-                    }}
-                  >
-                    <Copy className="h-4 w-4 mr-2" />
-                    Copiar para Canva/PPT
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      // Copiar para clipboard e abrir Canva
-                      const slidesText = slides.map((s, i) =>
-                        `SLIDE ${i + 1} - ${s.titulo}\n${s.conteudo.replace(/\\n/g, '\n')}`
-                      ).join('\n\n---\n\n');
-                      navigator.clipboard.writeText(slidesText);
-                      // Abrir Canva com template de apresentação
-                      window.open('https://www.canva.com/create/presentations/', '_blank');
-                      toast({
-                        title: 'Abrindo Canva!',
-                        description: 'Conteúdo copiado. Cole no template.',
-                        duration: 5000
-                      });
-                    }}
-                  >
-                    <Presentation className="h-4 w-4 mr-2" />
-                    Abrir no Canva
-                  </Button>
                 </div>
-
-                <GuidanceMessage variant="tip">
-                  <strong>Dica:</strong> Clique em "Copiar para Canva/PPT" e cole o conteúdo em
-                  qualquer ferramenta de apresentação. Você também pode projetar esta tela
-                  diretamente em sala de aula!
-                </GuidanceMessage>
               </div>
             )}
           </TabsContent>
