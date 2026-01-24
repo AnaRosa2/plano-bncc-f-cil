@@ -1,73 +1,312 @@
-# Welcome to your Lovable project
+# 📚 Plano BNCC - Sistema de Geração de Materiais Didáticos de Cultura Digital
 
-## Project info
+> Sistema Inteligente para Geração de Materiais Didáticos alinhados à BNCC desenvolvido para o Hackathon IFPI Campus Piripiri - Janeiro 2026
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 📋 Índice
 
-## How can I edit this code?
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Funcionalidades](#funcionalidades)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Uso de IA no Desenvolvimento](#uso-de-ia-no-desenvolvimento)
+- [Requisitos do Hackathon](#requisitos-do-hackathon)
+- [Como Executar](#como-executar)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Demonstração](#demonstração)
+- [Equipe](#equipe)
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🎯 Sobre o Projeto
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+O **Plano BNCC** é uma aplicação web desenvolvida para apoiar professores do Ensino Fundamental e Médio no planejamento pedagógico de aulas de Cultura Digital. O sistema utiliza **Inteligência Artificial Generativa (Google Gemini)** com técnicas de **RAG (Retrieval-Augmented Generation)** baseadas na Base Nacional Comum Curricular para gerar automaticamente:
 
-Changes made via Lovable will be committed automatically to this repo.
+- 📝 **Planos de aula** completos e alinhados à BNCC
+- 📊 **Atividades avaliativas** (objetivas, discursivas e práticas)
+- 💡 **Sugestões de unidades temáticas** contextualizadas
+- 📄 **Exportação em PDF** de todo o material gerado
 
-**Use your preferred IDE**
+### Diferenciais
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- ✅ **100% funcional com IA real** - Não usa templates mockados
+- ✅ **RAG com BNCC** - IA treinada com documento oficial de 1.1MB
+- ✅ **Exportação PDF** - Gera documentos profissionais prontos para uso
+- ✅ **Interface moderna** - Design responsivo e intuitivo
+- ✅ **Single-user** - Sem necessidade de autenticação
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## ⚡ Funcionalidades
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Requisitos Funcionais Implementados
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+| Código | Requisito | Status |
+|--------|-----------|--------|
+| **RF01** | Cadastro e gerenciamento de disciplinas | ✅ Implementado |
+| **RF02** | Criação manual de unidades (aulas) | ✅ Implementado |
+| **RF03** | Sugestão automática de unidades via IA | ✅ Implementado |
+| **RF04** | Geração automática de plano de aula | ✅ Implementado |
+| **RF05** | Geração automática de atividade avaliativa | ✅ Implementado |
+| **RF06** | Geração de slides por unidade | ⏳ Opcional (não implementado) |
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Funcionalidades Adicionais
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+- 🎨 **Edição de conteúdo gerado** - Personalize planos e atividades após geração
+- 📥 **Exportação em PDF** - Baixe materiais formatados profissionalmente
+- 🔄 **Integração completa** - Frontend ↔ Backend ↔ IA
+- 💬 **Feedback visual** - Loading states e toasts informativos
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+### Frontend
+- **React 18** - Biblioteca para interfaces
+- **TypeScript** - Tipagem estática
+- **Vite** - Build tool moderna
+- **shadcn/ui** - Componentes acessíveis
+- **Tailwind CSS** - Estilização utilitária
+- **React Router** - Navegação SPA
+- **pdfmake** - Geração de PDFs
+
+### Backend
+- **Node.js** - Runtime JavaScript
+- **Express 5** - Framework web
+- **TypeScript** - Tipagem no servidor
+- **Google Gemini API** - IA Generativa
+- **CORS** - Comunicação cross-origin
+
+### IA e RAG
+- **Google Gemini 1.5** - Modelo de linguagem
+- **RAG** - Retrieval-Augmented Generation
+- **BNCC completa** - Base de conhecimento (1.1MB)
+
+---
+
+## 🤖 Uso de IA no Desenvolvimento
+
+**Conforme Item 12 do Edital**, documentamos o papel da IA no desenvolvimento deste projeto:
+
+### Ferramentas de IA Utilizadas
+
+1. **GitHub Copilot / Google Gemini (Assistentes de Código)**
+   - Geração de código boilerplate
+   - Sugestões de estrutura de componentes React
+   - Autocompletar funções e tipos TypeScript
+   - Debugging e refatoração
+
+2. **ChatGPT / Gemini (Consultas Técnicas)**
+   - Pesquisa de melhores práticas
+   - Resolução de problemas específicos
+   - Otimização de prompts para IA generativa
+   - Estruturação de arquitetura
+
+### Partes Desenvolvidas com Auxílio de IA
+
+- ✅ **Componentes React** - Estrutura inicial gerada, depois customizada
+- ✅ **Serviço de API** - Lógica de comunicação frontend/backend
+- ✅ **Prompts para Gemini** - Refinamento iterativo para melhor qualidade
+- ✅ **Tipagens TypeScript** - Interfaces e tipos sugeridos
+- ✅ **Geração de PDF** - Estrutura inicial com pdfmake
+
+### Domínio da Solução
+
+**A equipe possui domínio TOTAL sobre a solução**, incluindo:
+- Arquitetura do sistema (frontend/backend separados)
+- Fluxo de dados e estado da aplicação
+- Integração com API do Google Gemini
+- Geração de PDFs e manipulação de componentes
+- Capacidade de explicar, modificar e estender qualquer parte do código
+
+> **Importante:** A IA foi utilizada como **ferramenta de produtividade**, não como substituto do conhecimento técnico. Todo código gerado foi revisado, compreendido, testado e adaptado às necessidades específicas do projeto.
+
+---
+
+## ✅ Requisitos do Hackathon
+
+### Conformidade com Edital
+
+| Critério | Atendimento | Detalhes |
+|----------|-------------|----------|
+| Sistema web single-user | ✅ | Sem autenticação, dados locais |
+| Cadastro de disciplinas | ✅ | Com ano/série e descrição |
+| Criação manual de unidades | ✅ | Formulário completo implementado |
+| Sugestão automática via IA | ✅ | Endpoint `/unidades/sugerir-tema` |
+| Geração de plano de aula | ✅ | Endpoint `/unidades` com IA |
+| Geração de atividades | ✅ | 3 tipos: objetiva, discursiva, prática |
+| Uso de IA Generativa | ✅ | Google Gemini com RAG |
+| Alinhamento à BNCC | ✅ | RAG com documento oficial |
+| Código organizado | ✅ | TypeScript, separação clara |
+
+### Público-Alvo
+
+- 👨‍🏫 Professores do Ensino Fundamental (1º ao 9º ano)
+- 👩‍🏫 Professores do Ensino Médio (1º ao 3º ano)
+
+---
+
+## 🚀 Como Executar
+
+### Pré-requisitos
+
+- **Node.js** 18+ ([instalar com nvm](https://github.com/nvm-sh/nvm))
+- **npm** ou **yarn**
+- **Chave API do Google Gemini** ([obter aqui](https://ai.google.dev/))
+
+### Instalação
+
+```bash
+# Clone o repositório
+git clone https://github.com/AnaRosa2/plano-bncc-f-cil.git
+cd plano-bncc-f-cil
+```
+
+### Configuração do Backend
+
+```bash
+# Entre na pasta do backend
+cd backend
+
+# Instale as dependências
+npm install
+
+# Configure a variável de ambiente
+echo "GEMINI_API_KEY=SUA_CHAVE_AQUI" > .env
+
+# Inicie o servidor (porta 3333)
+npx ts-node src/server.ts
+```
+
+### Configuração do Frontend
+
+```bash
+# Em outro terminal, entre na pasta do frontend
+cd frontend
+
+# Instale as dependências
+npm install
+
+# Configure a URL da API
+echo "VITE_API_URL=http://localhost:3333" > .env
+
+# Inicie o servidor de desenvolvimento (porta 8081)
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Acessar a Aplicação
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Abra o navegador em: **http://localhost:8081**
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 📁 Estrutura do Projeto
 
-## What technologies are used for this project?
+```
+plano-bncc-f-cil/
+├── frontend/                 # Aplicação React
+│   ├── src/
+│   │   ├── components/      # Componentes React reutilizáveis
+│   │   ├── contexts/        # Context API (estado global)
+│   │   ├── pages/           # Páginas da aplicação
+│   │   ├── services/        # Serviço de comunicação com API
+│   │   ├── utils/           # Utilitários (geração de PDF)
+│   │   └── types/           # Tipos TypeScript
+│   └── package.json
+│
+├── backend/                  # API Node.js + Express
+│   ├── src/
+│   │   ├── routes/          # Rotas da API
+│   │   ├── services/        # Lógica de negócio e IA
+│   │   ├── utils/           # Utilitários (BNCC, RAG)
+│   │   └── server.ts        # Entrada da aplicação
+│   └── package.json
+│
+└── README.md                 # Este arquivo
+```
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🎥 Demonstração
 
-## How can I deploy this project?
+### Fluxo de Uso
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+1. **Criar Disciplina**
+   - Informar nome, ano/série e descrição
+   - Exemplo: "Cultura Digital - 6º ano EF"
 
-## Can I connect a custom domain to my Lovable project?
+2. **Adicionar Unidade**
+   - Criar manualmente OU
+   - Usar sugestões da IA
 
-Yes, you can!
+3. **Gerar Plano de Aula**
+   - Clique em "Gerar Plano de Aula com IA"
+   - Aguarde processamento (5-10 segundos)
+   - Conteúdo alinhado à BNCC gerado automaticamente
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+4. **Gerar Atividade Avaliativa**
+   - Escolha tipo: Objetiva / Discursiva / Prática
+   - IA gera atividade coerente com o plano
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+5. **Exportar em PDF**
+   - Clique em "Baixar PDF"
+   - Documento completo com unidade, plano e atividade
+
+### Screenshots
+
+_(Adicionar screenshots aqui antes da apresentação)_
+
+---
+
+## 👥 Equipe
+
+- **Líder:** [Nome do Líder]
+- **Integrante 2:** [Nome]
+- **Integrante 3:** [Nome]
+
+**Curso:** Tecnologia em Análise e Desenvolvimento de Sistemas (TADS)  
+**Instituição:** IFPI Campus Piripiri  
+**Hackathon:** Janeiro 2026
+
+---
+
+## 📄 Licença
+
+Este projeto foi desenvolvido para fins educacionais no contexto do Hackathon IFPI 2026.
+
+---
+
+## 🏆 Considerações para Avaliação
+
+### Pontos Fortes
+
+- ✅ **Sistema 100% funcional** - Todos os requisitos obrigatórios implementados
+- ✅ **IA real integrada** - Não usa templates mockados, gera conteúdo dinâmico
+- ✅ **RAG com BNCC** - Base de conhecimento oficial carregada
+- ✅ **Código profissional** - TypeScript, organização clara, separação frontend/backend
+- ✅ **UX moderna** - shadcn/ui, responsivo, feedback visual
+- ✅ **Funcionalidade extra** - Exportação PDF (não solicitada no edital)
+
+### Decisões Técnicas
+
+1. **Separação Frontend/Backend** - Facilita manutenção e escalabilidade
+2. **TypeScript** - Reduz bugs, melhora DX
+3. **Context API** - Gerenciamento de estado simples e eficaz
+4. **pdfmake** - Gera PDFs no cliente, sem dependência do backend
+
+### Próximos Passos (Opcional)
+
+- [ ] Implementar RF06 (geração de slides)
+- [ ] Melhorar RAG com embeddings semânticos
+- [ ] Adicionar histórico de gerações
+- [ ] Testes automatizados
+
+---
+
+## 📞 Contato
+
+Para dúvidas sobre o projeto:
+- **GitHub:** [AnaRosa2/plano-bncc-f-cil](https://github.com/AnaRosa2/plano-bncc-f-cil)
+- **E-mail:** [email-do-lider@example.com]
+
+---
+
+**Desenvolvido com 💙 para o Hackathon IFPI 2026**
