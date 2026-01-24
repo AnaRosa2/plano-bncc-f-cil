@@ -1,6 +1,7 @@
 // src/routes/unidades.routes.ts
 import { Router } from "express";
 import { gerarConteudo, gerarAtividade, sugerirUnidades } from "../services/geracao.service";
+import { gerarSlides } from "../services/geracao.service.slides";
 
 const router = Router();
 
@@ -55,6 +56,25 @@ router.post('/sugerir-tema', async (req, res) => {
   } catch (error: any) {
     console.error('[unidades/sugerir-tema] Erro:', error?.message || error, error?.stack);
     res.status(500).json({ error: 'Falha ao sugerir unidades.' });
+  }
+});
+
+// RF06 - Gerar slides educacionais
+router.post('/slides', async (req, res) => {
+  try {
+    const { tema, disciplina, anoSerie } = req.body;
+    console.log('[unidades/slides] origin:', req.headers.origin || req.ip);
+    console.log('[unidades/slides] body:', JSON.stringify(req.body));
+
+    if (!tema || !disciplina) {
+      return res.status(400).json({ error: 'Tema e disciplina são obrigatórios.' });
+    }
+
+    const slides = await gerarSlides(tema, disciplina, anoSerie);
+    res.json(slides);
+  } catch (error: any) {
+    console.error('[unidades/slides] Erro:', error?.message || error, error?.stack);
+    res.status(500).json({ error: 'Falha ao gerar slides.' });
   }
 });
 

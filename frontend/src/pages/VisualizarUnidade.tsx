@@ -16,6 +16,9 @@ import {
   CheckCircle,
   Save,
   X,
+  Presentation,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,6 +43,7 @@ import { TipoAtividade, TIPOS_ATIVIDADE } from '@/types';
 
 import { generateUnitPDF } from '@/utils/pdfGenerator';
 import { Download } from 'lucide-react';
+import { gerarSlidesAPI, SlideAPI } from '@/services/apiService';
 
 const VisualizarUnidade: React.FC = () => {
   const { id: disciplinaId, unidadeId } = useParams<{ id: string; unidadeId: string }>();
@@ -61,6 +65,11 @@ const VisualizarUnidade: React.FC = () => {
   const [editingPlano, setEditingPlano] = useState(false);
   const [editingAtividade, setEditingAtividade] = useState(false);
   const [tipoAtividade, setTipoAtividade] = useState<TipoAtividade>('discursiva');
+
+  // Estados para slides
+  const [slides, setSlides] = useState<SlideAPI[]>([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [loadingSlides, setLoadingSlides] = useState(false);
 
   // Estados de edição
   const [planoEditado, setPlanoEditado] = useState({
@@ -112,6 +121,28 @@ const VisualizarUnidade: React.FC = () => {
       title: 'Atividade gerada!',
       description: 'A IA criou uma atividade avaliativa para esta unidade.',
     });
+  };
+
+  // Handler para gerar slides
+  const handleGerarSlides = async () => {
+    setLoadingSlides(true);
+    try {
+      const slidesGerados = await gerarSlidesAPI(unidade.tema, disciplina.nome, disciplina.anoSerie);
+      setSlides(slidesGerados);
+      setCurrentSlide(0);
+      toast({
+        title: 'Slides gerados!',
+        description: `${slidesGerados.length} slides criados com IA.`,
+      });
+    } catch (error) {
+      toast({
+        title: 'Erro ao gerar slides',
+        description: 'Tente novamente em alguns instantes.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoadingSlides(false);
+    }
   };
 
   const handleEditarPlano = () => {
@@ -227,6 +258,10 @@ const VisualizarUnidade: React.FC = () => {
             <TabsTrigger value="completo" className="flex-1 sm:flex-none">
               <Layers className="h-4 w-4 mr-2" />
               Visão Completa
+            </TabsTrigger>
+            <TabsTrigger value="slides" className="flex-1 sm:flex-none">
+              <Presentation className="h-4 w-4 mr-2" />
+              Slides
             </TabsTrigger>
           </TabsList>
 
@@ -579,6 +614,102 @@ const VisualizarUnidade: React.FC = () => {
                 title="Material incompleto"
                 description="Gere o plano de aula e a atividade avaliativa nas abas correspondentes para visualizar o material completo."
               />
+            )}
+          </TabsContent>
+
+          {/* Tab: Slides */}
+          <TabsContent value="slides" className="space-y-4">
+            {loadingSlides ? (
+              <LoadingSpinner message="Gerando slides com IA..." />
+            ) : slides.length === 0 ? (
+              <Card className="edu-card">
+                <CardContent className="pt-6">
+                  <EmptyState
+                    icon={Presentation}
+                    title="Nenhum slide gerado"
+                    description="Gere uma apresentação de slides educacionais com IA. Perfeito para usar em sala de aula ou projetor."
+                    action={{
+                      label: 'Gerar Slides com IA',
+                      onClick: handleGerarSlides,
+                      icon: Sparkles,
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {/* Slide Atual */}
+                <Card className="edu-card min-h-[400px] flex flex-col">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="flex items-center gap-2">
+                        <Presentation className="h-5 w-5 text-primary" />
+                        Slide {currentSlide + 1} de {slides.length}
+                      </CardTitle>
+                      <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded capitalize">
+                        {slides[currentSlide]?.tipo}
+                      </span>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="flex-1 flex flex-col justify-center">
+                    <div className="text-center space-y-4">
+                      <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                        {slides[currentSlide]?.titulo}
+                      </h2>
+                      <p className="text-lg text-muted-foreground whitespace-pre-line max-w-2xl mx-auto">
+                        {slides[currentSlide]?.conteudo}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Navegação dos Slides */}
+                <div className="flex items-center justify-center gap-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentSlide(prev => Math.max(0, prev - 1))}
+                    disabled={currentSlide === 0}
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-1" />
+                    Anterior
+                  </Button>
+
+                  <div className="flex gap-1">
+                    {slides.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentSlide(index)}
+                        className={`w-3 h-3 rounded-full transition-colors ${index === currentSlide
+                            ? 'bg-primary'
+                            : 'bg-muted hover:bg-muted-foreground/30'
+                          }`}
+                      />
+                    ))}
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentSlide(prev => Math.min(slides.length - 1, prev + 1))}
+                    disabled={currentSlide === slides.length - 1}
+                  >
+                    Próximo
+                    <ChevronRight className="h-4 w-4 ml-1" />
+                  </Button>
+                </div>
+
+                {/* Botão para regenerar */}
+                <div className="flex justify-center">
+                  <Button variant="outline" onClick={handleGerarSlides}>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Gerar Novos Slides
+                  </Button>
+                </div>
+
+                <GuidanceMessage variant="tip">
+                  <strong>Dica:</strong> Use as setas do teclado ou clique nos botões para navegar entre os slides.
+                  Você pode projetar esta tela em sala de aula!
+                </GuidanceMessage>
+              </div>
             )}
           </TabsContent>
         </Tabs>

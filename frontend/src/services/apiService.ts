@@ -82,3 +82,31 @@ export async function sugerirUnidadesAPI(
 
     return await response.json();
 }
+
+// Interface para slides
+export interface SlideAPI {
+    titulo: string;
+    conteudo: string;
+    tipo: 'titulo' | 'conteudo' | 'questao' | 'conclusao';
+}
+
+// Gerar slides educacionais com IA (RF06)
+export async function gerarSlidesAPI(
+    tema: string,
+    disciplina: string,
+    anoSerie?: string
+): Promise<SlideAPI[]> {
+    const response = await fetch(`${API_BASE_URL}/unidades/slides`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tema, disciplina, anoSerie }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Erro ao gerar slides');
+    }
+
+    return await response.json();
+}
