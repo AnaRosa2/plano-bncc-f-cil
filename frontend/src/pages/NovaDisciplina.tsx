@@ -117,7 +117,6 @@ const NovaDisciplina: React.FC = () => {
                       <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
                         Principais
                       </div>
-                      <SelectItem value="Cultura Digital">Cultura Digital</SelectItem>
                       <SelectItem value="Português">Português</SelectItem>
                       <SelectItem value="Matemática">Matemática</SelectItem>
 

@@ -64,7 +64,6 @@ export const ANOS_SERIES = [
 ];
 
 export const DISCIPLINAS_SUGERIDAS = [
-  'Cultura Digital',
   'Português',
   'Matemática',
   'História',
