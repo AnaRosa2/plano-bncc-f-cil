@@ -647,12 +647,12 @@ const VisualizarUnidade: React.FC = () => {
                   >
                     {/* Background Gradiente baseado no tipo do slide */}
                     <div className={`absolute inset-0 ${slides[currentSlide]?.tipo === 'titulo'
-                        ? 'bg-gradient-to-br from-primary via-primary/90 to-primary/70'
-                        : slides[currentSlide]?.tipo === 'questao'
-                          ? 'bg-gradient-to-br from-amber-500 via-orange-500 to-red-500'
-                          : slides[currentSlide]?.tipo === 'conclusao'
-                            ? 'bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500'
-                            : 'bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900'
+                      ? 'bg-gradient-to-br from-primary via-primary/90 to-primary/70'
+                      : slides[currentSlide]?.tipo === 'questao'
+                        ? 'bg-gradient-to-br from-amber-500 via-orange-500 to-red-500'
+                        : slides[currentSlide]?.tipo === 'conclusao'
+                          ? 'bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500'
+                          : 'bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900'
                       }`} />
 
                     {/* Padrão decorativo */}
@@ -689,8 +689,8 @@ const VisualizarUnidade: React.FC = () => {
 
                       {/* Título do Slide */}
                       <h2 className={`font-bold mb-6 leading-tight ${slides[currentSlide]?.tipo === 'titulo'
-                          ? 'text-3xl md:text-5xl lg:text-6xl text-center'
-                          : 'text-2xl md:text-3xl lg:text-4xl'
+                        ? 'text-3xl md:text-5xl lg:text-6xl text-center'
+                        : 'text-2xl md:text-3xl lg:text-4xl'
                         }`}>
                         {slides[currentSlide]?.titulo}
                       </h2>
@@ -745,8 +745,8 @@ const VisualizarUnidade: React.FC = () => {
                         key={index}
                         onClick={() => setCurrentSlide(index)}
                         className={`w-10 h-2 rounded-full transition-all duration-300 ${index === currentSlide
-                            ? 'bg-primary scale-110'
-                            : 'bg-muted hover:bg-muted-foreground/50'
+                          ? 'bg-primary scale-110'
+                          : 'bg-muted hover:bg-muted-foreground/50'
                           }`}
                         title={`Slide ${index + 1}: ${slide.titulo}`}
                       />
@@ -783,6 +783,25 @@ const VisualizarUnidade: React.FC = () => {
                   >
                     <Copy className="h-4 w-4 mr-2" />
                     Copiar para Canva/PPT
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      // Copiar para clipboard e abrir Canva
+                      const slidesText = slides.map((s, i) =>
+                        `SLIDE ${i + 1} - ${s.titulo}\n${s.conteudo.replace(/\\n/g, '\n')}`
+                      ).join('\n\n---\n\n');
+                      navigator.clipboard.writeText(slidesText);
+                      // Abrir Canva com template de apresentação
+                      window.open('https://www.canva.com/create/presentations/', '_blank');
+                      toast({
+                        title: 'Abrindo Canva!',
+                        description: 'Conteúdo copiado. Cole no template.',
+                        duration: 5000
+                      });
+                    }}
+                  >
+                    <Presentation className="h-4 w-4 mr-2" />
+                    Abrir no Canva
                   </Button>
                 </div>
 
