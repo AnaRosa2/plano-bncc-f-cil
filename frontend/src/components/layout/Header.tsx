@@ -20,10 +20,8 @@ const Header: React.FC<HeaderProps> = ({ breadcrumbs = [] }) => {
     <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo e Nome */}
-        <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg ai-gradient text-white shadow-md">
-            <span className="font-heading font-bold text-sm">BC</span>
-          </div>
+        <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <BookOpen className="h-8 w-8 text-primary" />
           <div className="hidden sm:block">
             <h1 className="text-lg font-heading font-semibold text-foreground">Plano BNCC</h1>
             <p className="text-xs text-muted-foreground">Sistema de Planejamento</p>
