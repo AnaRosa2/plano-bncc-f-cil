@@ -10,17 +10,23 @@ export function getBnccText(): string {
     const filePath = path.join(__dirname, 'BNCC_EI_EF_110518_versaofinal.txt');
     if (fs.existsSync(filePath)) {
       const raw = fs.readFileSync(filePath, 'utf-8');
-      // Limitar tamanho para evitar prompts excessivos (ajustável)
-      cachedText = raw.slice(0, 30_000); // 30KB
+      // Aumentado de 30KB para 100KB para melhor qualidade RAG
+      cachedText = raw.slice(0, 100_000); // 100KB de contexto BNCC
       return cachedText;
     } else {
-      console.warn('BNCC TXT não encontrado em', filePath);
+      console.warn('⚠️ BNCC TXT não encontrado em', filePath);
     }
   } catch (err) {
-    console.warn('Erro ao ler BNCC TXT:', err);
+    console.warn('⚠️ Erro ao ler BNCC TXT:', err);
   }
 
-  // Fallback curto
-  cachedText = `Competência Geral 5 da BNCC: "Utilizar tecnologias digitais de forma crítica, ética e responsável."`;
+  // Fallback expandido com mais competências
+  cachedText = `
+BNCC - Base Nacional Comum Curricular
+
+Competência Geral 5: Utilizar tecnologias digitais de comunicação e informação de forma crítica, significativa, reflexiva e ética nas diversas práticas do cotidiano (incluindo as escolares) ao se comunicar, acessar e disseminar informações, produzir conhecimentos e resolver problemas.
+
+Cultura Digital: Compreender, utilizar e criar tecnologias digitais de informação e comunicação de forma crítica, significativa, reflexiva e ética nas diversas práticas sociais (incluindo as escolares) para se comunicar, acessar e disseminar informações, produzir conhecimentos, resolver problemas e exercer protagonismo e autoria na vida pessoal e coletiva.
+  `.trim();
   return cachedText;
 }

@@ -12,16 +12,34 @@ export async function gerarConteudo(disciplina: string, tema: string) {
   const prompt = `
 ${bncc}
 
-Crie UM ÚNICO plano de aula sobre "${tema}" para a disciplina "${disciplina}".
-Siga EXATAMENTE estas regras:
-1. Responda APENAS com um objeto JSON
-2. NÃO use colchetes [] (não é array)
-3. NÃO adicione texto antes ou depois do JSON
-4. Use ESTA estrutura exata:
-{"objetivo":"...","metodologia":"...","meta":"...","atividade":"..."}
+Você é um assistente pedagógico especializado em criar planos de aula alinhados à BNCC.
 
-Exemplo válido:
-{"objetivo":"Ensinar o uso ético da tecnologia.","metodologia":"Debate em grupo.","meta":"Desenvolver senso crítico digital.","atividade":"Criar um guia de boas práticas online."}
+CRIE UM PLANO DE AULA DETALHADO sobre "${tema}" para a disciplina "${disciplina}".
+
+Diretrizes:
+- Alinhe com as competências e habilidades da BNCC mencionadas acima
+- Seja específico e prático para uso em sala de aula
+- Adapte a linguagem ao nível da disciplina
+- Inclua metodologias ativas e participativas
+- Considere recursos digitais quando apropriado
+
+RETORNE APENAS UM OBJETO JSON com esta estrutura exata:
+{
+  "objetivo": "Objetivo de aprendizagem claro e mensurável (3-4 sentenças)",
+  "metodologia": "Metodologia detalhada com etapas (5-7 sentenças)",
+  "meta": "Meta pedagógica alinhada à BNCC (2-3 sentenças)",
+  "atividade": "Descrição de atividade prática engajadora (4-5 sentenças)"
+}
+
+Exemplo para "Fake News" em "Cultura Digital":
+{
+  "objetivo": "Desenvolver senso crítico para identificar desinformação online. Ensinar técnicas de checagem de fatos. Promover cidadania digital responsável.",
+  "metodologia": "1) Apresentar exemplos reais de fake news. 2) Demonstrar ferramentas de fact-checking. 3) Dividir turma em grupos para análise de notícias. 4) Apresentação dos grupos com justificativas. 5) Discussão coletiva sobre impactos sociais. 6) Síntese e fixação com quiz interativo.",
+  "meta": "Formar cidadãos digitais críticos conforme Competência 5 da BNCC. Desenvolver habilidades de análise e verificação de informações.",
+  "atividade": "Cada grupo recebe 3 notícias (2 falsas, 1 verdadeira) e deve investigar usando fact-checkers como Agência Lupa e Aos Fatos. Apresentam descobertas com evidências. Criam guia ilustrado de 'Como Identificar Fake News' para compartilhar na escola."
+}
+
+APENAS JSON, sem texto adicional:
 `;
 
   const respostaBruta = await gerarTextoComIA(prompt);
@@ -42,14 +60,14 @@ Exemplo válido:
       ...conteudo
     };
   } catch (error) {
-    console.error('Erro ao parsear JSON:', respostaBruta);
-    // Fallback pedagógico
+    console.error('❌ Erro ao parsear JSON:', respostaBruta);
+    // Fallback pedagógico melhorado
     return {
       planoDeAula: `Plano de aula sobre ${tema} na disciplina ${disciplina}`,
-      objetivo: `Explorar o tema "${tema}" com foco em Cultura Digital.`,
-      metodologia: "Aula dialogada com análise crítica de fontes digitais.",
-      meta: "Desenvolver competência digital conforme a BNCC.",
-      atividade: `Pesquisa guiada sobre "${tema}" com produção de relatório ético-digital.`
+      objetivo: `Desenvolver compreensão crítica e prática sobre ${tema}, promovendo competências digitais conforme a BNCC. Capacitar alunos para aplicação ética e consciente dos conhecimentos.`,
+      metodologia: "Aula interativa com apresentação de conceitos, demonstração prática, atividade em grupos colaborativos, discussão reflexiva e síntese coletiva. Uso de recursos audiovisuais e tecnologias digitais quando disponíveis.",
+      meta: "Promover aprendizagem significativa alinhada às competências da BNCC, especialmente Competência 5 (Cultura Digital). Desenvolver pensamento crítico e autonomia.",
+      atividade: `Projeto prático em grupos: pesquisa guiada sobre ${tema}, análise crítica de fontes, produção de material educativo (apresentação, vídeo ou infográfico) e compartilhamento com a turma.`
     };
   }
 }
