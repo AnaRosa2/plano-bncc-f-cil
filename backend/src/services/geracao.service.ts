@@ -21,9 +21,10 @@ Crie um PLANO DE AULA COMPLETO E PRÁTICO sobre "${tema}" para a disciplina "${d
 === REQUISITOS ===
 1. FOCO NO TEMA: O plano deve ser sobre "${tema}", não sobre teoria pedagógica
 2. PRÁTICO: Deve ser imediatamente utilizável por qualquer professor
-3. PROFUNDO: Conteúdo substancial, não genérico
-4. PROGRESSIVO: Considerando diferentes níveis de aprendizagem
-5. CONTEXTUALIZADO: Situações reais que os alunos vivenciam
+3. NÃO USE ASTERISCOS (**) para negrito ou negritos internos. Use apenas letras maiúsculas para destacar rótulos ou títulos.
+4. PROFUNDO: Conteúdo substancial, não genérico
+5. PROGRESSIVO: Considerando diferentes níveis de aprendizagem
+6. CONTEXTUALIZADO: Situações reais que os alunos vivenciam
 
 === ESTRUTURA DO JSON ===
 {
@@ -247,7 +248,8 @@ Os CRITÉRIOS DE AVALIAÇÃO devem incluir:\n1. DIMENSÕES: O que está sendo av
 }
 
 === IMPORTANTE ===
-- Foque no CONTEÚDO do tema "${tema}", não em teoria pedagógica
+- NÃO USE ASTERISCOS (**) para negrito.
+- Use letras MAIÚSCULAS para títulos internos.
 - Seja prático - professor vai usar isto para avaliar alunos reais
 - Crie atividades desafiadoras mas viáveis
 - APENAS JSON (ARRAY), sem texto adicional:

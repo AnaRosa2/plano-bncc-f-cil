@@ -35,29 +35,34 @@ Crie uma APRESENTAÇÃO DE SLIDES COMPLETA sobre "${tema}" para "${disciplina}"$
 
 ===  TIPOS DE SLIDES ===
 - TITULO (1): Abertura impactante
-- CONTEUDO (5-6): Desenvolvimento conceitual progressivo
-- QUESTAO (2): Momentos de reflexão e interação
-- CONCLUSAO (1): Síntese e call-to-action
+- CONTEUDO (3-4): Desenvolvimento conceitual
+- PRATICA (1-2): Atividade prática ou mão na massa
+- QUESTAO (1-2): Reflexão ou desafio
+- CONCLUSAO (1): Síntese e próximos passos
 
 === ESTRUTURA ===
 - titulo: Frase impactante (máx 8 palavras)
-- conteudo: 4-6 bullet points substantivos OU 2-3 parágrafos
+- subtitulo: Frase de apoio (opcional)
+- conteudo: 3-5 tópicos ou parágrafos
+- icon: Nome de um ícone da Lucide (ex: Rocket, Lightbulb, Users)
 - Linguagem acessível mas não simplista
-- Incluir dados, exemplos reais quando apropriado
 
 IMPORTANTE:
+- NÃO USE ASTERISCOS (**) para negrito ou destaque.
+- Use letras MAIÚSCULAS para títulos ou termos importantes.
 - Foque no CONTEÚDO de "${tema}", não em teoria pedagógica
 - Slides devem engajar, não apenas informar
-- Inclua dados reais e exemplos práticos quando possível
 - RETORNE APENAS JSON (ARRAY), sem texto adicional:
 
 Formato de resposta:
 [
   {
     "numero": 1,
-    "titulo": "Título impactante",
-    "conteudo": "Conteúdo do slide separado por \\\\n",
-    "tipo": "titulo|conteudo|questao|conclusao"
+    "titulo": "Título",
+    "subtitulo": "Subtítulo opcional",
+    "conteudo": "Conteúdo...",
+    "tipo": "titulo|conteudo|pratica|questao|conclusao",
+    "icon": "nome-do-icone"
   }
 ]
 `;

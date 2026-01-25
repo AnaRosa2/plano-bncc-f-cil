@@ -12,9 +12,9 @@ import { errorHandler } from "./middlewares/errorHandler";
 const app = express();
 const isDev = process.env.NODE_ENV !== 'production';
 app.use(cors({
-  origin: isDev ? true : (process.env.FRONTEND_URL || '*')
+  origin: isDev ? true : (process.env.FRONTEND_URL || 'http://localhost:8081')
 }));
-console.log(`CORS configured. Development mode: ${isDev}. FRONTEND_URL: ${process.env.FRONTEND_URL || 'ANY (*)'}`);
+console.log(`CORS configured. Development mode: ${isDev}. FRONTEND_URL: ${process.env.FRONTEND_URL || 'not set'}`);
 
 app.use(express.json());
 
@@ -38,11 +38,6 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3333;
-
-if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-    console.log(`API rodando em http://localhost:${PORT}`);
-  });
-}
-
-export { app };
+app.listen(PORT, () => {
+  console.log(`API rodando na porta ${PORT}`);
+});
