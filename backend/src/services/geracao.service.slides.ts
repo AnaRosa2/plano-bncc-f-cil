@@ -1,4 +1,8 @@
 // src/services/geracao.service.slides.ts
+/**
+ * Serviço para gerar slides educacionais usando IA (Google Gemini)
+ */
+
 import { gerarTextoComIA } from './ai-gemini.service';
 import { getBnccText } from '../utils/bncc';
 
