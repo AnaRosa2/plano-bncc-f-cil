@@ -38,10 +38,5 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 app.listen(3333, () => {
-  console.log("✅ API rodando em http://localhost:3333");
-  console.log("📚 Endpoints disponíveis:");
-  console.log("  POST /unidades - Gerar plano de aula");
-  console.log("  POST /unidades/atividade - Gerar atividade");
-  console.log("  POST /unidades/sugerir-tema - Sugerir unidades");
-  console.log("  POST /atividades/gerar - Gerar atividade");
+  console.log("API rodando em http://localhost:3333");
 });
