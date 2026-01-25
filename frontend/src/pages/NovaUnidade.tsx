@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import PageContainer from '@/components/layout/PageContainer';
 import GuidanceMessage from '@/components/shared/GuidanceMessage';
@@ -23,6 +24,11 @@ const NovaUnidade: React.FC = () => {
   const [tema, setTema] = useState('');
   const [objetivoGeral, setObjetivoGeral] = useState('');
   const [habilidadesBNCC, setHabilidadesBNCC] = useState('');
+
+  // Checkboxes de geração automática
+  const [gerarPlano, setGerarPlano] = useState(true);
+  const [gerarAtividade, setGerarAtividade] = useState(true);
+  const [gerarSlides, setGerarSlides] = useState(true);
 
   if (!disciplina) {
     navigate('/');
@@ -57,35 +63,35 @@ const NovaUnidade: React.FC = () => {
   };
 
   const handleGerarTemaIA = async () => {
-  if (!tema.trim()) {
-    toast({
-      title: 'Informe um tema',
-      description: 'Digite um tema base para a geração com IA.',
-      variant: 'destructive',
-    });
-    return;
-  }
+    if (!tema.trim()) {
+      toast({
+        title: 'Informe um tema',
+        description: 'Digite um tema base para a geração com IA.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-  try {
-    const resultado = await gerarUnidade(
-      disciplina.nome,
-      tema
-    );
+    try {
+      const resultado = await gerarUnidade(
+        disciplina.nome,
+        tema
+      );
 
-    setObjetivoGeral(resultado.planoDeAula);
+      setObjetivoGeral(resultado.planoDeAula);
 
-    toast({
-      title: 'Conteúdo gerado com IA',
-      description: 'O plano de aula foi gerado automaticamente.',
-    });
-  } catch (error) {
-    toast({
-      title: 'Erro ao gerar conteúdo',
-      description: 'Não foi possível gerar o conteúdo com IA.',
-      variant: 'destructive',
-    });
-  }
-};
+      toast({
+        title: 'Conteúdo gerado com IA',
+        description: 'O plano de aula foi gerado automaticamente.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Erro ao gerar conteúdo',
+        description: 'Não foi possível gerar o conteúdo com IA.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   return (
     <PageContainer
@@ -171,6 +177,58 @@ const NovaUnidade: React.FC = () => {
                 identificar quais habilidades serão desenvolvidas, garantindo uma educação integral
                 e alinhada às diretrizes nacionais.
               </GuidanceMessage>
+
+              {/* Gerar Materiais Automaticamente */}
+              <div className="space-y-3 pt-2">
+                <Label className="text-base">Gerar materiais automaticamente</Label>
+                <p className="text-sm text-muted-foreground">
+                  Selecione quais materiais você deseja gerar com IA ao criar esta unidade:
+                </p>
+
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="gerarPlano"
+                      checked={gerarPlano}
+                      onCheckedChange={(checked) => setGerarPlano(checked as boolean)}
+                    />
+                    <Label
+                      htmlFor="gerarPlano"
+                      className="text-sm font-normal cursor-pointer"
+                    >
+                      Gerar Plano de Aula
+                    </Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="gerarAtividade"
+                      checked={gerarAtividade}
+                      onCheckedChange={(checked) => setGerarAtividade(checked as boolean)}
+                    />
+                    <Label
+                      htmlFor="gerarAtividade"
+                      className="text-sm font-normal cursor-pointer"
+                    >
+                      Gerar Atividade
+                    </Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="gerarSlides"
+                      checked={gerarSlides}
+                      onCheckedChange={(checked) => setGerarSlides(checked as boolean)}
+                    />
+                    <Label
+                      htmlFor="gerarSlides"
+                      className="text-sm font-normal cursor-pointer"
+                    >
+                      Gerar Slides de Apoio
+                    </Label>
+                  </div>
+                </div>
+              </div>
 
               {/* Botões */}
               <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4">

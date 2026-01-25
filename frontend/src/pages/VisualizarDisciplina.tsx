@@ -107,6 +107,13 @@ const VisualizarDisciplina: React.FC = () => {
 
   return (
     <PageContainer breadcrumbs={[{ label: disciplina.nome }]}>
+      {/* Saudação */}
+      <div className="mb-6">
+        <p className="text-lg text-muted-foreground">
+          Bem-vindo à disciplina de <span className="font-semibold text-foreground">{disciplina.nome}</span>!
+        </p>
+      </div>
+
       {/* Cabeçalho da Disciplina */}
       <div className="mb-8">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">

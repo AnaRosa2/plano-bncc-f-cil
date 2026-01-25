@@ -31,8 +31,8 @@ Crie um PLANO DE AULA COMPLETO E PRÁTICO sobre "${tema}" para a disciplina "${d
     - Objetivo geral claro e mensurável
     - 3-4 objetivos específicos (o que os alunos vão SABER FAZER ao final)
     - Competências desenvolvidas (pensamento crítico, criatividade, colaboração, etc.)
-    - Conexões com outras disciplinas ou temas",
-    
+    - Conexões com outras disciplinas ou temas)",
+
   "metodologia": "METODOLOGIA DETALHADA (6 momentos):
     - MOMENTO 1 (10 min): Como iniciar e engajar os alunos
     - MOMENTO 2 (15 min): Situação-problema ou desafio instigante
@@ -40,12 +40,12 @@ Crie um PLANO DE AULA COMPLETO E PRÁTICO sobre "${tema}" para a disciplina "${d
     - MOMENTO 4 (25 min): Atividade prática colaborativa
     - MOMENTO 5 (15 min): Síntese e consolidação do aprendizado
     - MOMENTO 6 (5 min): Fechamento e conexão com próxima aula",
-    
+
   "meta": "METAS E COMPETÊNCIAS (2-3 parágrafos):
     - Principais habilidades desenvolvidas na aula
     - Como isso prepara os alunos para a vida real
     - Indicadores de que a aula foi bem-sucedida",
-    
+
   "atividade": "ATIVIDADE PRÁTICA PRINCIPAL (detalhamento completo):
     - Descrição passo a passo da atividade
     - Materiais necessários (digitais e físicos)
@@ -65,11 +65,7 @@ OBJETIVOS ESPECÍFICOS:
 • Reconhecer diferentes tipos de golpes digitais (phishing, perfis falsos, links maliciosos)
 • Criar senhas seguras e entender a importância da autenticação
 • Desenvolver senso crítico para não cair em armadilhas online
-• Produzir um guia de segurança para compartilhar com a família
-
-COMPETÊNCIAS: Pensamento crítico, resolução de problemas, responsabilidade digital e comunicação
-
-CONEXÕES: Língua Portuguesa (interpretação de mensagens suspeitas), Matemática (probabilidade de ataques), Sociologia (impactos na sociedade)",
+• Produzir um guia de segurança para compartilhar com a família",
 
   "metodologia": "MOMENTO 1 - ENGAJAMENTO (10 min):
 Perguntar: 'Quem aqui já clicou em um link e depois pensou: será que era seguro?' Enquete rápida no celular sobre experiências com segurança digital. Compartilhar manchetes recentes de vazamentos de dados que afetaram milhões de pessoas.
@@ -129,12 +125,12 @@ AVALIAÇÃO:
 • Completou o checklist? (3 pontos)
 • Qualidade das recomendações? (4 pontos)
 • Evidência de conversa familiar? (2 pontos)
-• Reflexão sobre aprendizados? (1 ponto)
+• Reflexão sobre aprendimentos? (1 ponto)
 
 PRODUTO FINAL: Relatório do check-up + 3 ações concretas implementadas"
 }
 
-IMPORTANTE: 
+IMPORTANTE:
 - Foque no CONTEÚDO do tema "${tema}", não em explicar teoria pedagógica
 - Seja prático e direto - professor quer usar isso amanhã na sala
 - Mencione competências naturalmente, quando relevante (não force)
@@ -163,44 +159,10 @@ IMPORTANTE:
     // Fallback pedagógico melhorado
     return {
       planoDeAula: `Plano de aula sobre ${tema} na disciplina ${disciplina}`,
-      objetivo: `OBJETIVO GERAL: Desenvolver compreensão crítica e prática sobre ${tema}, promovendo competências digitais conforme a BNCC.
-
-OBJETIVOS ESPECÍFICOS:
-• Analisar conceitos fundamentais de ${tema} e sua relevância no contexto atual
-• Aplicar conhecimentos em situações práticas do cotidiano
-• Avaliar criticamente informações e fontes relacionadas ao tema
-• Criar produtos que demonstrem domínio dos conceitos aprendidos
-
-COMPETÊNCIAS BNCC: CG1 (Conhecimento), CG2 (Pensamento Científico), CG5 (Cultura Digital)`,
-      metodologia: `MOMENTO 1 - ACOLHIMENTO (10 min): Roda de conversa inicial sobre experiências prévias com ${tema}.
-
-MOMENTO 2 - PROBLEMATIZAÇÃO (15 min): Apresentação de situação-problema real que desperte curiosidade e engajamento.
-
-MOMENTO 3 - DESENVOLVIMENTO (20 min): Exposição dialogada com recursos audiovisuais, demonstrações práticas e exemplos contextualizados.
-
-MOMENTO 4 - PRÁTICA (25 min): Atividade colaborativa em grupos pequenos para aplicação dos conceitos.
-
-MOMENTO 5 - SISTEMATIZAÇÃO (15 min): Construção coletiva de síntese do aprendizado com participação de todos.
-
-MOMENTO 6 - ENCERRAMENTO (5 min): Conexão com próxima aula e orientações para atividades complementares.`,
-      meta: `COMPETÊNCIAS GERAIS BNCC:
-• CG5 (Cultura Digital): Compreender, utilizar e criar tecnologias digitais de forma crítica e ética
-• CG2 (Pensamento Científico): Investigar, analisar e resolver problemas
-• CG7 (Argumentação): Formular e defender ideias com base em evidências
-
-INDICADORES DE SUCESSO:
-• Participação ativa nas discussões
-• Conclusão satisfatória das atividades práticas
-• Demonstração de compreensão nos momentos de sistematização`,
-      atividade: `ATIVIDADE PRÁTICA: Projeto em grupos sobre ${tema}
-
-DESCRIÇÃO: Pesquisa guiada, análise crítica de fontes, produção de material educativo e apresentação.
-
-MATERIAIS: Dispositivos digitais, materiais de papelaria, acesso à internet.
-
-ORGANIZAÇÃO: Grupos de 4-5 alunos.
-
-PRODUTO FINAL: Apresentação, infográfico ou vídeo educativo sobre o tema estudado.`
+      objetivo: `OBJETIVO GERAL: Desenvolver compreensão crítica e prática sobre ${tema}, promovendo competências digitais conforme a BNCC.\n\nOBJETIVOS ESPECÍFICOS:\n• Analisar conceitos fundamentais de ${tema} e sua relevância no contexto atual\n• Aplicar conhecimentos em situações práticas do cotidiano\n• Avaliar criticamente informações e fontes relacionadas ao tema\n• Criar produtos que demonstrem domínio dos conceitos aprendidos\n\nCOMPETÊNCIAS BNCC: CG1 (Conhecimento), CG2 (Pensamento Científico), CG5 (Cultura Digital)`,
+      metodologia: `MOMENTO 1 - ACOLHIMENTO (10 min): Roda de conversa inicial sobre experiências prévias com ${tema}.\n\nMOMENTO 2 - PROBLEMATIZAÇÃO (15 min): Apresentação de situação-problema real que desperte curiosidade e engajamento.\n\nMOMENTO 3 - DESENVOLVIMENTO (20 min): Exposição dialogada com recursos audiovisuais, demonstrações práticas e exemplos contextualizados.\n\nMOMENTO 4 - PRÁTICA (25 min): Atividade colaborativa em grupos pequenos para aplicação dos conceitos.\n\nMOMENTO 5 - SISTEMATIZAÇÃO (15 min): Construção coletiva de síntese do aprendizado com participação de todos.\n\nMOMENTO 6 - ENCERRAMENTO (5 min): Conexão com próxima aula e orientações para atividades complementares.`,
+      meta: `COMPETÊNCIAS GERAIS BNCC:\n• CG5 (Cultura Digital): Compreender, utilizar e criar tecnologias digitais de forma crítica e ética\n• CG2 (Pensamento Científico): Investigar, analisar e resolver problemas\n• CG7 (Argumentação): Formular e defender ideias com base em evidências\n\nINDICADORES DE SUCESSO:\n• Participação ativa nas discussões\n• Conclusão satisfatória das atividades práticas\n• Demonstração de compreensão nos momentos de sistematização`,
+      atividade: `ATIVIDADE PRÁTICA: Projeto em grupos sobre ${tema}\n\nDESCRIÇÃO: Pesquisa guiada, análise crítica de fontes, produção de material educativo e apresentação.\n\nMATERIAIS: Dispositivos digitais, materiais de papelaria, acesso à internet.\n\nORGANIZAÇÃO: Grupos de 4-5 alunos.\n\nPRODUTO FINAL: Apresentação, infográfico ou vídeo educativo sobre o tema estudado.`
     };
   }
 }
@@ -249,27 +211,11 @@ export async function gerarAtividade(tema: string, tipo: string, anoSerie?: stri
   console.log(`[geracao.service] gerarAtividade called: tema=${tema} tipo=${tipo} anoSerie=${anoSerie} quantidade=${quantidade}`);
 
   const instrucoesDetalhadas: Record<string, string> = {
-    objetiva: `ATIVIDADE DE MÚLTIPLA ESCOLHA (5-7 questões):
-- Cada questão deve ter contexto/situação-problema antes das alternativas
-- 4 alternativas (A, B, C, D) sendo apenas 1 correta
-- Distratores (alternativas incorretas) devem ser plausíveis e comuns erros conceituais
-- Inclua questões de diferentes níveis: conhecimento, compreensão, aplicação e análise
-- Contextualize com situações reais do cotidiano dos alunos`,
+    objetiva: `ATIVIDADE DE MÚLTIPLA ESCOLHA (5-7 questões):\n- Cada questão deve ter contexto/situação-problema antes das alternativas\n- 4 alternativas (A, B, C, D) sendo apenas 1 correta\n- Distratores (alternativas incorretas) devem ser plausíveis e comuns erros conceituais\n- Inclua questões de diferentes níveis: conhecimento, compreensão, aplicação e análise\n- Contextualize com situações reais do cotidiano dos alunos`,
 
-    discursiva: `ATIVIDADE DISCURSIVA REFLEXIVA (4-5 questões):
-- Questões que exijam argumentação, análise crítica e produção textual
-- Inclua situações-problema reais para análise
-- Peça posicionamento fundamentado do aluno
-- Solicite conexões com a realidade e experiências pessoais
-- Questões progressivas: da compreensão à síntese e avaliação`,
+    discursiva: `ATIVIDADE DISCURSIVA REFLEXIVA (4-5 questões):\n- Questões que exijam argumentação, análise crítica e produção textual\n- Inclua situações-problema reais para análise\n- Peça posicionamento fundamentado do aluno\n- Solicite conexões com a realidade e experiências pessoais\n- Questões progressivas: da compreensão à síntese e avaliação`,
 
-    pratica: `PROJETO PRÁTICO EM GRUPO:
-- Descrição completa do projeto com todas as etapas
-- Divisão de papéis sugerida para os membros do grupo
-- Cronograma de execução (pelo menos 3 etapas)
-- Lista de materiais e recursos necessários
-- Produto final esperado com especificações claras
-- Rubrica de avaliação com critérios detalhados`
+    pratica: `PROJETO PRÁTICO EM GRUPO:\n- Descrição completa do projeto com todas as etapas\n- Divisão de papéis sugerida para os membros do grupo\n- Cronograma de execução (pelo menos 3 etapas)\n- Lista de materiais e recursos necessários\n- Produto final esperado com especificações claras\n- Rubrica de avaliação com critérios detalhados`
   };
 
   const bncc = await getBnccSnippet();
@@ -289,26 +235,18 @@ Ano/Série: ${anoSerie || 'Ensino Fundamental/Médio'}
 ${instrucoesDetalhadas[tipo] || instrucoesDetalhadas['discursiva']}
 
 === ESTRUTURA ===
-Para CADA atividade, o enunciado DEVE conter:
-1. CONTEXTUALIZAÇÃO: Situação real que introduz o problema
-2. INSTRUÇÕES CLARAS: O que o aluno deve fazer
-3. QUESTÕES/TAREFAS: Detalhamento do que será avaliado
-4. ORIENTAÇÕES: Tempo, recursos, formato de resposta
+Para CADA atividade, o enunciado DEVE conter:\n1. CONTEXTUALIZAÇÃO: Situação real que introduz o problema\n2. INSTRUÇÕES CLARAS: O que o aluno deve fazer\n3. QUESTÕES/TAREFAS: Detalhamento do que será avaliado\n4. ORIENTAÇÕES: Tempo, recursos, formato de resposta
 
-Os CRITÉRIOS DE AVALIAÇÃO devem incluir:
-1. DIMENSÕES: O que está sendo avaliado
-2. NÍVEIS: Excelente, Satisfatório, Em desenvolvimento, Insuficiente
-3. PONTOS: Peso de cada critério
-4. INDICADORES: O que caracteriza cada nível
+=== CRITÉRIOS DE AVALIAÇÃO ===
+Os CRITÉRIOS DE AVALIAÇÃO devem incluir:\n1. DIMENSÕES: O que está sendo avaliado\n2. NÍVEIS: Excelente, Satisfatório, Em desenvolvimento, Insuficiente\n3. PONTOS: Peso de cada critério\n4. INDICADORES: O que caracteriza cada nível
 
 === EXEMPLO DE QUALIDADE ===
 {
   "enunciado": "ATIVIDADE: ANÁLISE CRÍTICA DE FAKE NEWS\\n\\nCONTEXTO:\\nEm 2022, uma imagem de urnas sendo transportadas em carro particular viralizou com a legenda 'urnas sendo manipuladas'. Milhares compartilharam antes de descobrir: eram urnas de TREINAMENTO para capacitação.\\n\\nINSTRUÇÕES:\\nAnalise o caso e responda de forma fundamentada.\\n\\nQUESTÕES:\\n\\n1. ANÁLISE (2 pts): Identifique 3 elementos suspeitos sobre essa notícia. Justifique.\\n\\n2. INVESTIGAÇÃO (2 pts): Como você verificaria usando ferramentas online? Cite 2 ferramentas.\\n\\n3. IMPACTO (3 pts): Analise os impactos sociais da disseminação de fake news sobre eleições.\\n\\n4. AÇÃO PRÁTICA (3 pts): Crie um guia (5-7 tópicos) para sua família sobre como identificar fake news.\\n\\nTEMPO: 45 min\\nFORMATO: Respostas dissertativas, mínimo 8 linhas",
-  
   "criteriosAvaliacao": "AVALIAÇÃO - TOTAL: 10 PONTOS\\n\\nANÁLISE CRÍTICA (4 pts)\\nEXCELENTE (4): Identifica com precisão, fundamenta claramente\\nSATISFATÓRIO (3): Identifica corretamente, fundamentação parcial\\nEM DESENVOLVIMENTO (2): Identificação superficial\\nINSUFICIENTE (0-1): Não identifica adequadamente\\n\\nINVESTIGAÇÃO (2 pts)\\nEXCELENTE (2): Processo sistemático, ferramentas corretas\\nSATISFATÓRIO (1.5): Processo razoável\\nEM DESENVOLVIMENTO (1): Processo vago\\nINSUFICIENTE (0-0.5): Sem conhecimento de verificação\\n\\nCONSCIÊNCIA SOCIAL (2 pts)\\nEXCELENTE (2): Análise profunda, múltiplas perspectivas\\nSATISFATÓRIO (1.5): Análise adequada\\nEM DESENVOLVIMENTO (1): Análise superficial\\nINSUFICIENTE (0-0.5): Não demonstra compreensão\\n\\nAPLICAÇÃO PRÁTICA (2 pts)\\nEXCELENTE (2): Guia claro, prático, aplicável\\nSATISFATÓRIO (1.5): Guia útil\\nEM DESENVOLVIMENTO (1): Guia genérico\\nINSUFICIENTE (0-0.5): Guia confuso"
 }
 
-IMPORTANTE:
+=== IMPORTANTE ===
 - Foque no CONTEÚDO do tema "${tema}", não em teoria pedagógica
 - Seja prático - professor vai usar isto para avaliar alunos reais
 - Crie atividades desafiadoras mas viáveis
@@ -341,52 +279,10 @@ IMPORTANTE:
     return parsed.slice(0, quantidade);
   } catch (error) {
     console.error('Erro ao parsear JSON de atividade (array):', respostaBruta, error);
-    // Fallback com atividade detalhada
+    // Fallback: criar quantidade de atividades simples
     const fallback = Array.from({ length: quantidade }, (_, i) => ({
-      enunciado: `ATIVIDADE AVALIATIVA: ${tema.toUpperCase()}
-
-📌 CONTEXTUALIZAÇÃO:
-Considerando os conceitos estudados sobre ${tema} e sua importância no contexto da cultura digital contemporânea...
-
-📝 INSTRUÇÕES:
-Responda às questões abaixo de forma completa e fundamentada.
-
-❓ QUESTÕES:
-
-1. COMPREENSÃO (2 pontos):
-Explique com suas palavras o que você entende sobre ${tema} e qual sua importância no mundo atual.
-
-2. ANÁLISE (3 pontos):
-Identifique e analise um exemplo real de como ${tema} impacta a vida das pessoas no cotidiano.
-
-3. APLICAÇÃO (3 pontos):
-Proponha uma ação prática que você e sua comunidade poderiam realizar relacionada a ${tema}.
-
-4. REFLEXÃO (2 pontos):
-Como os conhecimentos sobre ${tema} podem contribuir para uma sociedade mais consciente e ética?
-
-⏰ TEMPO SUGERIDO: 40 minutos`,
-      criteriosAvaliacao: `📊 CRITÉRIOS DE AVALIAÇÃO - TOTAL: 10 PONTOS
-
-🎯 CONHECIMENTO CONCEITUAL (2 pontos):
-• Demonstra compreensão dos conceitos fundamentais
-• Usa vocabulário adequado ao tema
-
-🔍 CAPACIDADE ANALÍTICA (3 pontos):
-• Identifica exemplos relevantes
-• Estabelece relações pertinentes
-• Fundamenta análises com argumentos
-
-💡 APLICAÇÃO PRÁTICA (3 pontos):
-• Propõe soluções viáveis
-• Considera o contexto social
-• Demonstra criatividade
-
-📢 REFLEXÃO CRÍTICA (2 pontos):
-• Apresenta posicionamento fundamentado
-• Conecta tema com questões éticas e sociais
-
-📚 COMPETÊNCIAS BNCC: CG2, CG5, CG7`
+      enunciado: `ATIVIDADE AVALIATIVA: ${tema.toUpperCase()}\n\n📌 CONTEXTUALIZAÇÃO:\nConsiderando os conceitos estudados sobre ${tema} e sua importância no contexto da cultura digital contemporânea...\n\n📝 INSTRUÇÕES:\nResponda às questões abaixo de forma completa e fundamentada.\n\n❓ QUESTÕES:\n\n1. COMPREENSÃO (2 pontos):\nExplique com suas palavras o que você entende sobre ${tema} e qual sua importância no mundo atual.\n\n2. ANÁLISE (3 pontos):\nIdentifique e analise um exemplo real de como ${tema} impacta a vida das pessoas no cotidiano.\n\n3. APLICAÇÃO (3 pontos):\nProponha uma ação prática que você e sua comunidade poderiam realizar relacionada a ${tema}.\n\n4. REFLEXÃO (2 pontos):\nComo os conhecimentos sobre ${tema} podem contribuir para uma sociedade mais consciente e ética?\n\n⏰ TEMPO SUGERIDO: 40 minutos`,
+      criteriosAvaliacao: `📊 CRITÉRIOS DE AVALIAÇÃO - TOTAL: 10 PONTOS\n\n🎯 CONHECIMENTO CONCEITUAL (2 pontos):\n• Demonstra compreensão dos conceitos fundamentais\n• Usa vocabulário adequado ao tema\n\n🔍 CAPACIDADE ANALÍTICA (3 pontos):\n• Identifica exemplos relevantes\n• Estabelece relações pertinentes\n• Fundamenta análises com argumentos\n\n💡 APLICAÇÃO PRÁTICA (3 pontos):\n• Propõe soluções viáveis\n• Considera o contexto social\n• Demonstra criatividade\n\n📢 REFLEXÃO CRÍTICA (2 pontos):\n• Apresenta posicionamento fundamentado\n• Conecta tema com questões éticas e sociais\n\n📚 COMPETÊNCIAS BNCC: CG2, CG5, CG7`
     }));
     return fallback;
   }

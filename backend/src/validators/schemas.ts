@@ -30,7 +30,7 @@ export function validatePlanoAula(req: Request, res: Response, next: NextFunctio
 /**
  * Validar requisição de atividade
  */
-export function validateAtividade(req: Request, res: Response, NextFunction) {
+export function validateAtividade(req: Request, res: Response, next: NextFunction) {
     const { tema, tipo } = req.body;
 
     if (!tema || typeof tema !== 'string') {

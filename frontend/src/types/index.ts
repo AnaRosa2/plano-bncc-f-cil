@@ -62,3 +62,19 @@ export const ANOS_SERIES = [
   '2º ano EM',
   '3º ano EM',
 ];
+
+export const DISCIPLINAS_SUGERIDAS = [
+  'Português',
+  'Matemática',
+  'História',
+  'Geografia',
+  'Ciências',
+  'Biologia',
+  'Física',
+  'Química',
+  'Artes',
+  'Educação Física',
+  'Inglês',
+  'Filosofia',
+  'Sociologia',
+];

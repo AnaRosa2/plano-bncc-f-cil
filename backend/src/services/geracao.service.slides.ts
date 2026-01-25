@@ -16,12 +16,8 @@ export async function gerarSlides(tema: string, disciplina: string, anoSerie?: s
   const bncc = await getBnccSnippet();
 
   const prompt = `
-${bncc}
-
 === CONTEXTO ===
-Você é um DESIGNER INSTRUCIONAL com especialização em criar apresentações educacionais impactantes
-
-. Você domina técnicas de storytelling educacional e engajamento de alunos.
+Você é um DESIGNER INSTRUCIONAL com especialização em criar apresentações educacionais impactantes e engajadoras. Você domina técnicas de storytelling educacional.
 
 === MISSÃO ===
 Crie uma APRESENTAÇÃO DE SLIDES COMPLETA sobre "${tema}" para "${disciplina}"${anoSerie ? ` (${anoSerie})` : ''}.
@@ -29,11 +25,11 @@ Crie uma APRESENTAÇÃO DE SLIDES COMPLETA sobre "${tema}" para "${disciplina}"$
 === REQUISITOS ===
 1. QUANTIDADE: 8-10 slides (apresentação de 40-50 min)
 2. NARRATIVA: Contar uma "história" pedagógica com início, meio e fim
-3. PROFUNDIDADE: Conteúdo substancial, não tópicos genéricos
+3. PROFUNDIDADE: Conteúdo substancial e relevante, não tópicos genéricos
 4. ENGAJAMENTO: Elementos interativos, perguntas e reflexões
 5. CONTEXTUALIZAÇÃO: Situações reais que os alunos vivenciam
 
-=== TIPOS DE SLIDES ===
+===  TIPOS DE SLIDES ===
 - TITULO (1): Abertura impactante
 - CONTEUDO (5-6): Desenvolvimento conceitual progressivo
 - QUESTAO (2): Momentos de reflexão e interação
@@ -45,52 +41,21 @@ Crie uma APRESENTAÇÃO DE SLIDES COMPLETA sobre "${tema}" para "${disciplina}"$
 - Linguagem acessível mas não simplista
 - Incluir dados, exemplos reais quando apropriado
 
-=== EXEMPLO DE QUALIDADE - "Cyberbullying" ===
-[
-  {
-    "numero": 1,
-    "titulo": "Cyberbullying: A Violência Invisível",
-    "conteudo": "- 37% dos jovens brasileiros já sofreram algum tipo de agressão online\\n- Diferente do bullying tradicional, persegue a vítima 24h por dia\\n- Consequências: ansiedade, depressão, isolamento\\n- Hoje vamos entender, identificar e aprender a combater",
-    "tipo": "titulo"
-  },
-  {
-    "numero": 2,
-    "titulo": "O Que Caracteriza?",
-    "conteudo": "- REPETIÇÃO: Ataques sistemáticos, não incidentes isolados\\n- INTENÇÃO: Propósito deliberado de humilhar ou intimidar\\n- DESEQUILÍBRIO: Anonimato, viralização, número de agressores\\n- AMBIENTE DIGITAL: Redes, jogos, grupos de mensagens\\n- PERMANÊNCIA: Conteúdo pode ficar online para sempre",
-    "tipo": "conteudo"
-  },
-  {
-    "numero": 3,
-    "titulo": "Formas Que Você Precisa Conhecer",
-    "conteudo": "- FLAMING: Provocações e insultos em espaços públicos\\n- DENIGRATION: Espalhar fofocas e mentiras\\n- IMPERSONATION: Criar perfis falsos em nome de outros\\n- OUTING: Expor informações íntimas\\n- EXCLUSION: Remover propositalmente de grupos\\n- CYBERSTALKING: Perseguição online sistemática",
-    "tipo": "conteudo"
-  },
-  {
-    "numero": 4,
-    "titulo": "🤔 Momento de Reflexão",
-    "conteudo": "Pense por 1 minuto:\\n\\n1. Você já presenciou cyberbullying?\\n\\n2. Como você reagiu (ou reagiria)?\\n\\n3. Por que tantos veem e não fazem nada?\\n\\n💬 Vamos compartilhar (sem expor nomes)",
-    "tipo": "questao"
-  },
-  {
-    "numero": 5,
-    "titulo": "Por Que Pessoas Agridem Online?",
-    "conteudo": "- EFEITO DESINIBIÇÃO: Anonimato reduz freios morais\\n- DESSENSIBILIZAÇÃO: Não ver o sofrimento afasta empatia\\n- PRESSÃO SOCIAL: Busca de status no grupo\\n- TRANSFERÊNCIA: Vítimas podem virar agressores\\n- IMPUNIDADE PERCEBIDA: Crença que não haverá consequências",
-    "tipo": "conteudo"
-  },
-  {
-    "numero": 6,
-    "titulo": "Como Agir: Seu Papel",
-    "conteudo": "SE VOCÊ É VÍTIMA:\\n- Não responda (é o que ele quer)\\n- Salve evidências\\n- Bloqueie e denuncie\\n- Converse com adulto de confiança\\n\\nSE VOCÊ TESTEMUNHA:\\n- Não curta, não compartilhe\\n- Ofereça apoio à vítima\\n- Denuncie na plataforma e escola",
-    "tipo": "conteudo"
-  }
-]
-
 IMPORTANTE:
 - Foque no CONTEÚDO de "${tema}", não em teoria pedagógica
 - Slides devem engajar, não apenas informar
-- Inclua dados reais e exemplos quando possível
-- Mencione competências naturalmente, sem forçar
-- APENAS JSON (ARRAY), sem texto adicional:
+- Inclua dados reais e exemplos práticos quando possível
+- RETORNE APENAS JSON (ARRAY), sem texto adicional:
+
+Formato de resposta:
+[
+  {
+    "numero": 1,
+    "titulo": "Título impactante",
+    "conteudo": "Conteúdo do slide separado por \\\\n",
+    "tipo": "titulo|conteudo|questao|conclusao"
+  }
+]
 `;
 
   try {
