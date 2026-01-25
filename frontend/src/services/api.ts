@@ -2,7 +2,8 @@ export async function gerarUnidade(
   disciplina: string,
   tema: string
 ) {
-  const response = await fetch("http://localhost:3333/unidades", {
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3333";
+  const response = await fetch(`${API_URL}/unidades`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
