@@ -245,6 +245,17 @@ const VisualizarUnidade: React.FC = () => {
               </p>
             )}
           </div>
+
+          <div className="flex shrink-0 gap-2">
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => generateUnitPDF(unidade, disciplina, planoAula, atividadeAvaliativa)}
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden sm:inline">Baixar PDF</span>
+            </Button>
+          </div>
         </div>
       </div>
 
