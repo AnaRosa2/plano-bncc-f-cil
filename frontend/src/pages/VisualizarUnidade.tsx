@@ -1,14 +1,37 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  FileText, BookOpen, ClipboardCheck, Sparkles, Edit, Copy, Target, Clock, Layers, Wrench, MessageSquare, CheckCircle, Save, X, Presentation, ChevronLeft, ChevronRight
+  FileText,
+  BookOpen,
+  ClipboardCheck,
+  Sparkles,
+  Edit,
+  Copy,
+  Printer,
+  Target,
+  Clock,
+  Layers,
+  Wrench,
+  MessageSquare,
+  CheckCircle,
+  Save,
+  X,
+  Presentation,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import PageContainer from '@/components/layout/PageContainer';
 import GuidanceMessage from '@/components/shared/GuidanceMessage';
 import EmptyState from '@/components/shared/EmptyState';
@@ -17,6 +40,9 @@ import SectionCard from '@/components/shared/SectionCard';
 import { useApp } from '@/contexts/AppContext';
 import { useToast } from '@/hooks/use-toast';
 import { TipoAtividade, TIPOS_ATIVIDADE } from '@/types';
+
+import { generateUnitPDF } from '@/utils/pdfGenerator';
+import { Download } from 'lucide-react';
 import { gerarSlidesAPI, SlideAPI } from '@/services/apiService';
 
 const VisualizarUnidade: React.FC = () => {
@@ -24,55 +50,111 @@ const VisualizarUnidade: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const {
-    getDisciplina, getUnidade, getPlanoAula, getAtividadeAvaliativa,
-    gerarPlanoAula, gerarAtividadeAvaliativa, updatePlanoAula, updateAtividadeAvaliativa, isLoading
+    getDisciplina,
+    getUnidade,
+    getPlanoAula,
+    getAtividadeAvaliativa,
+    gerarPlanoAula,
+    gerarAtividadeAvaliativa,
+    updatePlanoAula,
+    updateAtividadeAvaliativa,
+    isLoading,
   } = useApp();
 
   const [activeTab, setActiveTab] = useState('plano');
   const [editingPlano, setEditingPlano] = useState(false);
   const [editingAtividade, setEditingAtividade] = useState(false);
   const [tipoAtividade, setTipoAtividade] = useState<TipoAtividade>('discursiva');
+
+  // Estados para slides
   const [slides, setSlides] = useState<SlideAPI[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loadingSlides, setLoadingSlides] = useState(false);
 
-  const [planoEditado, setPlanoEditado] = useState({ objetivos: '', conteudos: '', metodologia: '', recursosDidaticos: '', avaliacao: '', tempoEstimado: '' });
-  const [atividadeEditada, setAtividadeEditada] = useState({ enunciado: '', criteriosAvaliacao: '' });
+  // Estados de edição
+  const [planoEditado, setPlanoEditado] = useState({
+    objetivos: '',
+    conteudos: '',
+    metodologia: '',
+    recursosDidaticos: '',
+    avaliacao: '',
+    tempoEstimado: '',
+  });
+
+  const [atividadeEditada, setAtividadeEditada] = useState({
+    enunciado: '',
+    criteriosAvaliacao: '',
+  });
 
   const disciplina = getDisciplina(disciplinaId || '');
   const unidade = getUnidade(unidadeId || '');
   const planoAula = getPlanoAula(unidadeId || '');
   const atividadeAvaliativa = getAtividadeAvaliativa(unidadeId || '');
 
-  if (!disciplina || !unidade) return <PageContainer><EmptyState icon={FileText} title="Não encontrado" description="Unidade não existe." action={{ label: 'Voltar', onClick: () => navigate('/') }} /></PageContainer>;
+  if (!disciplina || !unidade) {
+    return (
+      <PageContainer>
+        <EmptyState
+          icon={FileText}
+          title="Unidade não encontrada"
+          description="A unidade que você procura não existe ou foi removida."
+          action={{
+            label: 'Voltar',
+            onClick: () => navigate(disciplinaId ? `/disciplina/${disciplinaId}` : '/'),
+          }}
+        />
+      </PageContainer>
+    );
+  }
 
   const handleGerarPlano = async () => {
-    try {
-      await gerarPlanoAula(unidade.id);
-      toast({ title: 'Plano gerado!', description: 'O plano foi criado e alinhado à BNCC.' });
-    } catch (e) { toast({ title: 'Erro', description: 'Falha ao gerar o plano.', variant: 'destructive' }); }
+    await gerarPlanoAula(unidade.id);
+    toast({
+      title: 'Plano de aula gerado!',
+      description: 'A IA criou um plano de aula baseado no tema da unidade.',
+    });
   };
 
   const handleGerarAtividade = async () => {
-    try {
-      await gerarAtividadeAvaliativa(unidade.id, tipoAtividade);
-      toast({ title: 'Atividade gerada!', description: 'Avaliação criada com sucesso.' });
-    } catch (e) { toast({ title: 'Erro', description: 'Falha ao gerar a atividade.', variant: 'destructive' }); }
+    await gerarAtividadeAvaliativa(unidade.id, tipoAtividade);
+    toast({
+      title: 'Atividade gerada!',
+      description: 'A IA criou uma atividade avaliativa para esta unidade.',
+    });
   };
 
+  // Handler para gerar slides
   const handleGerarSlides = async () => {
     setLoadingSlides(true);
     try {
-      const res = await gerarSlidesAPI(unidade.tema, disciplina.nome, disciplina.anoSerie);
-      setSlides(res);
+      const slidesGerados = await gerarSlidesAPI(unidade.tema, disciplina.nome, disciplina.anoSerie);
+      setSlides(slidesGerados);
       setCurrentSlide(0);
-      toast({ title: 'Slides gerados!', description: `${res.length} slides criados.` });
-    } catch (e) { toast({ title: 'Erro', variant: 'destructive' }); } finally { setLoadingSlides(false); }
+      toast({
+        title: 'Slides gerados!',
+        description: `${slidesGerados.length} slides criados com IA.`,
+      });
+    } catch (error) {
+      toast({
+        title: 'Erro ao gerar slides',
+        description: 'Tente novamente em alguns instantes.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoadingSlides(false);
+    }
   };
 
   const handleEditarPlano = () => {
     if (planoAula) {
-      setPlanoEditado({ ...planoAula });
+      setPlanoEditado({
+        objetivos: planoAula.objetivos,
+        conteudos: planoAula.conteudos,
+        metodologia: planoAula.metodologia,
+        recursosDidaticos: planoAula.recursosDidaticos,
+        avaliacao: planoAula.avaliacao,
+        tempoEstimado: planoAula.tempoEstimado,
+      });
       setEditingPlano(true);
     }
   };
@@ -81,13 +163,19 @@ const VisualizarUnidade: React.FC = () => {
     if (planoAula) {
       updatePlanoAula(planoAula.id, planoEditado);
       setEditingPlano(false);
-      toast({ title: 'Plano salvo!' });
+      toast({
+        title: 'Plano atualizado!',
+        description: 'Suas alterações foram salvas.',
+      });
     }
   };
 
   const handleEditarAtividade = () => {
     if (atividadeAvaliativa) {
-      setAtividadeEditada({ ...atividadeAvaliativa });
+      setAtividadeEditada({
+        enunciado: atividadeAvaliativa.enunciado,
+        criteriosAvaliacao: atividadeAvaliativa.criteriosAvaliacao,
+      });
       setEditingAtividade(true);
     }
   };
@@ -96,131 +184,575 @@ const VisualizarUnidade: React.FC = () => {
     if (atividadeAvaliativa) {
       updateAtividadeAvaliativa(atividadeAvaliativa.id, atividadeEditada);
       setEditingAtividade(false);
-      toast({ title: 'Atividade salva!' });
+      toast({
+        title: 'Atividade atualizada!',
+        description: 'Suas alterações foram salvas.',
+      });
     }
   };
 
+  const handleCopiar = (texto: string) => {
+    navigator.clipboard.writeText(texto);
+    toast({
+      title: 'Copiado!',
+      description: 'O conteúdo foi copiado para a área de transferência.',
+    });
+  };
+
+  const handleImprimir = () => {
+    window.print();
+  };
+
   return (
-    <PageContainer breadcrumbs={[{ label: disciplina.nome, href: `/disciplina/${disciplina.id}` }, { label: unidade.tema }]}>
+    <PageContainer
+      breadcrumbs={[
+        { label: disciplina.nome, href: `/disciplina/${disciplina.id}` },
+        { label: unidade.tema },
+      ]}
+    >
+      {/* Cabeçalho da Unidade */}
       <div className="mb-6">
-        <span className="bncc-badge mb-2"><Sparkles className="h-3 w-3" /> Cultura Digital</span>
-        <h1 className="text-2xl font-bold">{unidade.tema}</h1>
-        <p className="text-muted-foreground">{unidade.objetivoGeral}</p>
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div>
+            <span className="bncc-badge mb-2">
+              <Sparkles className="h-3 w-3" />
+              Cultura Digital
+            </span>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{unidade.tema}</h1>
+            <p className="text-muted-foreground mt-1">{unidade.objetivoGeral}</p>
+            {unidade.habilidadesBNCC && (
+              <p className="text-sm text-bncc mt-2">
+                <BookOpen className="h-3.5 w-3.5 inline mr-1" />
+                {unidade.habilidadesBNCC}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
 
-      {isLoading && <LoadingSpinner message="Consultando IA..." />}
+      {/* Loading */}
+      {isLoading && <LoadingSpinner message="Gerando conteúdo com IA..." />}
 
+      {/* Tabs */}
       {!isLoading && (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="plano"><FileText className="h-4 w-4 mr-2" /> Plano</TabsTrigger>
-            <TabsTrigger value="atividade"><ClipboardCheck className="h-4 w-4 mr-2" /> Atividade</TabsTrigger>
-            <TabsTrigger value="completo"><Layers className="h-4 w-4 mr-2" /> Visão Completa</TabsTrigger>
-            <TabsTrigger value="slides"><Presentation className="h-4 w-4 mr-2" /> Slides</TabsTrigger>
+          <TabsList className="w-full sm:w-auto">
+            <TabsTrigger value="plano" className="flex-1 sm:flex-none">
+              <FileText className="h-4 w-4 mr-2" />
+              Plano de Aula
+            </TabsTrigger>
+            <TabsTrigger value="atividade" className="flex-1 sm:flex-none">
+              <ClipboardCheck className="h-4 w-4 mr-2" />
+              Atividade
+            </TabsTrigger>
+            <TabsTrigger value="completo" className="flex-1 sm:flex-none">
+              <Layers className="h-4 w-4 mr-2" />
+              Visão Completa
+            </TabsTrigger>
+            <TabsTrigger value="slides" className="flex-1 sm:flex-none">
+              <Presentation className="h-4 w-4 mr-2" />
+              Slides
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="plano">
+          {/* Tab: Plano de Aula */}
+          <TabsContent value="plano" className="space-y-4">
             {!planoAula ? (
-              <EmptyState icon={FileText} title="Sem plano" description="Gere um plano de aula agora." action={{ label: 'Gerar com IA', onClick: handleGerarPlano, icon: Sparkles }} />
+              <Card className="edu-card">
+                <CardContent className="pt-6">
+                  <EmptyState
+                    icon={FileText}
+                    title="Nenhum plano de aula"
+                    description="Gere um plano de aula completo utilizando nossa IA como assistente pedagógico. O plano será alinhado à BNCC e ao tema desta unidade."
+                    action={{
+                      label: 'Gerar Plano de Aula com IA',
+                      onClick: handleGerarPlano,
+                      icon: Sparkles,
+                    }}
+                  />
+                </CardContent>
+              </Card>
             ) : editingPlano ? (
-              <Card><CardHeader><CardTitle>Editar Plano</CardTitle></CardHeader>
+              <Card className="edu-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Edit className="h-5 w-5" />
+                    Editar Plano de Aula
+                  </CardTitle>
+                </CardHeader>
                 <CardContent className="space-y-4">
-                  {Object.keys(planoEditado).map(k => (
-                    <div key={k} className="space-y-2"><Label className="capitalize">{k}</Label>
-                      <Textarea value={(planoEditado as any)[k]} onChange={e => setPlanoEditado(p => ({ ...p, [k]: e.target.value }))} />
+                  {Object.entries({
+                    objetivos: 'Objetivos',
+                    conteudos: 'Conteúdos',
+                    metodologia: 'Metodologia',
+                    recursosDidaticos: 'Recursos Didáticos',
+                    avaliacao: 'Avaliação',
+                    tempoEstimado: 'Tempo Estimado',
+                  }).map(([key, label]) => (
+                    <div key={key} className="space-y-2">
+                      <Label>{label}</Label>
+                      <Textarea
+                        value={planoEditado[key as keyof typeof planoEditado]}
+                        onChange={(e) =>
+                          setPlanoEditado((prev) => ({ ...prev, [key]: e.target.value }))
+                        }
+                        rows={key === 'tempoEstimado' ? 1 : 3}
+                        className="bg-background"
+                      />
                     </div>
                   ))}
-                  <div className="flex gap-2"><Button variant="outline" onClick={() => setEditingPlano(false)}>Cancelar</Button><Button onClick={handleSalvarPlano}>Salvar</Button></div>
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline" onClick={() => setEditingPlano(false)}>
+                      <X className="h-4 w-4" />
+                      Cancelar
+                    </Button>
+                    <Button onClick={handleSalvarPlano}>
+                      <Save className="h-4 w-4" />
+                      Salvar
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ) : (
               <Card className="edu-card">
                 <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <div><CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5 text-primary" /> Plano de Aula</CardTitle></div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        <FileText className="h-5 w-5 text-primary" />
+                        Plano de Aula
+                      </CardTitle>
+                      <CardDescription>
+                        {planoAula.geradoPorIA ? (
+                          <span className="flex items-center gap-1">
+                            <Sparkles className="h-3 w-3" />
+                            Gerado por IA
+                          </span>
+                        ) : (
+                          'Editado manualmente'
+                        )}
+                      </CardDescription>
+                    </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={handleEditarPlano}><Edit className="h-4 w-4" /></Button>
-                      <Button variant="ai" size="sm" onClick={handleGerarPlano}><Sparkles className="h-4 w-4 mr-1" /> Gerar de novo</Button>
+                      <Button variant="outline" size="sm" onClick={handleEditarPlano}>
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          handleCopiar(
+                            `PLANO DE AULA: ${unidade.tema}\n\nOBJETIVOS:\n${planoAula.objetivos}\n\nCONTEÚDOS:\n${planoAula.conteudos}\n\nMETODOLOGIA:\n${planoAula.metodologia}\n\nRECURSOS:\n${planoAula.recursosDidaticos}\n\nAVALIAÇÃO:\n${planoAula.avaliacao}\n\nTEMPO: ${planoAula.tempoEstimado}`
+                          )
+                        }
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <SectionCard title="Objetivos" icon={Target}>{planoAula.objetivos}</SectionCard>
-                  <SectionCard title="Metodologia" icon={Wrench}>{planoAula.metodologia}</SectionCard>
-                  <SectionCard title="Atividade Prática" icon={Layers}>{planoAula.recursosDidaticos}</SectionCard>
+                  <SectionCard title="Objetivos" icon={Target}>
+                    {planoAula.objetivos}
+                  </SectionCard>
+                  <SectionCard title="Conteúdos" icon={BookOpen}>
+                    {planoAula.conteudos}
+                  </SectionCard>
+                  <SectionCard title="Metodologia" icon={Wrench}>
+                    {planoAula.metodologia}
+                  </SectionCard>
+                  <SectionCard title="Recursos Didáticos" icon={Layers}>
+                    {planoAula.recursosDidaticos}
+                  </SectionCard>
+                  <SectionCard title="Avaliação" icon={CheckCircle}>
+                    {planoAula.avaliacao}
+                  </SectionCard>
+                  <SectionCard title="Tempo Estimado" icon={Clock}>
+                    {planoAula.tempoEstimado}
+                  </SectionCard>
+
+                  <GuidanceMessage variant="tip">
+                    <strong>Você pode editar!</strong> O conteúdo gerado pela IA é uma sugestão.
+                    Sinta-se à vontade para adaptar o plano à sua realidade escolar e às
+                    necessidades dos seus alunos.
+                  </GuidanceMessage>
                 </CardContent>
               </Card>
             )}
           </TabsContent>
 
-          <TabsContent value="atividade">
+          {/* Tab: Atividade Avaliativa */}
+          <TabsContent value="atividade" className="space-y-4">
             {!atividadeAvaliativa ? (
-              <div className="max-w-xs mx-auto space-y-4 py-8">
-                <Select value={tipoAtividade} onValueChange={v => setTipoAtividade(v as TipoAtividade)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>{TIPOS_ATIVIDADE.map(t => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
-                </Select>
-                <Button variant="ai" className="w-full" onClick={handleGerarAtividade}><Sparkles className="h-4 w-4 mr-2" /> Gerar Atividade</Button>
-              </div>
+              <Card className="edu-card">
+                <CardContent className="pt-6">
+                  <div className="text-center mb-6">
+                    <ClipboardCheck className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">Nenhuma atividade avaliativa</h3>
+                    <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">
+                      Escolha o tipo de atividade e gere uma avaliação coerente com o tema da
+                      unidade.
+                    </p>
+                  </div>
+
+                  <div className="max-w-xs mx-auto space-y-4">
+                    <div className="space-y-2">
+                      <Label>Tipo de Atividade</Label>
+                      <Select
+                        value={tipoAtividade}
+                        onValueChange={(v) => setTipoAtividade(v as TipoAtividade)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {TIPOS_ATIVIDADE.map((tipo) => (
+                            <SelectItem key={tipo.value} value={tipo.value}>
+                              {tipo.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button variant="ai" className="w-full" onClick={handleGerarAtividade}>
+                      <Sparkles className="h-4 w-4" />
+                      Gerar Atividade com IA
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             ) : editingAtividade ? (
-              <Card className="edu-card"><CardContent className="space-y-4 pt-6"><Label>Enunciado</Label>
-                <Textarea rows={10} value={atividadeEditada.enunciado} onChange={e => setAtividadeEditada(p => ({ ...p, enunciado: e.target.value }))} />
-                <Label>Critérios</Label><Textarea value={atividadeEditada.criteriosAvaliacao} onChange={e => setAtividadeEditada(p => ({ ...p, criteriosAvaliacao: e.target.value }))} />
-                <div className="flex gap-2"><Button variant="outline" onClick={() => setEditingAtividade(false)}>Cancelar</Button><Button onClick={handleSalvarAtividade}>Salvar</Button></div>
-              </CardContent></Card>
+              <Card className="edu-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Edit className="h-5 w-5" />
+                    Editar Atividade Avaliativa
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Enunciado</Label>
+                    <Textarea
+                      value={atividadeEditada.enunciado}
+                      onChange={(e) =>
+                        setAtividadeEditada((prev) => ({ ...prev, enunciado: e.target.value }))
+                      }
+                      rows={10}
+                      className="bg-background font-mono text-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Critérios de Avaliação</Label>
+                    <Textarea
+                      value={atividadeEditada.criteriosAvaliacao}
+                      onChange={(e) =>
+                        setAtividadeEditada((prev) => ({
+                          ...prev,
+                          criteriosAvaliacao: e.target.value,
+                        }))
+                      }
+                      rows={4}
+                      className="bg-background"
+                    />
+                  </div>
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline" onClick={() => setEditingAtividade(false)}>
+                      <X className="h-4 w-4" />
+                      Cancelar
+                    </Button>
+                    <Button onClick={handleSalvarAtividade}>
+                      <Save className="h-4 w-4" />
+                      Salvar
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             ) : (
               <Card className="edu-card">
                 <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <div><CardTitle className="capitalize">{atividadeAvaliativa.tipo}</CardTitle></div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        <ClipboardCheck className="h-5 w-5 text-primary" />
+                        Atividade Avaliativa
+                      </CardTitle>
+                      <CardDescription className="flex items-center gap-2">
+                        <span className="capitalize">
+                          {TIPOS_ATIVIDADE.find((t) => t.value === atividadeAvaliativa.tipo)?.label}
+                        </span>
+                        {atividadeAvaliativa.geradoPorIA && (
+                          <span className="flex items-center gap-1 text-bncc">
+                            <Sparkles className="h-3 w-3" />
+                            IA
+                          </span>
+                        )}
+                      </CardDescription>
+                    </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={handleEditarAtividade}><Edit className="h-4 w-4" /></Button>
-                      <Button variant="outline" size="sm" onClick={() => handleGerarAtividade()}>Mudar Versão</Button>
+                      <Button variant="outline" size="sm" onClick={handleEditarAtividade}>
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          handleCopiar(
+                            `ATIVIDADE AVALIATIVA: ${unidade.tema}\n\n${atividadeAvaliativa.enunciado}\n\nCRITÉRIOS DE AVALIAÇÃO:\n${atividadeAvaliativa.criteriosAvaliacao}`
+                          )
+                        }
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <SectionCard title="Questões" icon={MessageSquare}>{atividadeAvaliativa.enunciado}</SectionCard>
-                  <SectionCard title="Critérios" icon={CheckCircle}>{atividadeAvaliativa.criteriosAvaliacao}</SectionCard>
+                  <SectionCard title="Enunciado" icon={MessageSquare}>
+                    {atividadeAvaliativa.enunciado}
+                  </SectionCard>
+                  <SectionCard title="Critérios de Avaliação" icon={CheckCircle}>
+                    {atividadeAvaliativa.criteriosAvaliacao}
+                  </SectionCard>
+
+                  <GuidanceMessage variant="tip">
+                    <strong>Personalize!</strong> Adapte a atividade ao nível da sua turma e aos
+                    recursos disponíveis na sua escola.
+                  </GuidanceMessage>
                 </CardContent>
               </Card>
             )}
           </TabsContent>
 
-          <TabsContent value="completo">
-            <div className="space-y-6">
-              <Card className="edu-card"><CardHeader><CardTitle>📚 {unidade.tema}</CardTitle></CardHeader><CardContent><p>{unidade.objetivoGeral}</p></CardContent></Card>
-              {planoAula && (
-                <Card className="edu-card"><CardHeader><CardTitle>Plano de Aula</CardTitle></CardHeader><CardContent className="space-y-4">
-                  <SectionCard title="Objetivos" icon={Target}>{planoAula.objetivos}</SectionCard>
-                  <SectionCard title="Metodologia" icon={Wrench}>{planoAula.metodologia}</SectionCard>
-                </CardContent></Card>
-              )}
-              {atividadeAvaliativa && (
-                <Card className="edu-card"><CardHeader><CardTitle>Atividade ({atividadeAvaliativa.tipo})</CardTitle></CardHeader><CardContent className="space-y-4">
-                  <SectionCard title="Enunciado" icon={MessageSquare}>{atividadeAvaliativa.enunciado}</SectionCard>
-                </CardContent></Card>
-              )}
-            </div>
+          {/* Tab: Visão Completa */}
+          <TabsContent value="completo" className="space-y-6">
+            <GuidanceMessage variant="info">
+              Esta é a visualização completa de todo o material da unidade, pronta para impressão ou
+              uso em sala de aula.
+            </GuidanceMessage>
+
+            {/* Resumo da Unidade */}
+            <Card className="edu-card">
+              <CardHeader>
+                <CardTitle>📚 {unidade.tema}</CardTitle>
+                <CardDescription>{disciplina.nome} • {disciplina.anoSerie}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">{unidade.objetivoGeral}</p>
+                {unidade.habilidadesBNCC && (
+                  <p className="text-sm text-bncc mt-2">
+                    <strong>BNCC:</strong> {unidade.habilidadesBNCC}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Plano de Aula Completo */}
+            {planoAula && (
+              <Card className="edu-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-primary" />
+                    Plano de Aula
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <SectionCard title="Objetivos" icon={Target}>
+                    {planoAula.objetivos}
+                  </SectionCard>
+                  <SectionCard title="Conteúdos" icon={BookOpen}>
+                    {planoAula.conteudos}
+                  </SectionCard>
+                  <SectionCard title="Metodologia" icon={Wrench}>
+                    {planoAula.metodologia}
+                  </SectionCard>
+                  <SectionCard title="Recursos Didáticos" icon={Layers}>
+                    {planoAula.recursosDidaticos}
+                  </SectionCard>
+                  <SectionCard title="Avaliação" icon={CheckCircle}>
+                    {planoAula.avaliacao}
+                  </SectionCard>
+                  <SectionCard title="Tempo Estimado" icon={Clock}>
+                    {planoAula.tempoEstimado}
+                  </SectionCard>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Atividade Avaliativa Completa */}
+            {atividadeAvaliativa && (
+              <Card className="edu-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ClipboardCheck className="h-5 w-5 text-primary" />
+                    Atividade Avaliativa
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <SectionCard title="Enunciado" icon={MessageSquare}>
+                    {atividadeAvaliativa.enunciado}
+                  </SectionCard>
+                  <SectionCard title="Critérios de Avaliação" icon={CheckCircle}>
+                    {atividadeAvaliativa.criteriosAvaliacao}
+                  </SectionCard>
+                </CardContent>
+              </Card>
+            )}
+
+            {!planoAula && !atividadeAvaliativa && (
+              <EmptyState
+                icon={Layers}
+                title="Material incompleto"
+                description="Gere o plano de aula e a atividade avaliativa nas abas correspondentes para visualizar o material completo."
+              />
+            )}
           </TabsContent>
 
-          <TabsContent value="slides">
-            {loadingSlides ? <LoadingSpinner message="Criando aula visual..." /> : slides.length === 0 ? (
-              <EmptyState icon={Presentation} title="Sem slides" description="Gere os slides para esta aula." action={{ label: 'Gerar Slides agora', onClick: handleGerarSlides, icon: Sparkles }} />
+          {/* Tab: Slides */}
+          <TabsContent value="slides" className="space-y-4">
+            {loadingSlides ? (
+              <LoadingSpinner message="Gerando slides com IA..." />
+            ) : slides.length === 0 ? (
+              <Card className="edu-card">
+                <CardContent className="pt-6">
+                  <EmptyState
+                    icon={Presentation}
+                    title="Nenhum slide gerado"
+                    description="Gere uma apresentação de slides educacionais com IA. Perfeito para usar em sala de aula ou projetor."
+                    action={{
+                      label: 'Gerar Slides com IA',
+                      onClick: handleGerarSlides,
+                      icon: Sparkles,
+                    }}
+                  />
+                </CardContent>
+              </Card>
             ) : (
-              <div className="space-y-6 text-center">
-                <div className="relative aspect-video rounded-xl bg-slate-800 flex items-center justify-center p-8 text-white shadow-xl">
-                  <div className="absolute top-4 left-4 opacity-50 text-sm">{currentSlide + 1} / {slides.length}</div>
-                  <div className="space-y-4">
-                    <h2 className="text-2xl font-bold">{slides[currentSlide]?.titulo}</h2>
-                    <p className="text-lg opacity-90 max-w-2xl mx-auto whitespace-pre-wrap">{slides[currentSlide]?.conteudo}</p>
+              <div className="space-y-6">
+                {/* Slide Atual - Design Profissional */}
+                <div className="relative">
+                  {/* Container do Slide com aspecto 16:9 */}
+                  <div
+                    className="relative w-full overflow-hidden rounded-2xl shadow-2xl"
+                    style={{ aspectRatio: '16/9' }}
+                  >
+                    {/* Background Gradiente baseado no tipo do slide */}
+                    <div className={`absolute inset-0 ${slides[currentSlide]?.tipo === 'titulo'
+                      ? 'bg-gradient-to-br from-primary via-primary/90 to-primary/70'
+                      : slides[currentSlide]?.tipo === 'questao'
+                        ? 'bg-gradient-to-br from-amber-500 via-orange-500 to-red-500'
+                        : slides[currentSlide]?.tipo === 'conclusao'
+                          ? 'bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500'
+                          : 'bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900'
+                      }`} />
+
+                    {/* Padrão decorativo */}
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full -translate-y-1/2 translate-x-1/2" />
+                      <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full translate-y-1/2 -translate-x-1/2" />
+                    </div>
+
+                    {/* Conteúdo do Slide */}
+                    <div className="relative h-full flex flex-col justify-center p-8 md:p-12 lg:p-16 text-white">
+
+                      {/* Número do slide */}
+                      <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6">
+                        <span className="text-white/60 text-sm font-medium">
+                          {currentSlide + 1} / {slides.length}
+                        </span>
+                      </div>
+
+                      {/* Logo/Marca */}
+                      <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6">
+                        <span className="text-white/40 text-xs font-medium">
+                          Plano BNCC • Cultura Digital
+                        </span>
+                      </div>
+
+                      {/* Título do Slide */}
+                      <h2 className={`font-bold mb-6 leading-tight ${slides[currentSlide]?.tipo === 'titulo'
+                        ? 'text-3xl md:text-5xl lg:text-6xl text-center'
+                        : 'text-2xl md:text-3xl lg:text-4xl'
+                        }`}>
+                        {slides[currentSlide]?.titulo}
+                      </h2>
+
+                      {/* Conteúdo do Slide */}
+                      <div className={`text-white/90 ${slides[currentSlide]?.tipo === 'titulo' ? 'text-center' : ''
+                        }`}>
+                        {slides[currentSlide]?.conteudo.split('\\n').map((line, idx) => {
+                          const cleanLine = line.trim();
+                          if (!cleanLine) return <div key={idx} className="h-3" />;
+
+                          // Formatar bullet points
+                          if (cleanLine.startsWith('-') || cleanLine.startsWith('•')) {
+                            return (
+                              <div key={idx} className="flex items-start gap-3 mb-3">
+                                <span className="w-2 h-2 mt-2 rounded-full bg-white/80 flex-shrink-0" />
+                                <span className="text-lg md:text-xl lg:text-2xl">
+                                  {cleanLine.replace(/^[-•]\s*/, '')}
+                                </span>
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <p key={idx} className="text-lg md:text-xl lg:text-2xl mb-2">
+                              {cleanLine}
+                            </p>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="flex justify-center gap-4">
-                  <Button variant="outline" disabled={currentSlide === 0} onClick={() => setCurrentSlide(p => p - 1)}>Anterior</Button>
-                  <Button variant="outline" disabled={currentSlide === slides.length - 1} onClick={() => setCurrentSlide(p => p + 1)}>Próximo</Button>
+
+                {/* Controles de Navegação */}
+                <div className="flex items-center justify-center gap-6">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={() => setCurrentSlide(prev => Math.max(0, prev - 1))}
+                    disabled={currentSlide === 0}
+                    className="gap-2"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                    Anterior
+                  </Button>
+
+                  {/* Indicadores de Slide */}
+                  <div className="flex gap-2">
+                    {slides.map((slide, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentSlide(index)}
+                        className={`w-10 h-2 rounded-full transition-all duration-300 ${index === currentSlide
+                          ? 'bg-primary scale-110'
+                          : 'bg-muted hover:bg-muted-foreground/50'
+                          }`}
+                        title={`Slide ${index + 1}: ${slide.titulo}`}
+                      />
+                    ))}
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={() => setCurrentSlide(prev => Math.min(slides.length - 1, prev + 1))}
+                    disabled={currentSlide === slides.length - 1}
+                    className="gap-2"
+                  >
+                    Próximo
+                    <ChevronRight className="h-5 w-5" />
+                  </Button>
                 </div>
-                <Button variant="outline" onClick={handleGerarSlides}><Sparkles className="h-4 w-4 mr-2" /> Gerar Novos Slides</Button>
+
+                {/* Ações */}
+                <div className="flex flex-wrap justify-center gap-3">
+                  <Button variant="outline" onClick={handleGerarSlides}>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Gerar Novos Slides
+                  </Button>
+                </div>
               </div>
             )}
           </TabsContent>
