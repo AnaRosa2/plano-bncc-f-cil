@@ -108,19 +108,37 @@ const VisualizarUnidade: React.FC = () => {
   }
 
   const handleGerarPlano = async () => {
-    await gerarPlanoAula(unidade.id);
-    toast({
-      title: 'Plano de aula gerado!',
-      description: 'A IA criou um plano de aula baseado no tema da unidade.',
-    });
+    try {
+      await gerarPlanoAula(unidade.id);
+      toast({
+        title: 'Plano de aula gerado!',
+        description: 'A IA criou um plano de aula baseado no tema da unidade.',
+      });
+    } catch (error) {
+      console.error('Erro ao gerar plano:', error);
+      toast({
+        title: 'Erro na geração',
+        description: 'Não foi possível gerar o plano de aula agora. Tente novamente.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleGerarAtividade = async () => {
-    await gerarAtividadeAvaliativa(unidade.id, tipoAtividade);
-    toast({
-      title: 'Atividade gerada!',
-      description: 'A IA criou uma atividade avaliativa para esta unidade.',
-    });
+    try {
+      await gerarAtividadeAvaliativa(unidade.id, tipoAtividade);
+      toast({
+        title: 'Atividade gerada!',
+        description: 'A IA criou uma atividade avaliativa para esta unidade.',
+      });
+    } catch (error) {
+      console.error('Erro ao gerar atividade:', error);
+      toast({
+        title: 'Erro na geração',
+        description: 'Não foi possível gerar a atividade agora. Tente novamente.',
+        variant: 'destructive',
+      });
+    }
   };
 
   // Handler para gerar slides

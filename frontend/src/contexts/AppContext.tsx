@@ -221,27 +221,29 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   // === PLANOS DE AULA ===
   const gerarPlanoAula = useCallback(async (unidadeId: string): Promise<PlanoAula> => {
+    console.log(`[AppContext] Iniciando gerarPlanoAula para unidade: ${unidadeId}`);
     setIsLoading(true);
 
     try {
       const unidade = unidades.find(u => u.id === unidadeId);
       if (!unidade) {
-        throw new Error('Unidade não encontrada');
+        throw new Error(`Unidade ${unidadeId} não encontrada no estado atual.`);
       }
 
       const disciplina = disciplinas.find(d => d.id === unidade.disciplinaId);
       const nomeDisciplina = disciplina?.nome || 'Disciplina';
 
-      // Chamar API real para gerar plano com IA
+      console.log(`[AppContext] Chamando API de Plano para tema: ${unidade.tema}`);
       const planoAPI = await gerarPlanoAulaAPI(nomeDisciplina, unidade.tema);
+      console.log('[AppContext] Resposta da API de Plano recebida com sucesso.');
 
       const novoPlano: PlanoAula = {
         id: generateId(),
         unidadeId,
-        objetivos: planoAPI.objetivo,
-        conteudos: planoAPI.meta,
-        metodologia: planoAPI.metodologia,
-        recursosDidaticos: planoAPI.atividade,
+        objetivos: planoAPI.objetivo || 'Objetivos gerados conforme o tema.',
+        conteudos: planoAPI.meta || 'Conteúdos alinhados à BNCC.',
+        metodologia: planoAPI.metodologia || 'Metodologia ativa sugerida.',
+        recursosDidaticos: planoAPI.atividade || 'Recursos digitais e físicos.',
         avaliacao: 'Avaliação conforme atividade gerada',
         tempoEstimado: '4 a 6 aulas de 50 minutos',
         geradoPorIA: true,
@@ -252,12 +254,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         return [...filtered, novoPlano];
       });
 
-      setIsLoading(false);
       return novoPlano;
     } catch (error) {
-      console.error('Erro ao gerar plano de aula:', error);
-      setIsLoading(false);
+      console.error('[AppContext] Erro crítico ao gerar plano de aula:', error);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   }, [unidades, disciplinas]);
 
@@ -271,26 +273,33 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   // === ATIVIDADES AVALIATIVAS ===
   const gerarAtividadeAvaliativa = useCallback(async (unidadeId: string, tipo: TipoAtividade): Promise<AtividadeAvaliativa> => {
+    console.log(`[AppContext] Iniciando gerarAtividadeAvaliativa para unidade: ${unidadeId}`);
     setIsLoading(true);
 
     try {
       const unidade = unidades.find(u => u.id === unidadeId);
       if (!unidade) {
-        throw new Error('Unidade não encontrada');
+        throw new Error(`Unidade ${unidadeId} não encontrada ao gerar atividade.`);
       }
 
       const disciplina = disciplinas.find(d => d.id === unidade.disciplinaId);
       const anoSerie = disciplina?.anoSerie;
 
-      // Chamar API real para gerar atividade com IA
+      console.log(`[AppContext] Chamando API de Atividade (${tipo}) para: ${unidade.tema}`);
       const atividadeAPI = await gerarAtividadeAPI(unidade.tema, tipo, anoSerie);
+
+      if (!atividadeAPI) {
+        throw new Error('API não retornou dados de atividade válidos.');
+      }
+
+      console.log('[AppContext] Resposta da API de Atividade recebida.');
 
       const novaAtividade: AtividadeAvaliativa = {
         id: generateId(),
         unidadeId,
-        enunciado: atividadeAPI.enunciado,
+        enunciado: atividadeAPI.enunciado || 'Enunciado da atividade pedagógica.',
         tipo,
-        criteriosAvaliacao: atividadeAPI.criteriosAvaliacao,
+        criteriosAvaliacao: atividadeAPI.criteriosAvaliacao || 'Critérios de avaliação alinhados à BNCC.',
         geradoPorIA: true,
       };
 
@@ -299,12 +308,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         return [...filtered, novaAtividade];
       });
 
-      setIsLoading(false);
       return novaAtividade;
     } catch (error) {
-      console.error('Erro ao gerar atividade avaliativa:', error);
-      setIsLoading(false);
+      console.error('[AppContext] Erro crítico ao gerar atividade:', error);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   }, [unidades, disciplinas]);
 
