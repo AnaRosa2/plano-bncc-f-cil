@@ -10,8 +10,16 @@ export function getBnccText(): string {
     const filePath = path.join(__dirname, 'BNCC_EI_EF_110518_versaofinal.txt');
     if (fs.existsSync(filePath)) {
       const raw = fs.readFileSync(filePath, 'utf-8');
-      // Reduzido para 20KB para evitar timeouts no Render mantendo boa precisão
-      cachedText = raw.slice(0, 20_000);
+
+      // Smart RAG: Limpeza e extração estratégica
+      // Remove caracteres especiais de controle e espaços duplicados para economizar espaço
+      const cleanText = raw
+        .replace(/[\f\v\b]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      // Pega os primeiros 60k caracteres (cobre competências gerais de forma profunda)
+      cachedText = cleanText.slice(0, 60_000);
       return cachedText;
     } else {
       console.warn('⚠️ BNCC TXT não encontrado em', filePath);
