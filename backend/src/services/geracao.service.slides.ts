@@ -14,53 +14,82 @@ async function getBnccSnippet() {
  * RF06 - Gerar slides para unidade de ensino
  * Retorna conteúdo em formato Markdown pronto para apresentação
  */
-export async function gerarSlides(tema: string, disciplina: string, anoSerie?: string) {
+const FRAMEWORK_SLIDES = {
+  FUND_I: {
+    estilo: 'Lúdico, alfabetização inicial, coordenação motora direta.',
+    animacoes: {
+      entradas: '"Pular suave" (bounce) para personagens (0.8s), "Girar 360°" para elementos-chave, "Zoom suave de 110% a 100%"',
+      transicoes: '"Empurrar para direita" com som de "whoosh" leve, "Cortina de estrelinhas" (0.6s)',
+      interacoes: 'Ao clicar: "pisca 2x" + som de "pling!", Destaque: borda colorida que "pulsa" 1x'
+    },
+    cores: 'Fundo: amarelo-bebê (#FFF9C4) ou azul-claro (#E3F2FD). Destaque: laranja (#FF9800), verde-limão (#CDDC39), rosa-choque (#E91E63)',
+    obrigatorios: 'Personagens redondeados, ícones de materiais reais (tesoura ✂️, cola 🧴), setas em "rastro de formiga".'
+  },
+  FUND_II: {
+    estilo: 'Interativo, contextualizado, pegada redes sociais (TikTok educativo).',
+    animacoes: {
+      entradas: '"Fade suave" (0.5s) + "deslizar de baixo para cima", delay de 0.2s entre elementos',
+      transicoes: '"Morphing" suave entre conceitos, "Zoom panorâmico"',
+      interacoes: 'Hover: sombra suave + scale 1.03, Clique: mudança de cor + mini-ícone de "check"'
+    },
+    cores: 'Fundo: branco ou cinza claro (#FAFAFA). Destaque: azul-turquesa (#00BCD4), roxo (#9C27B0), verde (#4CAF50)',
+    obrigatorios: 'Ícones flat design, infográficos minimalistas, espaço para escolha do aluno.'
+  },
+  MEDIO: {
+    estilo: 'Profissional, acadêmico, foco em ENEM e mercado de trabalho.',
+    animacoes: {
+      entradas: 'Fade simples (0.3s) SEM excessos, apenas em fórmulas/elementos-chave',
+      transicoes: 'Fade elegante ou corte seco (profissional)',
+      interacoes: 'Destaque por contraste, animação só com propósito didático'
+    },
+    cores: 'Fundo: branco ou off-white (#FDFDFD). Destaque: coral (#FF6B6B) + tons neutros',
+    obrigatorios: 'Gráficos com dados reais, citações de especialistas, conexão ENEM.'
+  }
+};
+
+function getSlideFramework(anoSerie: string = '') {
+  const s = anoSerie.toLowerCase();
+  if (s.includes('médio') || s.includes('3º') || s.includes('ensino médio')) return FRAMEWORK_SLIDES.MEDIO;
+  if (s.includes('6') || s.includes('7') || s.includes('8') || s.includes('9')) return FRAMEWORK_SLIDES.FUND_II;
+  return FRAMEWORK_SLIDES.FUND_I;
+}
+
+export async function gerarSlides(tema: string, disciplina: string, anoSerie: string = '') {
   console.log(`[geracao.service] gerarSlides: tema=${tema} disciplina=${disciplina} anoSerie=${anoSerie}`);
 
   const bncc = await getBnccSnippet();
+  const fw = getSlideFramework(anoSerie);
 
   const prompt = `
 === CONTEXTO ===
-Você é um DESIGNER INSTRUCIONAL com especialização em criar apresentações educacionais impactantes e engajadoras. Você domina técnicas de storytelling educacional.
+Você é um DESIGNER INSTRUCIONAL ESPECIALISTA EM PEDAGOGIA. 
+Etapa de Ensino: ${fw.estilo}
 
 === MISSÃO ===
-Crie uma APRESENTAÇÃO DE SLIDES COMPLETA sobre "${tema}" para "${disciplina}"${anoSerie ? ` (${anoSerie})` : ''}.
+Crie uma APRESENTAÇÃO DE SLIDES sobre "${tema}" para "${disciplina}".
+
+=== DIRETRIZES DE DESIGN (OBRIGATÓRIO) ===
+- CORES HEX: ${fw.cores}
+- ELEMENTOS VISUAIS: ${fw.obrigatorios}
+- ANIMAÇÕES RECOMENDADAS NO ROTEIRO:
+  * Entradas: ${fw.animacoes.entradas}
+  * Transições: ${fw.animacoes.transicoes}
+  * Interações: ${fw.animacoes.interacoes}
 
 === REQUISITOS ===
-1. QUANTIDADE: 8-10 slides (apresentação de 40-50 min)
-2. NARRATIVA: Contar uma "história" pedagógica com início, meio e fim
-3. PROFUNDIDADE: Conteúdo substancial e relevante, não tópicos genéricos
-4. ENGAJAMENTO: Elementos interativos, perguntas e reflexões
-5. CONTEXTUALIZAÇÃO: Situações reais que os alunos vivenciam
+1. QUANTIDADE: 8-10 slides.
+2. DIFERENCIAÇÃO: Conteúdo adequado à maturidade da turma.
+3. PRÁTICA: Incluir 2 atividades práticas com materiais reais no roteiro.
 
-===  TIPOS DE SLIDES ===
-- TITULO (1): Abertura impactante
-- CONTEUDO (3-4): Desenvolvimento conceitual
-- PRATICA (1-2): Atividade prática ou mão na massa
-- QUESTAO (1-2): Reflexão ou desafio
-- CONCLUSAO (1): Síntese e próximos passos
+=== ESTRUTURA DO CONTEÚDO ===
+No campo "conteudo", além do texto pedagógico, inclua uma seção "ROTEIRO DE ANIMAÇÃO" descrevendo quais animações e cores usar de acordo com as diretrizes acima.
 
-=== ESTRUTURA ===
-- titulo: Frase impactante (máx 8 palavras)
-- subtitulo: Frase de apoio (opcional)
-- conteudo: 3-5 tópicos ou parágrafos
-- icon: Nome de um ícone da Lucide (ex: Rocket, Lightbulb, Users)
-- Linguagem acessível mas não simplista
-
-IMPORTANTE:
-- NÃO USE ASTERISCOS (**) para negrito ou destaque.
-- Use letras MAIÚSCULAS para títulos ou termos importantes.
-- Foque no CONTEÚDO de "${tema}", não em teoria pedagógica
-- Slides devem engajar, não apenas informar
-- RETORNE APENAS JSON (ARRAY), sem texto adicional:
-
-Formato de resposta:
+RETORNE APENAS JSON (ARRAY):
 [
   {
     "numero": 1,
     "titulo": "Título",
-    "subtitulo": "Subtítulo opcional",
-    "conteudo": "Conteúdo...",
+    "conteudo": "Texto Pedagógico... \\n\\nROTEIRO DE ANIMAÇÃO: [Descreva animações e tons HEX]",
     "tipo": "titulo|conteudo|pratica|questao|conclusao",
     "icon": "nome-do-icone"
   }

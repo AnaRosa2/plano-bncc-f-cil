@@ -130,7 +130,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     try {
       const u = unidades.find(x => x.id === unidadeId);
       const d = disciplinas.find(x => x.id === u?.disciplinaId);
-      const res = await gerarPlanoAulaAPI(d?.nome || '', u?.tema || '');
+      const res = await gerarPlanoAulaAPI(d?.nome || '', u?.tema || '', d?.anoSerie);
       const novo: PlanoAula = {
         id: generateId(),
         unidadeId,

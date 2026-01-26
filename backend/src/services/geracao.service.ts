@@ -23,9 +23,60 @@ async function gerarComRetry(prompt: string, maxRetries = 1): Promise<string> {
   throw lastError;
 }
 
-export async function gerarConteudo(disciplina: string, tema: string) {
+const FRAMEWORK_PEDAGOGICO = {
+  FUND_I: {
+    etapa: 'Ensino Fundamental I (1º ao 5º ano)',
+    foco: 'Ludicidade, descoberta orientada e linguagem simples.',
+    materiais: 'Tesoura de ponta redonda ✂️, Cola bastão 🧴, EVA, Massinha de modelar, Palitos de sorvete, Tampinhas coloridas, Caixa de surpresa.',
+    atencao: '10 a 15 minutos',
+    estetica: 'Cores pastéis, personagens arredondados, ícones de materiais reais.'
+  },
+  FUND_II: {
+    etapa: 'Ensino Fundamental II (6º ao 9º ano)',
+    foco: 'Experimentos, metodologias ativas e tecnologia.',
+    materiais: 'Materiais do cotidiano (garrafa PET, bicarbonato), Jogos de tabuleiro customizados, Materiais recicláveis, QR Codes.',
+    atencao: '20 a 30 minutos',
+    estetica: 'Design flat, infográficos minimalistas, moderno.'
+  },
+  MEDIO: {
+    etapa: 'Ensino Médio',
+    foco: 'Análise crítica, ética complexa, carreira e ENEM.',
+    materiais: 'Estudos de caso reais (dados IBGE), Simuladores digitais (PhET, GeoGebra), Cartões de debate.',
+    atencao: '45 a 50 minutos',
+    estetica: 'Profissional, acadêmico, foco em dados.'
+  }
+};
+
+function getFramework(anoSerie: string = '') {
+  const s = anoSerie.toLowerCase();
+  if (s.includes('médio') || s.includes('3º') || s.includes('ensino médio')) return FRAMEWORK_PEDAGOGICO.MEDIO;
+  if (s.includes('6') || s.includes('7') || s.includes('8') || s.includes('9')) return FRAMEWORK_PEDAGOGICO.FUND_II;
+  return FRAMEWORK_PEDAGOGICO.FUND_I;
+}
+
+export async function gerarConteudo(disciplina: string, tema: string, anoSerie: string = '') {
   const bncc = await getBnccSnippet();
-  const prompt = `${bncc}\n\n=== MISSÃO ===\nCrie um PLANO DE AULA COMPLETO sobre "${tema}" para "${disciplina}".\nFoque no tema e nas competências da BNCC.\n\nAPENAS JSON: {"objetivo":"...","metodologia":"...","meta":"...","atividade":"..."}`;
+  const fw = getFramework(anoSerie);
+
+  const prompt = `
+=== CONTEXTO PEDAGÓGICO ===
+Etapa: ${fw.etapa}
+Foco: ${fw.foco}
+Limite de Atenção: ${fw.atencao}
+Materiais Recomendados: ${fw.materiais}
+
+=== MISSÃO ===
+Crie um PLANO DE AULA COMPLETO sobre "${tema}" para "${disciplina}".
+Respeite RIGOROSAMENTE a maturidade cognitiva da etapa ${fw.etapa}.
+
+=== REQUISITOS DE CONTEÚDO ===
+1. DIFERENCIAÇÃO: Ajuste o nível de complexidade para o limite de atenção de ${fw.atencao}.
+2. MATERIAIS: Integre o uso de: ${fw.materiais}.
+3. BNCC: Alinhe às competências de Cultura Digital.
+
+${bncc}
+
+APENAS JSON: {"objetivo":"...","metodologia":"...","meta":"...","atividade":"..."}`;
 
   try {
     const respostaBruta = await gerarComRetry(prompt);

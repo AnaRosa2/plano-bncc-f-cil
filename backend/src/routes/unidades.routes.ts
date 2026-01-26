@@ -7,11 +7,11 @@ const router = Router();
 
 router.post("/", async (req, res) => {
   try {
-    const { disciplina, tema } = req.body;
+    const { disciplina, tema, anoSerie } = req.body;
     if (!disciplina || !tema) {
       return res.status(400).json({ error: "Disciplina e tema são obrigatórios." });
     }
-    const resultado = await gerarConteudo(disciplina, tema);
+    const resultado = await gerarConteudo(disciplina, tema, anoSerie);
     res.json(resultado);
   } catch (error: any) {
     console.error("❌ Erro COMPLETO:", error);
