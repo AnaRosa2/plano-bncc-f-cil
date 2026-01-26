@@ -1,4 +1,5 @@
 # 📚 Plano BNCC - Sistema de Geração de Materiais Didáticos de Cultura Digital
+<!-- Teste de deploy Vercel - 2026-01-26 -->
 
 > Sistema Inteligente para Geração de Materiais Didáticos alinhados à BNCC desenvolvido para o Hackathon IFPI Campus Piripiri - Janeiro 2026
 
