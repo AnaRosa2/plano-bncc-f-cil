@@ -14,51 +14,25 @@ export async function gerarConteudo(disciplina: string, tema: string) {
 ${bncc}
 
 === CONTEXTO ===
-Você é um PROFESSOR EXPERIENTE com 20 anos de sala de aula. Você cria planos de aula que realmente funcionam na prática, são engajadores e desenvolvem competências essenciais nos alunos.
+Professor especialista em BNCC e Cultura Digital.
 
 === MISSÃO ===
-Crie um PLANO DE AULA COMPLETO E PRÁTICO sobre "${tema}" para a disciplina "${disciplina}".
+Plano de aula CONCISO sobre "${tema}" para "${disciplina}".
 
 === REQUISITOS ===
-1. FOCO NO TEMA: O plano deve ser sobre "${tema}", não sobre teoria pedagógica
-2. PRÁTICO: Deve ser imediatamente utilizável por qualquer professor
-3. NÃO USE ASTERISCOS (**) para negrito ou negritos internos. Use apenas letras maiúsculas para destacar rótulos ou títulos.
-4. PROFUNDO: Conteúdo substancial, não genérico
-5. PROGRESSIVO: Considerando diferentes níveis de aprendizagem
-6. CONTEXTUALIZADO: Situações reais que os alunos vivenciam
+1. Respostas DIRETAS e CURTAS (máx 2 parágrafos por campo).
+2. Sem asteriscos (**). Use MAIÚSCULAS para títulos.
+3. Prático para aplicação imediata.
 
-=== ESTRUTURA DO JSON ===
+=== ESTRUTURA JSON ===
 {
-  "objetivo": "OBJETIVOS DE APRENDIZAGEM (3-4 parágrafos):
-    - Objetivo geral claro e mensurável
-    - 3-4 objetivos específicos (o que os alunos vão SABER FAZER ao final)
-    - Competências desenvolvidas (pensamento crítico, criatividade, colaboração, etc.)
-    - Conexões com outras disciplinas ou temas)",
-
-  "metodologia": "METODOLOGIA DETALHADA (6 momentos):
-    - MOMENTO 1 (10 min): Como iniciar e engajar os alunos
-    - MOMENTO 2 (15 min): Situação-problema ou desafio instigante
-    - MOMENTO 3 (20 min): Desenvolvimento do conteúdo com exemplos práticos
-    - MOMENTO 4 (25 min): Atividade prática colaborativa
-    - MOMENTO 5 (15 min): Síntese e consolidação do aprendizado
-    - MOMENTO 6 (5 min): Fechamento e conexão com próxima aula",
-
-  "meta": "METAS E COMPETÊNCIAS (2-3 parágrafos):
-    - Principais habilidades desenvolvidas na aula
-    - Como isso prepara os alunos para a vida real
-    - Indicadores de que a aula foi bem-sucedida",
-
-  "atividade": "ATIVIDADE PRÁTICA PRINCIPAL (detalhamento completo):
-    - Descrição passo a passo da atividade
-    - Materiais necessários (digitais e físicos)
-    - Como organizar a turma (individual, duplas, grupos)
-    - Roteiro de execução com tempos
-    - Adaptações para diferentes níveis
-    - Como avaliar o aprendizado
-    - Produto final que os alunos criam"
+  "objetivo": "Objetivos claros e as competências BNCC atingidas.",
+  "metodologia": "Passo a passo resumido da aula (4 etapas principais).",
+  "meta": "Habilidades desenvolvidas e indicadores de sucesso.",
+  "atividade": "Uma proposta de atividade prática rápida sobre o tema."
 }
 
-IMPORTANTE: APENAS JSON, sem texto adicional:
+RETORNE APENAS JSON, sem texto adicional:
 `;
 
     const respostaBruta = await gerarTextoComIA(prompt);
@@ -121,28 +95,19 @@ RETORNE APENAS JSON VÁLIDO com a estrutura:
 
 export async function gerarAtividade(tema: string, tipo: string, anoSerie?: string, quantidade = 1) {
   try {
-    const instrucoesDetalhadas: Record<string, string> = {
-      objetiva: `ATIVIDADE DE MÚLTIPLA ESCOLHA (5-7 questões):\n- Contexto antes das alternativas\n- 4 alternativas (A, B, C, D)\n- Apenas 1 correta`,
-      discursiva: `ATIVIDADE DISCURSIVA (4-5 questões):\n- Exigência de argumentação e análise crítica\n- Situações-problema reais`,
-      pratica: `PROJETO PRÁTICO EM GRUPO:\n- Etapas detalhadas e cronograma\n- Lista de materiais e produto final esperado`
-    };
-
     const bncc = await getBnccSnippet();
     const prompt = `
 ${bncc}
 Crie ${quantidade} ATIVIDADE(S) AVALIATIVA(S) do tipo ${tipo.toUpperCase()} sobre "${tema}".
-Ano/Série: ${anoSerie || 'Ensino Fundamental/Médio'}
+Ano/Série: ${anoSerie || 'Geral'}
 
 === REQUISITOS ===
-${instrucoesDetalhadas[tipo] || instrucoesDetalhadas['discursiva']}
+1. Respostas DIRETAS e CURTAS.
+2. Estrutura: Enunciado com contexto e questões claras.
+3. Critérios: Divisão simples de pontos.
 
-=== ESTRUTURA ===
-{
-  "enunciado": "CONTEXTUALIZAÇÃO, INSTRUÇÕES e QUESTÕES",
-  "criteriosAvaliacao": "DIMENSÕES, NÍVEIS e PONTOS"
-}
-
-RETORNE APENAS UM ARRAY JSON [{}]:
+RETORNE APENAS UM ARRAY JSON:
+[{"enunciado": "..", "criteriosAvaliacao": ".."}]
 `;
 
     const respostaBruta = await gerarTextoComIA(prompt);
@@ -167,9 +132,8 @@ export async function sugerirUnidades(disciplina: string, anoSerie?: string, qua
     const bncc = await getBnccSnippet();
     const prompt = `
 ${bncc}
-Você é um assistente pedagógico. Para a disciplina "${disciplina}"${anoSerie ? `, ano/série: ${anoSerie}` : ''},
-crie ${quantidade} SUGESTÕES DE UNIDADES DE ENSINO.
-RETORNE APENAS UM ARRAY JSON: [{"tema":"...","objetivo":"..."}]
+Sugira ${quantidade} temas de aulas para "${disciplina}" (${anoSerie || 'Geral'}).
+RETORNE APENAS UM ARRAY JSON: [{"tema":"..","objetivo":".."}]
 `;
 
     const respostaBruta = await gerarTextoComIA(prompt);
@@ -190,4 +154,3 @@ RETORNE APENAS UM ARRAY JSON: [{"tema":"...","objetivo":"..."}]
     }));
   }
 }
-
