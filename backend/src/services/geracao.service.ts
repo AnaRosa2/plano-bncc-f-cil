@@ -9,7 +9,7 @@ async function getBnccSnippet() {
 /**
  * Função utilitária para tentar gerar texto com retry
  */
-async function gerarComRetry(prompt: string, maxRetries = 1): Promise<string> {
+export async function gerarComRetry(prompt: string, maxRetries = 1): Promise<string> {
   let lastError: any;
   for (let i = 0; i <= maxRetries; i++) {
     try {
@@ -78,11 +78,22 @@ ${bncc}
 
 APENAS JSON: {"objetivo":"...","metodologia":"...","meta":"...","atividade":"..."}`;
 
+  console.log(`[gerarConteudo] Gerando plano para: ${tema} (${fw.etapa})`);
+
   try {
     const respostaBruta = await gerarComRetry(prompt);
-    const jsonMatch = respostaBruta.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('JSON não encontrado');
-    const conteudo = JSON.parse(jsonMatch[0].replace(/```json/g, '').replace(/```/g, '').trim());
+
+    // Extração robusta de JSON
+    const firstBrace = respostaBruta.indexOf('{');
+    const lastBrace = respostaBruta.lastIndexOf('}');
+
+    if (firstBrace === -1 || lastBrace === -1) {
+      console.warn('[gerarConteudo] Resposta não contém JSON válido:', respostaBruta);
+      throw new Error('Formato de resposta inválido da IA');
+    }
+
+    const jsonStr = respostaBruta.substring(firstBrace, lastBrace + 1);
+    const conteudo = JSON.parse(jsonStr);
 
     return {
       planoDeAula: `Plano: ${tema}`,
@@ -91,14 +102,14 @@ APENAS JSON: {"objetivo":"...","metodologia":"...","meta":"...","atividade":"...
       meta: conteudo.meta || '',
       atividade: conteudo.atividade || ''
     };
-  } catch (error) {
-    console.error('❌ Usando Fallback Pedagógico para Plano:', error);
+  } catch (error: any) {
+    console.error('❌ Erro em gerarConteudo:', error.message);
     return {
-      planoDeAula: `Plano: ${tema}`,
-      objetivo: `OBJETIVO GERAL: Desenvolver conhecimento crítico sobre ${tema}.\n\nOBJETIVOS ESPECÍFICOS:\n• Analisar impactos de ${tema} na sociedade digital.\n• Aplicar ferramentas práticas alinhadas à BNCC.`,
+      planoDeAula: `Plano: ${tema} (Fallback)`,
+      objetivo: `[Aviso: Falha na IA - ${error.message}]\n\nOBJETIVO GERAL: Desenvolver conhecimento crítico sobre ${tema}.\n\nOBJETIVOS ESPECÍFICOS:\n• Analisar impactos de ${tema} na sociedade digital.\n• Aplicar ferramentas práticas alinhadas à BNCC.`,
       metodologia: `1. Introdução dialogada (10min)\n2. Atividade prática dirigida (30min)\n3. Síntese e avaliação (10min)`,
       meta: `Competências BNCC: CG05 (Cultura Digital). O aluno será capaz de mobilizar conhecimentos de ${tema} com ética e responsabilidade.`,
-      atividade: `Mapa Conceitual Digital: Criar um infográfico sobre ${tema} usando ferramentas online.`
+      atividade: `Utilizar recursos multimídia para explorar o tema ${tema} em sala.`
     };
   }
 }
@@ -139,26 +150,34 @@ Etapa: ${fw.etapa}
 Foco: ${fw.foco}
 
 === MISSÃO ===
-Sugira ${quantidade} temas de aula para a disciplina "${disciplina}" (${anoSerie}).
+Sugira ${quantidade} temas de aula inovadores para "${disciplina}" (${anoSerie}).
 Os temas devem ser adequados para ${fw.etapa}.
 
 RETORNE APENAS UM ARRAY JSON: [{"tema":"...","objetivo":"..."}]`;
 
-  console.log('[DEBUG] Prompt Sugestão:', prompt);
+  console.log(`[sugerirUnidades] Buscando sugestões para: ${disciplina} (${fw.etapa})`);
 
   try {
     const res = await gerarComRetry(prompt);
-    console.log('[DEBUG] Resposta Bruta Sugestão:', res);
 
-    const jsonMatch = res.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) {
-      console.warn('[DEBUG] JSON não encontrado na sugestão');
-      throw new Error('JSON não encontrado');
+    // Extração robusta de JSON (Array)
+    const firstBracket = res.indexOf('[');
+    const lastBracket = res.lastIndexOf(']');
+
+    if (firstBracket === -1 || lastBracket === -1) {
+      console.warn('[sugerirUnidades] JSON não encontrado na resposta');
+      throw new Error('Formato de resposta inválido');
     }
 
-    return JSON.parse(jsonMatch[0].replace(/```json/g, '').replace(/```/g, '').trim());
+    const jsonStr = res.substring(firstBracket, lastBracket + 1);
+    return JSON.parse(jsonStr);
   } catch (e: any) {
     console.error('❌ Erro em sugerirUnidades:', e.message);
-    return Array.from({ length: quantidade }, (_, i) => ({ tema: `Unidade ${i + 1}`, objetivo: `Baseada em ${disciplina}` }));
+    // Sugestões inteligentes de fallback caso a IA falhe
+    return [
+      { tema: `Tendências em ${disciplina}`, objetivo: `Explorar os fundamentos de ${disciplina} na era digital.` },
+      { tema: `Práticas em ${disciplina}`, objetivo: `Desenvolver competências práticas em ${disciplina}.` },
+      { tema: `Desafios da ${disciplina}`, objetivo: `Analisar criticamente o impacto da ${disciplina} na sociedade.` }
+    ];
   }
 }

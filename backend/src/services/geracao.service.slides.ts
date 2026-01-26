@@ -4,6 +4,7 @@
  */
 
 import { gerarTextoComIA } from './ai-gemini.service';
+import { gerarComRetry } from './geracao.service';
 import { getBnccText } from '../utils/bncc';
 
 async function getBnccSnippet() {
@@ -97,13 +98,17 @@ RETORNE APENAS JSON (ARRAY):
 `;
 
   try {
-    const respostaBruta = await gerarTextoComIA(prompt);
-    console.log('[geracao.service] slides response length:', respostaBruta?.length || 0);
+    const respostaBruta = await gerarComRetry(prompt);
+    console.log('[geracao.service] slides response received');
 
-    const jsonMatch = respostaBruta.match(/\\[[\\s\\S]*\\]/);
-    if (!jsonMatch) throw new Error('Nenhum array JSON encontrado');
+    const firstBracket = respostaBruta.indexOf('[');
+    const lastBracket = respostaBruta.lastIndexOf(']');
 
-    let jsonStr = jsonMatch[0].replace(/```json/g, '').replace(/```/g, '').trim();
+    if (firstBracket === -1 || lastBracket === -1) {
+      throw new Error('JSON não encontrado na resposta dos slides');
+    }
+
+    const jsonStr = respostaBruta.substring(firstBracket, lastBracket + 1);
     const slides = JSON.parse(jsonStr);
 
     if (!Array.isArray(slides)) throw new Error('Resposta não é um array');
