@@ -86,8 +86,10 @@ export async function sugerirUnidadesAPI(
 // Interface para slides
 export interface SlideAPI {
     titulo: string;
+    subtitulo?: string;
     conteudo: string;
-    tipo: 'titulo' | 'conteudo' | 'questao' | 'conclusao';
+    tipo: 'titulo' | 'conteudo' | 'questao' | 'conclusao' | 'pratica';
+    icon?: string;
 }
 
 // Gerar slides educacionais com IA (RF06)
