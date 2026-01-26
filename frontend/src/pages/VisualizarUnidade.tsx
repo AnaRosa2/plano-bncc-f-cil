@@ -400,6 +400,7 @@ const VisualizarUnidade: React.FC = () => {
                     <div className="space-y-2">
                       <Label htmlFor="tipo-atividade">Tipo de Atividade</Label>
                       <Select
+                        name="tipo-atividade"
                         value={tipoAtividade}
                         onValueChange={(v) => setTipoAtividade(v as TipoAtividade)}
                       >
