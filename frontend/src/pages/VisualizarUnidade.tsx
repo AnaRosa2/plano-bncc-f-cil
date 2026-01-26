@@ -115,6 +115,7 @@ const VisualizarUnidade: React.FC = () => {
           <TabsList>
             <TabsTrigger value="plano"><FileText className="h-4 w-4 mr-2" /> Plano</TabsTrigger>
             <TabsTrigger value="atividade"><ClipboardCheck className="h-4 w-4 mr-2" /> Atividade</TabsTrigger>
+            <TabsTrigger value="completo"><Layers className="h-4 w-4 mr-2" /> Visão Completa</TabsTrigger>
             <TabsTrigger value="slides"><Presentation className="h-4 w-4 mr-2" /> Slides</TabsTrigger>
           </TabsList>
 
@@ -184,6 +185,23 @@ const VisualizarUnidade: React.FC = () => {
                 </CardContent>
               </Card>
             )}
+          </TabsContent>
+
+          <TabsContent value="completo">
+            <div className="space-y-6">
+              <Card className="edu-card"><CardHeader><CardTitle>📚 {unidade.tema}</CardTitle></CardHeader><CardContent><p>{unidade.objetivoGeral}</p></CardContent></Card>
+              {planoAula && (
+                <Card className="edu-card"><CardHeader><CardTitle>Plano de Aula</CardTitle></CardHeader><CardContent className="space-y-4">
+                  <SectionCard title="Objetivos" icon={Target}>{planoAula.objetivos}</SectionCard>
+                  <SectionCard title="Metodologia" icon={Wrench}>{planoAula.metodologia}</SectionCard>
+                </CardContent></Card>
+              )}
+              {atividadeAvaliativa && (
+                <Card className="edu-card"><CardHeader><CardTitle>Atividade ({atividadeAvaliativa.tipo})</CardTitle></CardHeader><CardContent className="space-y-4">
+                  <SectionCard title="Enunciado" icon={MessageSquare}>{atividadeAvaliativa.enunciado}</SectionCard>
+                </CardContent></Card>
+              )}
+            </div>
           </TabsContent>
 
           <TabsContent value="slides">
