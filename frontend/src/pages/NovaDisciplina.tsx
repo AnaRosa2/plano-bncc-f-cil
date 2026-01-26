@@ -109,7 +109,7 @@ const NovaDisciplina: React.FC = () => {
                   </div>
                 ) : (
                   <Select value={nome} onValueChange={handleDisciplinaChange}>
-                    <SelectTrigger className="bg-background">
+                    <SelectTrigger id="nome" className="bg-background">
                       <SelectValue placeholder="Selecione uma disciplina" />
                     </SelectTrigger>
                     <SelectContent className="max-h-[300px]">
@@ -159,7 +159,7 @@ const NovaDisciplina: React.FC = () => {
               <div className="space-y-2">
                 <Label htmlFor="anoSerie">Ano/Série *</Label>
                 <Select value={anoSerie} onValueChange={setAnoSerie}>
-                  <SelectTrigger className="bg-background">
+                  <SelectTrigger id="anoSerie" className="bg-background">
                     <SelectValue placeholder="Selecione o ano ou série" />
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px]">

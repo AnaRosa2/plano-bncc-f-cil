@@ -290,8 +290,9 @@ const VisualizarUnidade: React.FC = () => {
                     tempoEstimado: 'Tempo Estimado',
                   }).map(([key, label]) => (
                     <div key={key} className="space-y-2">
-                      <Label>{label}</Label>
+                      <Label htmlFor={`plano-${key}`}>{label}</Label>
                       <Textarea
+                        id={`plano-${key}`}
                         value={planoEditado[key as keyof typeof planoEditado]}
                         onChange={(e) =>
                           setPlanoEditado((prev) => ({ ...prev, [key]: e.target.value }))
@@ -397,12 +398,12 @@ const VisualizarUnidade: React.FC = () => {
 
                   <div className="max-w-xs mx-auto space-y-4">
                     <div className="space-y-2">
-                      <Label>Tipo de Atividade</Label>
+                      <Label htmlFor="tipo-atividade">Tipo de Atividade</Label>
                       <Select
                         value={tipoAtividade}
                         onValueChange={(v) => setTipoAtividade(v as TipoAtividade)}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger id="tipo-atividade">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -431,8 +432,9 @@ const VisualizarUnidade: React.FC = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Enunciado</Label>
+                    <Label htmlFor="edit-enunciado">Enunciado</Label>
                     <Textarea
+                      id="edit-enunciado"
                       value={atividadeEditada.enunciado}
                       onChange={(e) =>
                         setAtividadeEditada((prev) => ({ ...prev, enunciado: e.target.value }))
@@ -442,8 +444,9 @@ const VisualizarUnidade: React.FC = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Critérios de Avaliação</Label>
+                    <Label htmlFor="edit-criterios">Critérios de Avaliação</Label>
                     <Textarea
+                      id="edit-criterios"
                       value={atividadeEditada.criteriosAvaliacao}
                       onChange={(e) =>
                         setAtividadeEditada((prev) => ({
