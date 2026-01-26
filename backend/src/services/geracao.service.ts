@@ -141,7 +141,10 @@ IMPORTANTE:
 - APENAS JSON, sem texto adicional:
 `;
 
+  console.log('[geracao.service] chamando gerarTextoComIA para tema:', tema);
+  const startTime = Date.now();
   const respostaBruta = await gerarTextoComIA(prompt);
+  console.log(`[geracao.service] IA respondeu em ${(Date.now() - startTime) / 1000}s`);
 
   try {
     // Remove qualquer texto antes/depois do JSON
@@ -315,7 +318,10 @@ IMPORTANTE:
 - APENAS JSON (ARRAY), sem texto adicional:
 `;
 
+  console.log('[geracao.service] chamando gerarTextoComIA (atividade) para tema:', tema);
+  const startTime = Date.now();
   const respostaBruta = await gerarTextoComIA(prompt);
+  console.log(`[geracao.service] IA (atividade) respondeu em ${(Date.now() - startTime) / 1000}s`);
   console.log('[geracao.service] respostaBruta length:', respostaBruta?.length || 0);
   console.log('[geracao.service] respostaBruta preview:', (respostaBruta || '').slice(0, 250));
 

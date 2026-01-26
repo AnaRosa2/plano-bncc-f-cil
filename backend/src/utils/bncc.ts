@@ -10,8 +10,8 @@ export function getBnccText(): string {
     const filePath = path.join(__dirname, 'BNCC_EI_EF_110518_versaofinal.txt');
     if (fs.existsSync(filePath)) {
       const raw = fs.readFileSync(filePath, 'utf-8');
-      // Restaurado para 100KB para garantir precisão total do RAG conforme original
-      cachedText = raw.slice(0, 100_000);
+      // Reduzido para 20KB para evitar timeouts no Render mantendo boa precisão
+      cachedText = raw.slice(0, 20_000);
       return cachedText;
     } else {
       console.warn('⚠️ BNCC TXT não encontrado em', filePath);
