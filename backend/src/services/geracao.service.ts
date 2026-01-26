@@ -131,12 +131,34 @@ export async function gerarDisciplina(anoSerie: string, tema: string) {
   }
 }
 
-export async function sugerirUnidades(disciplina: string, anoSerie?: string, quantidade = 3) {
-  const prompt = `Sugira ${quantidade} temas para ${disciplina} (${anoSerie}).\nJSON: [{"tema":"...","objetivo":"..."}]`;
+export async function sugerirUnidades(disciplina: string, anoSerie: string = '', quantidade = 3) {
+  const fw = getFramework(anoSerie);
+  const prompt = `
+=== CONTEXTO PEDAGÓGICO ===
+Etapa: ${fw.etapa}
+Foco: ${fw.foco}
+
+=== MISSÃO ===
+Sugira ${quantidade} temas de aula para a disciplina "${disciplina}" (${anoSerie}).
+Os temas devem ser adequados para ${fw.etapa}.
+
+RETORNE APENAS UM ARRAY JSON: [{"tema":"...","objetivo":"..."}]`;
+
+  console.log('[DEBUG] Prompt Sugestão:', prompt);
+
   try {
     const res = await gerarComRetry(prompt);
-    return JSON.parse(res.match(/\[[\s\S]*\]/)?.[0] || '[]');
-  } catch (e) {
+    console.log('[DEBUG] Resposta Bruta Sugestão:', res);
+
+    const jsonMatch = res.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      console.warn('[DEBUG] JSON não encontrado na sugestão');
+      throw new Error('JSON não encontrado');
+    }
+
+    return JSON.parse(jsonMatch[0].replace(/```json/g, '').replace(/```/g, '').trim());
+  } catch (e: any) {
+    console.error('❌ Erro em sugerirUnidades:', e.message);
     return Array.from({ length: quantidade }, (_, i) => ({ tema: `Unidade ${i + 1}`, objetivo: `Baseada em ${disciplina}` }));
   }
 }
