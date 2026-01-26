@@ -34,7 +34,9 @@ O **Plano BNCC** é uma aplicação web desenvolvida para apoiar professores do 
 - ✅ **Exportação PDF** - Gera documentos profissionais prontos para uso
 - ✅ **Interface moderna** - Design responsivo e intuitivo
 - ✅ **Testes unitários** - 23 testes passando com Vitest
-- ✅ **Single-user** - Sem necessidade de autenticação
+- ✅ **Single-user** - Sem necessidade de login (dados salvos localmente)
+- ✅ **Persistência Local** - Dados preservados via LocalStorage (não perde no F5)
+- ✅ **Console Clean** - Sem erros ou avisos de acessibilidade/semântica
 
 ---
 
@@ -296,6 +298,7 @@ Este projeto foi desenvolvido para fins educacionais no contexto do Hackathon IF
 - ✅ **Código profissional** - TypeScript, organização clara, separação frontend/backend
 - ✅ **UX moderna** - shadcn/ui, responsivo, feedback visual
 - ✅ **Funcionalidade extra** - Exportação PDF (não solicitada no edital)
+- ✅ **Persistência robusta** - Uso de LocalStorage para simular banco de dados local
 
 ### Decisões Técnicas
 
@@ -308,8 +311,8 @@ Este projeto foi desenvolvido para fins educacionais no contexto do Hackathon IF
 
 - [x] ~~Implementar RF06 (geração de slides)~~ ✅
 - [x] ~~Testes automatizados~~ ✅
+- [x] ~~Adicionar histórico de gerações (via LocalStorage)~~ ✅
 - [ ] Melhorar RAG com embeddings semânticos
-- [ ] Adicionar histórico de gerações
 
 ### Executar Testes
 
