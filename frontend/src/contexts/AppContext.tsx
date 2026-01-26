@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 import { Disciplina, Unidade, PlanoAula, AtividadeAvaliativa, TipoAtividade } from '@/types';
 import {
   disciplinasIniciais,
@@ -7,6 +7,8 @@ import {
   atividadesAvaliativasIniciais,
 } from '@/data/mockData';
 import { gerarPlanoAulaAPI, gerarAtividadeAPI, sugerirUnidadesAPI } from '@/services/apiService';
+
+const STORAGE_KEY = 'plano-bncc-data';
 
 interface AppContextType {
   // Estados
@@ -39,6 +41,9 @@ interface AppContextType {
   gerarAtividadeAvaliativa: (unidadeId: string, tipo: TipoAtividade) => Promise<AtividadeAvaliativa>;
   updateAtividadeAvaliativa: (id: string, data: Partial<AtividadeAvaliativa>) => void;
   getAtividadeAvaliativa: (unidadeId: string) => AtividadeAvaliativa | undefined;
+
+  // Utilitários
+  resetData: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -56,17 +61,90 @@ interface AppProviderProps {
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
-  const [disciplinas, setDisciplinas] = useState<Disciplina[]>(disciplinasIniciais);
-  const [unidades, setUnidades] = useState<Unidade[]>(unidadesIniciais);
-  const [planosAula, setPlanosAula] = useState<PlanoAula[]>(planosAulaIniciais);
-  const [atividadesAvaliativas, setAtividadesAvaliativas] = useState<AtividadeAvaliativa[]>(atividadesAvaliativasIniciais);
+  // Inicialização do estado a partir do LocalStorage ou mocks
+  const [disciplinas, setDisciplinas] = useState<Disciplina[]>(() => {
+    const saved = localStorage.getItem(`${STORAGE_KEY}-disciplinas`);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.map((d: any) => ({ ...d, criadoEm: new Date(d.criadoEm) }));
+      } catch (e) {
+        return disciplinasIniciais;
+      }
+    }
+    return disciplinasIniciais;
+  });
+
+  const [unidades, setUnidades] = useState<Unidade[]>(() => {
+    const saved = localStorage.getItem(`${STORAGE_KEY}-unidades`);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.map((u: any) => ({ ...u, criadoEm: new Date(u.criadoEm) }));
+      } catch (e) {
+        return unidadesIniciais;
+      }
+    }
+    return unidadesIniciais;
+  });
+
+  const [planosAula, setPlanosAula] = useState<PlanoAula[]>(() => {
+    const saved = localStorage.getItem(`${STORAGE_KEY}-planos`);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return planosAulaIniciais;
+      }
+    }
+    return planosAulaIniciais;
+  });
+
+  const [atividadesAvaliativas, setAtividadesAvaliativas] = useState<AtividadeAvaliativa[]>(() => {
+    const saved = localStorage.getItem(`${STORAGE_KEY}-atividades`);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return atividadesAvaliativasIniciais;
+      }
+    }
+    return atividadesAvaliativasIniciais;
+  });
+
   const [isLoading, setIsLoading] = useState(false);
+
+  // Hook para salvar no LocalStorage sempre que os estados mudarem
+  useEffect(() => {
+    localStorage.setItem(`${STORAGE_KEY}-disciplinas`, JSON.stringify(disciplinas));
+  }, [disciplinas]);
+
+  useEffect(() => {
+    localStorage.setItem(`${STORAGE_KEY}-unidades`, JSON.stringify(unidades));
+  }, [unidades]);
+
+  useEffect(() => {
+    localStorage.setItem(`${STORAGE_KEY}-planos`, JSON.stringify(planosAula));
+  }, [planosAula]);
+
+  useEffect(() => {
+    localStorage.setItem(`${STORAGE_KEY}-atividades`, JSON.stringify(atividadesAvaliativas));
+  }, [atividadesAvaliativas]);
+
+  // Função para resetar os dados
+  const resetData = useCallback(() => {
+    if (window.confirm('Tem certeza que deseja resetar todos os dados? Isso apagará suas criações.')) {
+      setDisciplinas(disciplinasIniciais);
+      setUnidades(unidadesIniciais);
+      setPlanosAula(planosAulaIniciais);
+      setAtividadesAvaliativas(atividadesAvaliativasIniciais);
+      localStorage.clear();
+      window.location.reload();
+    }
+  }, []);
 
   // Gerar ID único simples
   const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
-
-  // Simular delay de IA
-  const simulateAIDelay = () => new Promise(resolve => setTimeout(resolve, 1500));
 
   // === DISCIPLINAS ===
   const addDisciplina = useCallback((data: Omit<Disciplina, 'id' | 'criadoEm'>) => {
@@ -260,7 +338,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     gerarAtividadeAvaliativa,
     updateAtividadeAvaliativa,
     getAtividadeAvaliativa,
+    resetData,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
+
