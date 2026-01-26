@@ -28,15 +28,7 @@ export interface PlanoAula {
   recursosDidaticos: string;
   avaliacao: string;
   tempoEstimado: string;
-  criadoEm: Date;
   geradoPorIA: boolean;
-}
-
-export interface SlidePersistido {
-  id: string;
-  unidadeId: string;
-  slides: any[]; // Array vindo da API
-  criadoEm: Date;
 }
 
 export interface AtividadeAvaliativa {
@@ -45,7 +37,6 @@ export interface AtividadeAvaliativa {
   enunciado: string;
   tipo: 'objetiva' | 'discursiva' | 'pratica';
   criteriosAvaliacao: string;
-  criadoEm: Date;
   geradoPorIA: boolean;
 }
 

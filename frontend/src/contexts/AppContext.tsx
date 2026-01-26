@@ -96,32 +96,47 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const addDisciplina = useCallback((data: any) => setDisciplinas(prev => [...prev, { ...data, id: generateId(), criadoEm: new Date() }]), []);
   const updateDisciplina = useCallback((id: string, data: any) => setDisciplinas(prev => prev.map(d => d.id === id ? { ...d, ...data } : d)), []);
-  const deleteDisciplina = useCallback((id: string) => { setDisciplinas(prev => prev.filter(d => d.id !== id)); setUnidades(prev => prev.filter(u => u.disciplinaId !== id)); }, []);
+  const deleteDisciplina = useCallback((id: string) => {
+    setDisciplinas(prev => prev.filter(d => d.id !== id));
+    setUnidades(prev => prev.filter(u => u.disciplinaId !== id));
+  }, []);
   const getDisciplina = useCallback((id: string) => disciplinas.find(d => d.id === id), [disciplinas]);
 
   const addUnidade = useCallback((data: any) => setUnidades(prev => [...prev, { ...data, id: generateId(), criadoEm: new Date() }]), []);
   const updateUnidade = useCallback((id: string, data: any) => setUnidades(prev => prev.map(u => u.id === id ? { ...u, ...data } : u)), []);
-  const deleteUnidade = useCallback((id: string) => { setUnidades(prev => prev.filter(u => u.id !== id)); setPlanosAula(prev => prev.filter(p => p.unidadeId !== id)); setAtividadesAvaliativas(prev => prev.filter(a => a.unidadeId !== id)); }, []);
+  const deleteUnidade = useCallback((id: string) => {
+    setUnidades(prev => prev.filter(u => u.id !== id));
+    setPlanosAula(prev => prev.filter(p => p.unidadeId !== id));
+    setAtividadesAvaliativas(prev => prev.filter(a => a.unidadeId !== id));
+  }, []);
   const getUnidade = useCallback((id: string) => unidades.find(u => u.id === id), [unidades]);
-  const getUnidadesByDisciplina = useCallback((id: string) => unidades.filter(u => u.disciplinaId === id), [unidades]);
+  const getUnidadesByDisciplina = useCallback((disciplinaId: string) => unidades.filter(u => u.disciplinaId === disciplinaId), [unidades]);
 
-  const sugerirUnidades = useCallback(async (id: string) => {
+  const sugerirUnidades = useCallback(async (disciplinaId: string) => {
     setIsLoading(true);
     try {
-      const d = disciplinas.find(x => x.id === id);
-      return d ? await sugerirUnidadesAPI(d.nome, d.anoSerie, 3) : [];
-    } finally { setIsLoading(false); }
+      const d = disciplinas.find(x => x.id === disciplinaId);
+      if (!d) return [];
+      return await sugerirUnidadesAPI(d.nome, d.anoSerie, 3);
+    } catch (e) { return []; } finally { setIsLoading(false); }
   }, [disciplinas]);
 
-  const gerarPlanoAula = useCallback(async (unidadeId: string) => {
+  const gerarPlanoAula = useCallback(async (unidadeId: string): Promise<PlanoAula> => {
     setIsLoading(true);
     try {
       const u = unidades.find(x => x.id === unidadeId);
       const d = disciplinas.find(x => x.id === u?.disciplinaId);
       const res = await gerarPlanoAulaAPI(d?.nome || '', u?.tema || '');
       const novo: PlanoAula = {
-        id: generateId(), unidadeId, objetivos: res.objetivo, conteudos: res.meta,
-        metodologia: res.metodologia, recursosDidaticos: res.atividade, avaliacao: 'Contínua', tempoEstimado: '50 min', geradoPorIA: true
+        id: generateId(),
+        unidadeId,
+        objetivos: res.objetivo,
+        conteudos: res.meta,
+        metodologia: res.metodologia,
+        recursosDidaticos: res.atividade,
+        avaliacao: 'Contínua',
+        tempoEstimado: '50 min',
+        geradoPorIA: true
       };
       setPlanosAula(prev => {
         const filtered = prev.filter(p => p.unidadeId !== unidadeId);
@@ -131,17 +146,25 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally { setIsLoading(false); }
   }, [unidades, disciplinas]);
 
-  const updatePlanoAula = useCallback((id: string, data: any) => setPlanosAula(prev => prev.map(p => p.id === id ? { ...p, ...data, geradoPorIA: false } : p)), []);
+  const updatePlanoAula = useCallback((id: string, data: Partial<PlanoAula>) => {
+    setPlanosAula(prev => prev.map(p => (p.id === id ? { ...p, ...data, geradoPorIA: false } : p)));
+  }, []);
+
   const getPlanoAula = useCallback((unidadeId: string) => planosAula.find(p => p.unidadeId === unidadeId), [planosAula]);
 
-  const gerarAtividadeAvaliativa = useCallback(async (unidadeId: string, tipo: TipoAtividade) => {
+  const gerarAtividadeAvaliativa = useCallback(async (unidadeId: string, tipo: TipoAtividade): Promise<AtividadeAvaliativa> => {
     setIsLoading(true);
     try {
       const u = unidades.find(x => x.id === unidadeId);
       const d = disciplinas.find(x => x.id === u?.disciplinaId);
       const res = await gerarAtividadeAPI(u?.tema || '', tipo, d?.anoSerie);
       const nova: AtividadeAvaliativa = {
-        id: generateId(), unidadeId, enunciado: res.enunciado, tipo, criteriosAvaliacao: res.criteriosAvaliacao, geradoPorIA: true
+        id: generateId(),
+        unidadeId,
+        enunciado: res.enunciado,
+        tipo,
+        criteriosAvaliacao: res.criteriosAvaliacao,
+        geradoPorIA: true
       };
       setAtividadesAvaliativas(prev => {
         const filtered = prev.filter(a => a.unidadeId !== unidadeId);
@@ -151,10 +174,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally { setIsLoading(false); }
   }, [unidades, disciplinas]);
 
-  const updateAtividadeAvaliativa = useCallback((id: string, data: any) => setAtividadesAvaliativas(prev => prev.map(a => a.id === id ? { ...a, ...data, geradoPorIA: false } : a)), []);
+  const updateAtividadeAvaliativa = useCallback((id: string, data: Partial<AtividadeAvaliativa>) => {
+    setAtividadesAvaliativas(prev => prev.map(a => (a.id === id ? { ...a, ...data, geradoPorIA: false } : a)));
+  }, []);
+
   const getAtividadeAvaliativa = useCallback((unidadeId: string) => atividadesAvaliativas.find(a => a.unidadeId === unidadeId), [atividadesAvaliativas]);
 
-  const resetData = useCallback(() => { localStorage.clear(); window.location.reload(); }, []);
+  const resetData = useCallback(() => {
+    if (window.confirm('Resetar dados?')) {
+      localStorage.clear();
+      window.location.reload();
+    }
+  }, []);
 
   const value: AppContextType = {
     disciplinas, unidades, planosAula, atividadesAvaliativas, isLoading,
