@@ -95,19 +95,41 @@ RETORNE APENAS JSON VÁLIDO com a estrutura:
 
 export async function gerarAtividade(tema: string, tipo: string, anoSerie?: string, quantidade = 1) {
   try {
+    const instrucoesDetalhadas: Record<string, string> = {
+      objetiva: `ATIVIDADE DE MÚLTIPLA ESCOLHA (5 questões):\n- Cada questão com situação-problema real\n- 4 alternativas (A, B, C, D) sendo apenas 1 correta\n- Nível de complexidade progressivo`,
+
+      discursiva: `ATIVIDADE DISCURSIVA (4 questões):\n- Questões que exijam argumentação e análise crítica\n- Peça posicionamento fundamentado do aluno\n- Conexões com experiências reais`,
+
+      pratica: `PROJETO PRÁTICO EM GRUPO:\n- Descrição completa das etapas do projeto\n- Lista de materiais e produto final esperado\n- Critérios de execução baseados na BNCC`
+    };
+
     const bncc = await getBnccSnippet();
     const prompt = `
 ${bncc}
-Crie ${quantidade} ATIVIDADE(S) AVALIATIVA(S) do tipo ${tipo.toUpperCase()} sobre "${tema}".
-Ano/Série: ${anoSerie || 'Geral'}
 
-=== REQUISITOS ===
-1. Respostas DIRETAS e CURTAS.
-2. Estrutura: Enunciado com contexto e questões claras.
-3. Critérios: Divisão simples de pontos.
+=== CONTEXTO ===
+Você é um PROFESSOR AVALIADOR experiente. 
 
-RETORNE APENAS UM ARRAY JSON:
-[{"enunciado": "..", "criteriosAvaliacao": ".."}]
+=== MISSÃO ===
+Crie ${quantidade} ATIVIDADE(S) do tipo ${tipo.toUpperCase()} sobre "${tema}".
+Ano/Série: ${anoSerie || 'Ensino Fundamental/Médio'}
+
+=== REQUISITOS ESPECÍFICOS DO TIPO: ${tipo.toUpperCase()} ===
+${instrucoesDetalhadas[tipo] || instrucoesDetalhadas['discursiva']}
+
+=== REQUISITOS GERAIS ===
+1. NÃO USE asteriscos (**) para negrito.
+2. Use letras MAIÚSCULAS para títulos internos.
+3. Prático, desafiador e alinhado aos códigos da BNCC.
+
+=== ESTRUTURA JSON ===
+Para CADA atividade (RETORNE UM ARRAY [{}]) com as chaves:
+{
+  "enunciado": "CONTEXTO DA SITUAÇÃO + INSTRUÇÕES + QUESTÕES/TAREFAS",
+  "criteriosAvaliacao": "INDICADORES DE DESEMPENHO E PONTOS"
+}
+
+RETORNE APENAS JSON (ARRAY):
 `;
 
     const respostaBruta = await gerarTextoComIA(prompt);
