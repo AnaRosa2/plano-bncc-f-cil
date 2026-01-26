@@ -24,19 +24,27 @@ export async function gerarPlanoAulaAPI(
     disciplina: string,
     tema: string
 ): Promise<PlanoAulaAPI> {
-    const response = await fetch(`${API_BASE_URL}/unidades`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ disciplina, tema }),
-    });
+    console.log(`[apiService] Gerando plano para: ${tema} em ${disciplina}`);
+    try {
+        const response = await fetch(`${API_BASE_URL}/unidades`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ disciplina, tema }),
+        });
 
-    if (!response.ok) {
-        throw new Error('Erro ao gerar plano de aula');
+        if (!response.ok) {
+            const errBody = await response.text().catch(() => 'No error body');
+            console.error('[apiService] Erro na resposta do backend (Plano):', response.status, errBody);
+            throw new Error(`Erro ${response.status} ao gerar plano`);
+        }
+
+        const data = await response.json();
+        console.log('[apiService] Plano recebido com sucesso');
+        return data;
+    } catch (error) {
+        console.error('[apiService] Falha na requisição de Plano:', error);
+        throw error;
     }
-
-    return await response.json();
 }
 
 // Gerar atividade avaliativa com IA
@@ -45,21 +53,27 @@ export async function gerarAtividadeAPI(
     tipo: string,
     anoSerie?: string
 ): Promise<AtividadeAPI> {
-    const response = await fetch(`${API_BASE_URL}/atividades/gerar`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ tema, tipo, anoSerie, quantidade: 1 }),
-    });
+    console.log(`[apiService] Gerando atividade tipo ${tipo} para: ${tema}`);
+    try {
+        const response = await fetch(`${API_BASE_URL}/atividades/gerar`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tema, tipo, anoSerie, quantidade: 1 }),
+        });
 
-    if (!response.ok) {
-        throw new Error('Erro ao gerar atividade');
+        if (!response.ok) {
+            const errBody = await response.text().catch(() => 'No error body');
+            console.error('[apiService] Erro na resposta do backend (Atividade):', response.status, errBody);
+            throw new Error(`Erro ${response.status} ao gerar atividade`);
+        }
+
+        const result = await response.json();
+        console.log('[apiService] Atividade recebida com sucesso');
+        return Array.isArray(result) ? result[0] : result;
+    } catch (error) {
+        console.error('[apiService] Falha na requisição de Atividade:', error);
+        throw error;
     }
-
-    const result = await response.json();
-    // A API retorna um array, pegamos o primeiro item
-    return Array.isArray(result) ? result[0] : result;
 }
 
 // Sugerir unidades com IA
