@@ -125,19 +125,19 @@ RESPOSTA (APENAS O JSON, SEM TEXTO ADICIONAL):`;
     const jsonStr = respostaBruta.substring(firstBrace, lastBrace + 1);
     const conteudo = JSON.parse(jsonStr);
 
-    const asString = (val: any) => {
+    const cleanText = (val: any) => {
       if (!val) return '';
-      if (typeof val === 'string') return val;
-      return JSON.stringify(val, null, 2);
+      let str = typeof val === 'string' ? val : JSON.stringify(val, null, 2);
+      return str.replace(/\*\*/g, '').replace(/###/g, '').trim();
     };
 
     return {
       planoDeAula: `Plano: ${tema}`,
-      objetivo: asString(conteudo.objetivo),
-      metodologia: asString(conteudo.metodologia),
-      meta: asString(conteudo.meta),
-      atividade: asString(conteudo.atividade),
-      metodologiaId // Retorna o ID para o frontend saber o que foi usado
+      objetivo: cleanText(conteudo.objetivo),
+      metodologia: cleanText(conteudo.metodologia),
+      meta: cleanText(conteudo.meta),
+      atividade: cleanText(conteudo.atividade),
+      metodologiaId
     };
   } catch (error: any) {
     console.error('❌ Erro em gerarConteudo:', error.message);
