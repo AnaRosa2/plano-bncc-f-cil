@@ -45,6 +45,23 @@ import { generateUnitPDF } from '@/utils/pdfGenerator';
 import { Download } from 'lucide-react';
 import { gerarSlidesAPI, SlideAPI } from '@/services/apiService';
 
+const METODOLOGIAS_ATIVAS = [
+  { id: 'tradicional', nome: 'Tradicional / Padrão' },
+  { id: 'pbl', nome: 'Aprendizagem Baseada em Problemas (PBL)' },
+  { id: 'projetos', nome: 'Aprendizagem Baseada em Projetos' },
+  { id: 'invertida', nome: 'Sala de Aula Invertida' },
+  { id: 'gamificacao', nome: 'Gamificação' },
+  { id: 'hibrido', nome: 'Ensino Híbrido' },
+  { id: 'caso', nome: 'Estudo de Caso' },
+  { id: 'seminario', nome: 'Seminários' },
+  { id: 'cooperativa', nome: 'Aprendizagem Cooperativa' },
+  { id: 'equipe', nome: 'Aprendizagem Baseada em Equipe' },
+  { id: 'roda', nome: 'Roda de Conversa' },
+  { id: 'dramatizacao', nome: 'Dramatizações e Interpretações' },
+  { id: 'oficina', nome: 'Oficina (Cultura Maker)' },
+  { id: 'one-minute', nome: 'One Minute Paper' },
+];
+
 const VisualizarUnidade: React.FC = () => {
   const { id: disciplinaId, unidadeId } = useParams<{ id: string; unidadeId: string }>();
   const navigate = useNavigate();
@@ -65,6 +82,7 @@ const VisualizarUnidade: React.FC = () => {
   const [editingPlano, setEditingPlano] = useState(false);
   const [editingAtividade, setEditingAtividade] = useState(false);
   const [tipoAtividade, setTipoAtividade] = useState<TipoAtividade>('discursiva');
+  const [metodologiaSelecionada, setMetodologiaSelecionada] = useState('tradicional');
 
   // Estados para slides
   const [slides, setSlides] = useState<SlideAPI[]>([]);
@@ -109,7 +127,8 @@ const VisualizarUnidade: React.FC = () => {
 
   const handleGerarPlano = async () => {
     try {
-      await gerarPlanoAula(unidade.id);
+      const metId = metodologiaSelecionada === 'tradicional' ? undefined : metodologiaSelecionada;
+      await gerarPlanoAula(unidade.id, metId);
       toast({
         title: 'Plano de aula gerado!',
         description: 'A IA criou um plano de aula baseado no tema da unidade.',
@@ -292,13 +311,44 @@ const VisualizarUnidade: React.FC = () => {
                   <EmptyState
                     icon={FileText}
                     title="Nenhum plano de aula"
-                    description="Gere um plano de aula completo utilizando nossa IA como assistente pedagógico. O plano será alinhado à BNCC e ao tema desta unidade."
-                    action={{
-                      label: 'Gerar Plano de Aula com IA',
-                      onClick: handleGerarPlano,
-                      icon: Sparkles,
-                    }}
+                    description="Gere um plano de aula completo utilizando nossa IA como assistente pedagógico. O plano será alinhado à BNCC e à metodologia escolhida."
                   />
+
+                  <div className="max-w-md mx-auto p-6 border-2 border-dashed rounded-2xl bg-slate-50/50 space-y-6 -mt-4 mb-8">
+                    <div className="space-y-3">
+                      <Label className="text-sm font-bold flex items-center gap-2 text-primary">
+                        <Wrench className="h-4 w-4" />
+                        Estratégia Pedagógica
+                      </Label>
+                      <Select
+                        value={metodologiaSelecionada}
+                        onValueChange={setMetodologiaSelecionada}
+                      >
+                        <SelectTrigger className="bg-white h-12 text-base">
+                          <SelectValue placeholder="Selecione uma metodologia" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {METODOLOGIAS_ATIVAS.map((m) => (
+                            <SelectItem key={m.id} value={m.id} className="text-base py-3">
+                              {m.nome}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground italic">
+                        A IA irá reestruturar todo o plano de aula para seguir a metodologia escolhida acima.
+                      </p>
+                    </div>
+
+                    <Button
+                      variant="ai"
+                      className="w-full h-14 text-lg shadow-lg hover:shadow-xl transition-all"
+                      onClick={handleGerarPlano}
+                    >
+                      <Sparkles className="h-5 w-5 mr-3" />
+                      Gerar Plano de Aula com IA
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ) : editingPlano ? (
@@ -382,22 +432,22 @@ const VisualizarUnidade: React.FC = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <SectionCard title="Objetivos" icon={Target}>
-                    {planoAula.objetivos}
+                    {typeof planoAula.objetivos === 'string' ? planoAula.objetivos : JSON.stringify(planoAula.objetivos)}
                   </SectionCard>
                   <SectionCard title="Conteúdos" icon={BookOpen}>
-                    {planoAula.conteudos}
+                    {typeof planoAula.conteudos === 'string' ? planoAula.conteudos : JSON.stringify(planoAula.conteudos)}
                   </SectionCard>
                   <SectionCard title="Metodologia" icon={Wrench}>
-                    {planoAula.metodologia}
+                    {typeof planoAula.metodologia === 'string' ? planoAula.metodologia : JSON.stringify(planoAula.metodologia)}
                   </SectionCard>
                   <SectionCard title="Recursos Didáticos" icon={Layers}>
-                    {planoAula.recursosDidaticos}
+                    {typeof planoAula.recursosDidaticos === 'string' ? planoAula.recursosDidaticos : JSON.stringify(planoAula.recursosDidaticos)}
                   </SectionCard>
                   <SectionCard title="Avaliação" icon={CheckCircle}>
-                    {planoAula.avaliacao}
+                    {typeof planoAula.avaliacao === 'string' ? planoAula.avaliacao : JSON.stringify(planoAula.avaliacao)}
                   </SectionCard>
                   <SectionCard title="Tempo Estimado" icon={Clock}>
-                    {planoAula.tempoEstimado}
+                    {typeof planoAula.tempoEstimado === 'string' ? planoAula.tempoEstimado : JSON.stringify(planoAula.tempoEstimado)}
                   </SectionCard>
 
                   <GuidanceMessage variant="tip">

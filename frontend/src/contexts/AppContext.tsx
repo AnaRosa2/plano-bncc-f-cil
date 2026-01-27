@@ -29,7 +29,7 @@ interface AppContextType {
   getUnidadesByDisciplina: (disciplinaId: string) => Unidade[];
   sugerirUnidades: (disciplinaId: string) => Promise<{ tema: string; objetivo: string }[]>;
 
-  gerarPlanoAula: (unidadeId: string) => Promise<PlanoAula>;
+  gerarPlanoAula: (unidadeId: string, metodologiaId?: string) => Promise<PlanoAula>;
   updatePlanoAula: (id: string, data: Partial<PlanoAula>) => void;
   getPlanoAula: (unidadeId: string) => PlanoAula | undefined;
 
@@ -125,12 +125,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } catch (e) { return []; } finally { setIsLoading(false); }
   }, [disciplinas]);
 
-  const gerarPlanoAula = useCallback(async (unidadeId: string): Promise<PlanoAula> => {
+  const gerarPlanoAula = useCallback(async (unidadeId: string, metodologiaId?: string): Promise<PlanoAula> => {
     setIsLoading(true);
     try {
       const u = unidades.find(x => x.id === unidadeId);
       const d = disciplinas.find(x => x.id === u?.disciplinaId);
-      const res = await gerarPlanoAulaAPI(d?.nome || '', u?.tema || '', d?.anoSerie);
+      const res = await gerarPlanoAulaAPI(d?.nome || '', u?.tema || '', d?.anoSerie, metodologiaId);
       const novo: PlanoAula = {
         id: generateId(),
         unidadeId,
@@ -140,7 +140,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         recursosDidaticos: res.atividade,
         avaliacao: 'Contínua',
         tempoEstimado: '50 min',
-        geradoPorIA: true
+        geradoPorIA: true,
+        metodologiaId: res.metodologiaId || metodologiaId
       };
       setPlanosAula(prev => {
         const filtered = prev.filter(p => p.unidadeId !== unidadeId);

@@ -54,31 +54,61 @@ function getFramework(anoSerie: string = '') {
   return FRAMEWORK_PEDAGOGICO.FUND_I;
 }
 
-export async function gerarConteudo(disciplina: string, tema: string, anoSerie: string = '') {
+export async function gerarConteudo(disciplina: string, tema: string, anoSerie: string = '', metodologiaId?: string) {
   const bncc = await getBnccSnippet();
   const fw = getFramework(anoSerie);
 
+  let metodologiaContexto = '';
+  if (metodologiaId) {
+    const { METODOLOGIAS_ATIVAS } = require('../constants/metodologias');
+    const meto = METODOLOGIAS_ATIVAS.find((m: any) => m.id === metodologiaId);
+    if (meto) {
+      metodologiaContexto = `
+=== ESTRATÉGIA PEDAGÓGICA (METODOLOGIA ATIVA) ===
+Nome: ${meto.nome}
+Descrição: ${meto.descricao}
+${meto.fases ? `Fases a incluir: ${meto.fases.join(', ')}` : ''}
+Instrução: Adapte TODO o plano de aula para seguir RIGOROSAMENTE esta metodologia.
+`;
+    }
+  }
+
   const prompt = `
-=== CONTEXTO PEDAGÓGICO ===
-Etapa: ${fw.etapa}
-Foco: ${fw.foco}
-Limite de Atenção: ${fw.atencao}
-Materiais Recomendados: ${fw.materiais}
+=== SISTEMA DE GERAÇÃO PEDAGÓGICA AVANÇADA ===
+Você é um consultor pedagógico sênior especialista em BNCC e Metodologias Ativas.
+Sua missão é criar um PLANO DE AULA DENSO, DETALHADO e PROFISSIONAL.
 
-=== MISSÃO ===
-Crie um PLANO DE AULA COMPLETO sobre "${tema}" para "${disciplina}".
-Respeite RIGOROSAMENTE a maturidade cognitiva da etapa ${fw.etapa}.
+=== CONTEXTO DA TURMA ===
+- Etapa: ${fw.etapa}
+- Nível de Maturidade: ${fw.foco}
+- Tempo de Aula: ${fw.atencao} (Divida as atividades para não cansar o aluno)
+- Recursos Disponíveis: ${fw.materiais}
 
-=== REQUISITOS DE CONTEÚDO ===
-1. DIFERENCIAÇÃO: Ajuste o nível de complexidade para o limite de atenção de ${fw.atencao}.
-2. MATERIAIS: Integre o uso de: ${fw.materiais}.
-3. BNCC: Alinhe às competências de Cultura Digital.
+${metodologiaContexto}
 
+=== TEMA E DISCIPLINA ===
+- Tema: "${tema}"
+- Disciplina: "${disciplina}"
+
+=== REGRAS CRÍTICAS DE FORMATAÇÃO E CONTEÚDO ===
+1. PROIBIDO o uso de caracteres de formatação Markdown como "**" (negrito), "###" (títulos) ou qualquer outro símbolo fora de texto simples dentro dos valores do JSON.
+2. O conteúdo deve ser RICO e DETALHADO. Não seja superficial. Descreva o passo a passo de cada momento da aula.
+3. Use linguagem adequada à Etapa (${fw.etapa}), mas mantenha o rigor técnico para o professor.
+4. Integre a BNCC (Cultura Digital) de forma orgânica no texto.
+
+=== ESTRUTURA OBRIGATÓRIA (JSON) ===
+Retorne estritamente um objeto JSON com as seguintes chaves (em letras minúsculas):
+- "objetivo": Descreva 3 objetivos claros (Geral e Específicos).
+- "metodologia": Detalhe o passo a passo da aula (Introdução, Desenvolvimento, Conclusão). Use listas numeradas se necessário (ex: 1. Início..., 2. Prática...).
+- "meta": Explique as competências da BNCC desenvolvidas nesta aula.
+- "atividade": Descreva uma atividade prática "mão na massa" usando os materiais recomendados (${fw.materiais}).
+
+=== DATA SOURCE (BNCC) ===
 ${bncc}
 
-APENAS JSON: {"objetivo":"...","metodologia":"...","meta":"...","atividade":"..."}`;
+RESPOSTA (APENAS O JSON, SEM TEXTO ADICIONAL):`;
 
-  console.log(`[gerarConteudo] Gerando plano para: ${tema} (${fw.etapa})`);
+  console.log(`[gerarConteudo] Gerando plano DENSO para: ${tema} (${fw.etapa}) ${metodologiaId ? `usando ${metodologiaId}` : ''}`);
 
   try {
     const respostaBruta = await gerarComRetry(prompt);
@@ -95,12 +125,19 @@ APENAS JSON: {"objetivo":"...","metodologia":"...","meta":"...","atividade":"...
     const jsonStr = respostaBruta.substring(firstBrace, lastBrace + 1);
     const conteudo = JSON.parse(jsonStr);
 
+    const asString = (val: any) => {
+      if (!val) return '';
+      if (typeof val === 'string') return val;
+      return JSON.stringify(val, null, 2);
+    };
+
     return {
       planoDeAula: `Plano: ${tema}`,
-      objetivo: conteudo.objetivo || '',
-      metodologia: conteudo.metodologia || '',
-      meta: conteudo.meta || '',
-      atividade: conteudo.atividade || ''
+      objetivo: asString(conteudo.objetivo),
+      metodologia: asString(conteudo.metodologia),
+      meta: asString(conteudo.meta),
+      atividade: asString(conteudo.atividade),
+      metodologiaId // Retorna o ID para o frontend saber o que foi usado
     };
   } catch (error: any) {
     console.error('❌ Erro em gerarConteudo:', error.message);
@@ -109,13 +146,32 @@ APENAS JSON: {"objetivo":"...","metodologia":"...","meta":"...","atividade":"...
       objetivo: `[Aviso: Falha na IA - ${error.message}]\n\nOBJETIVO GERAL: Desenvolver conhecimento crítico sobre ${tema}.\n\nOBJETIVOS ESPECÍFICOS:\n• Analisar impactos de ${tema} na sociedade digital.\n• Aplicar ferramentas práticas alinhadas à BNCC.`,
       metodologia: `1. Introdução dialogada (10min)\n2. Atividade prática dirigida (30min)\n3. Síntese e avaliação (10min)`,
       meta: `Competências BNCC: CG05 (Cultura Digital). O aluno será capaz de mobilizar conhecimentos de ${tema} com ética e responsabilidade.`,
-      atividade: `Utilizar recursos multimídia para explorar o tema ${tema} em sala.`
+      atividade: `Utilizar recursos multimídia para explorar o tema ${tema} em sala.`,
+      metodologiaId
     };
   }
 }
 
 export async function gerarAtividade(tema: string, tipo: string, anoSerie?: string, quantidade = 1) {
-  const prompt = `Crie uma atividade ${tipo} sobre ${tema} para ${anoSerie || 'fundamental'}.\nAPENAS JSON: [{"enunciado":"...","criteriosAvaliacao":"..."}]`;
+  const prompt = `
+=== SISTEMA DE GERAÇÃO DE ATIVIDADES ===
+Crie uma atividade educacional do tipo "${tipo}" sobre o tema "${tema}" para a etapa "${anoSerie || 'Ensino Fundamental'}".
+
+=== REGRAS OBRIGATÓRIAS ===
+1. PROIBIDO o uso de markdown como "**" ou "###". Use apenas texto simples.
+2. Seja detalhado e criativo. A atividade deve ser desafiadora e pedagógica.
+3. Inclua critérios de avaliação claros e objetivos para o professor.
+
+=== ESTRUTURA JSON (ARRAY) ===
+Retorne apenas um array JSON:
+[
+  {
+    "enunciado": "Texto completo da questão ou descrição da atividade prática...",
+    "criteriosAvaliacao": "O que o professor deve observar ao corrigir..."
+  }
+]
+
+RESPOSTA (APENAS O ARRAY JSON):`;
 
   try {
     const respostaBruta = await gerarComRetry(prompt);

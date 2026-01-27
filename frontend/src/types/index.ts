@@ -29,6 +29,7 @@ export interface PlanoAula {
   avaliacao: string;
   tempoEstimado: string;
   geradoPorIA: boolean;
+  metodologiaId?: string;
 }
 
 export interface AtividadeAvaliativa {

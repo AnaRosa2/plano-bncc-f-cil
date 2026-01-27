@@ -23,14 +23,15 @@ export interface SugestaoUnidade {
 export async function gerarPlanoAulaAPI(
     disciplina: string,
     tema: string,
-    anoSerie?: string
-): Promise<PlanoAulaAPI> {
-    console.log(`[apiService] Gerando plano para: ${tema} em ${disciplina} (${anoSerie || 'geral'})`);
+    anoSerie?: string,
+    metodologiaId?: string
+): Promise<PlanoAulaAPI & { metodologiaId?: string }> {
+    console.log(`[apiService] Gerando plano para: ${tema} em ${disciplina} (${anoSerie || 'geral'}) ${metodologiaId ? `usando ${metodologiaId}` : ''}`);
     try {
         const response = await fetch(`${API_BASE_URL}/unidades`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ disciplina, tema, anoSerie }),
+            body: JSON.stringify({ disciplina, tema, anoSerie, metodologiaId }),
         });
 
         if (!response.ok) {

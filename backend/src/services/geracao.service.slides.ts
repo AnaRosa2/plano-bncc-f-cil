@@ -62,40 +62,37 @@ export async function gerarSlides(tema: string, disciplina: string, anoSerie: st
   const fw = getSlideFramework(anoSerie);
 
   const prompt = `
+=== DESIGNER INSTRUCIONAL IA (MODO SLIDES) ===
+Você é um designer instrucional sênior. Crie uma apresentação de slides DENSA e EDUCATIVA.
+
 === CONTEXTO ===
-Você é um DESIGNER INSTRUCIONAL ESPECIALISTA EM PEDAGOGIA. 
-Etapa de Ensino: ${fw.estilo}
+- Tema: "${tema}"
+- Disciplina: "${disciplina}"
+- Estilo Visual: ${fw.estilo}
+- Cores de Destaque: ${fw.cores}
 
-=== MISSÃO ===
-Crie uma APRESENTAÇÃO DE SLIDES sobre "${tema}" para "${disciplina}".
+=== REGRAS DE OURO ===
+1. PROIBIDO o uso de caracteres Markdown como "**" ou "###" dentro dos textos. Use texto limpo.
+2. Cada slide deve ter conteúdo educativo real, não apenas tópicos vazios.
+3. No campo "conteudo", forneça o texto que o aluno verá + um "ROTEIRO PARA O PROFESSOR" explicando como apresentar aquele slide.
+4. Use os tons HEX (${fw.cores}) no roteiro de design.
 
-=== DIRETRIZES DE DESIGN (OBRIGATÓRIO) ===
-- CORES HEX: ${fw.cores}
-- ELEMENTOS VISUAIS: ${fw.obrigatorios}
-- ANIMAÇÕES RECOMENDADAS NO ROTEIRO:
-  * Entradas: ${fw.animacoes.entradas}
-  * Transições: ${fw.animacoes.transicoes}
-  * Interações: ${fw.animacoes.interacoes}
-
-=== REQUISITOS ===
-1. QUANTIDADE: 8-10 slides.
-2. DIFERENCIAÇÃO: Conteúdo adequado à maturidade da turma.
-3. PRÁTICA: Incluir 2 atividades práticas com materiais reais no roteiro.
-
-=== ESTRUTURA DO CONTEÚDO ===
-No campo "conteudo", além do texto pedagógico, inclua uma seção "ROTEIRO DE ANIMAÇÃO" descrevendo quais animações e cores usar de acordo com as diretrizes acima.
-
-RETORNE APENAS JSON (ARRAY):
+=== ESTRUTURA JSON (ARRAY OBRIGATÓRIO) ===
+Retorne apenas um ARRAY JSON conforme o exemplo:
 [
   {
     "numero": 1,
-    "titulo": "Título",
-    "conteudo": "Texto Pedagógico... \\n\\nROTEIRO DE ANIMAÇÃO: [Descreva animações e tons HEX]",
+    "titulo": "Título Impactante",
+    "conteudo": "Conteúdo educativo detalhado... \\n\\n[ROTEIRO PROFESSOR]: Dicas de fala e interação.",
     "tipo": "titulo|conteudo|pratica|questao|conclusao",
-    "icon": "nome-do-icone"
+    "icon": "nome-do-icone-lucide"
   }
 ]
-`;
+
+=== DATA SOURCE (BNCC) ===
+${bncc}
+
+RESPOSTA (APENAS O ARRAY JSON):`;
 
   try {
     const respostaBruta = await gerarComRetry(prompt);
