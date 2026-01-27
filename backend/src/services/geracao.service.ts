@@ -189,10 +189,46 @@ RESPOSTA (APENAS O ARRAY JSON):`;
 }
 
 export async function gerarDisciplina(anoSerie: string, tema: string) {
-  const prompt = `Crie uma disciplina de Cultura Digital para ${anoSerie} focada em ${tema}.\nJSON: {"nome":"...","descricao":"...","sugestoesUnidades":[]}`;
+  const prompt = `
+=== GESTOR PEDAGÓGICO IA ===
+Crie uma disciplina profissional e estruturada.
+
+- Etapa: ${anoSerie}
+- Foco Principal: ${tema} (Integrar com Cultura Digital e BNCC)
+
+=== REGRAS OBRIGATÓRIAS ===
+1. PROIBIDO markdown (** ou ###). Use texto limpo.
+2. Seja profissional e inspirador.
+3. No campo "sugestoesUnidades", forneça 3 temas de unidades que cubram o semestre.
+
+=== ESTRUTURA JSON ===
+{
+  "nome": "Título da Disciplina",
+  "descricao": "Texto curto e denso explicando o valor pedagógico desta disciplina.",
+  "sugestoesUnidades": [
+    { "tema": "Tema 1", "objetivo": "Objetivo detalhado..." },
+    { "tema": "Tema 2", "objetivo": "Objetivo detalhado..." },
+    { "tema": "Tema 3", "objetivo": "Objetivo detalhado..." }
+  ]
+}
+
+RESPOSTA (APENAS O JSON):`;
   try {
     const res = await gerarComRetry(prompt);
-    return JSON.parse(res.match(/\{[\s\S]*\}/)?.[0] || '{}');
+    const jsonMatch = res.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Falha ao encontrar JSON');
+
+    const parsed = JSON.parse(jsonMatch[0]);
+    const cleanText = (str: string) => str.replace(/\*\*/g, '').replace(/###/g, '').trim();
+
+    return {
+      nome: cleanText(parsed.nome || `Disciplina: ${tema}`),
+      descricao: cleanText(parsed.descricao || ''),
+      sugestoesUnidades: (parsed.sugestoesUnidades || []).map((u: any) => ({
+        tema: cleanText(u.tema || ''),
+        objetivo: cleanText(u.objetivo || '')
+      }))
+    };
   } catch (e) {
     return { nome: `Disciplina: ${tema}`, descricao: `Foco em Cultura Digital para ${anoSerie}.`, sugestoesUnidades: [] };
   }
@@ -201,39 +237,45 @@ export async function gerarDisciplina(anoSerie: string, tema: string) {
 export async function sugerirUnidades(disciplina: string, anoSerie: string = '', quantidade = 3) {
   const fw = getFramework(anoSerie);
   const prompt = `
-=== CONTEXTO PEDAGÓGICO ===
-Etapa: ${fw.etapa}
-Foco: ${fw.foco}
+=== CONSULTOR PEDAGÓGICO (SUGESTÃO DE UNIDADES) ===
+Sugira ${quantidade} temas de unidades de ensino verdadeiramente INOVADORES e PEDAGÓGICOS.
 
-=== MISSÃO ===
-Sugira ${quantidade} temas de aula inovadores para "${disciplina}" (${anoSerie}).
-Os temas devem ser adequados para ${fw.etapa}.
+- Disciplina: "${disciplina}"
+- Etapa: ${fw.etapa}
+- Foco: ${fw.foco}
 
-RETORNE APENAS UM ARRAY JSON: [{"tema":"...","objetivo":"..."}]`;
+=== REGRAS CRÍTICAS ===
+1. PROIBIDO markdown (** ou ###).
+2. Cada objetivo deve ser uma frase completa, densa e profissional, explicando O QUE o aluno aprenderá.
+3. Não use temas genéricos. Seja específico para a etapa ${fw.etapa}.
 
-  console.log(`[sugerirUnidades] Buscando sugestões para: ${disciplina} (${fw.etapa})`);
+=== ESTRUTURA JSON (ARRAY) ===
+[
+  { "tema": "Título do Tema", "objetivo": "Objetivo pedagógico denso e detalhado..." }
+]
+
+RESPOSTA (APENAS O ARRAY JSON):`;
+
+  console.log(`[sugerirUnidades] Buscando sugestões DENSAS para: ${disciplina} (${fw.etapa})`);
 
   try {
     const res = await gerarComRetry(prompt);
+    const jsonMatch = res.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) throw new Error('JSON não encontrado');
 
-    // Extração robusta de JSON (Array)
-    const firstBracket = res.indexOf('[');
-    const lastBracket = res.lastIndexOf(']');
+    const parsed = JSON.parse(jsonMatch[0]);
+    const cleanText = (str: string) => str.replace(/\*\*/g, '').replace(/###/g, '').trim();
 
-    if (firstBracket === -1 || lastBracket === -1) {
-      console.warn('[sugerirUnidades] JSON não encontrado na resposta');
-      throw new Error('Formato de resposta inválido');
-    }
-
-    const jsonStr = res.substring(firstBracket, lastBracket + 1);
-    return JSON.parse(jsonStr);
+    return parsed.map((item: any) => ({
+      tema: cleanText(item.tema || ''),
+      objetivo: cleanText(item.objetivo || '')
+    }));
   } catch (e: any) {
     console.error('❌ Erro em sugerirUnidades:', e.message);
-    // Sugestões inteligentes de fallback caso a IA falhe
     return [
-      { tema: `Tendências em ${disciplina}`, objetivo: `Explorar os fundamentos de ${disciplina} na era digital.` },
-      { tema: `Práticas em ${disciplina}`, objetivo: `Desenvolver competências práticas em ${disciplina}.` },
-      { tema: `Desafios da ${disciplina}`, objetivo: `Analisar criticamente o impacto da ${disciplina} na sociedade.` }
+      { tema: `Fundamentos de ${disciplina}`, objetivo: `Explorar os conceitos essenciais de ${disciplina} aplicados à ${fw.etapa}.` },
+      { tema: `Inovação e ${disciplina}`, objetivo: `Desenvolver competências críticas e práticas em ${disciplina}.` },
+      { tema: `Desafios Contemporâneos`, objetivo: `Analisar o impacto de ${disciplina} na sociedade digital.` }
     ];
   }
 }
