@@ -18,6 +18,15 @@ console.log(`CORS configured. Development mode: ${isDev}. FRONTEND_URL: ${proces
 
 app.use(express.json());
 
+// Rota raiz para health check simples
+app.get("/", (req, res) => {
+  res.json({
+    message: "API do Plano BNCC está online! 🚀",
+    status: "alive",
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use("/unidades", unidadesRoutes);
 app.use("/atividades", atividadesRoutes);
 app.use("/disciplinas", disciplinasRoutes);
