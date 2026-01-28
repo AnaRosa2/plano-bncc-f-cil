@@ -19,6 +19,21 @@ export interface SugestaoUnidade {
     objetivo: string;
 }
 
+// Auxiliar para tratar erros da API
+async function handleApiResponse(response: Response, defaultMsg: string) {
+    if (!response.ok) {
+        try {
+            const errorData = await response.json();
+            throw new Error(errorData.message || errorData.error || defaultMsg);
+        } catch (e: any) {
+            if (e.message) throw e;
+            const text = await response.text().catch(() => defaultMsg);
+            throw new Error(text || defaultMsg);
+        }
+    }
+    return response.json();
+}
+
 // Gerar plano de aula com IA
 export async function gerarPlanoAulaAPI(
     disciplina: string,
@@ -27,26 +42,12 @@ export async function gerarPlanoAulaAPI(
     metodologiaId?: string
 ): Promise<PlanoAulaAPI & { metodologiaId?: string }> {
     console.log(`[apiService] Gerando plano para: ${tema} em ${disciplina} (${anoSerie || 'geral'}) ${metodologiaId ? `usando ${metodologiaId}` : ''}`);
-    try {
-        const response = await fetch(`${API_BASE_URL}/unidades`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ disciplina, tema, anoSerie, metodologiaId }),
-        });
-
-        if (!response.ok) {
-            const errBody = await response.text().catch(() => 'No error body');
-            console.error('[apiService] Erro na resposta do backend (Plano):', response.status, errBody);
-            throw new Error(`Erro ${response.status} ao gerar plano`);
-        }
-
-        const data = await response.json();
-        console.log('[apiService] Plano recebido com sucesso');
-        return data;
-    } catch (error) {
-        console.error('[apiService] Falha na requisição de Plano:', error);
-        throw error;
-    }
+    const response = await fetch(`${API_BASE_URL}/unidades`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ disciplina, tema, anoSerie, metodologiaId }),
+    });
+    return handleApiResponse(response, 'Falha ao gerar plano de aula');
 }
 
 // Gerar atividade avaliativa com IA
@@ -56,26 +57,13 @@ export async function gerarAtividadeAPI(
     anoSerie?: string
 ): Promise<AtividadeAPI> {
     console.log(`[apiService] Gerando atividade tipo ${tipo} para: ${tema}`);
-    try {
-        const response = await fetch(`${API_BASE_URL}/atividades/gerar`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tema, tipo, anoSerie, quantidade: 1 }),
-        });
-
-        if (!response.ok) {
-            const errBody = await response.text().catch(() => 'No error body');
-            console.error('[apiService] Erro na resposta do backend (Atividade):', response.status, errBody);
-            throw new Error(`Erro ${response.status} ao gerar atividade`);
-        }
-
-        const result = await response.json();
-        console.log('[apiService] Atividade recebida com sucesso');
-        return Array.isArray(result) ? result[0] : result;
-    } catch (error) {
-        console.error('[apiService] Falha na requisição de Atividade:', error);
-        throw error;
-    }
+    const response = await fetch(`${API_BASE_URL}/atividades/gerar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tema, tipo, anoSerie, quantidade: 1 }),
+    });
+    const result = await handleApiResponse(response, 'Falha ao gerar atividade');
+    return Array.isArray(result) ? result[0] : result;
 }
 
 // Sugerir unidades com IA
@@ -92,11 +80,7 @@ export async function sugerirUnidadesAPI(
         body: JSON.stringify({ disciplina, anoSerie, quantidade }),
     });
 
-    if (!response.ok) {
-        throw new Error('Erro ao sugerir unidades');
-    }
-
-    return await response.json();
+    return handleApiResponse(response, 'Falha ao sugerir unidades');
 }
 
 // Interface para slides
@@ -122,9 +106,5 @@ export async function gerarSlidesAPI(
         body: JSON.stringify({ tema, disciplina, anoSerie }),
     });
 
-    if (!response.ok) {
-        throw new Error('Erro ao gerar slides');
-    }
-
-    return await response.json();
+    return handleApiResponse(response, 'Falha ao gerar slides');
 }

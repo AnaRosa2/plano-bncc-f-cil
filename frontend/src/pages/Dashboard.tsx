@@ -24,12 +24,22 @@ const Dashboard: React.FC = () => {
       {/* Hero Section */}
       <div className="mb-8">
         <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-            Planejamento de Aulas
-          </h1>
-          <p className="text-muted-foreground">
-            Gerencie suas disciplinas e crie materiais didáticos alinhados à BNCC
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+                Planejamento de Aulas
+              </h1>
+              <p className="text-muted-foreground">
+                Gerencie suas disciplinas e crie materiais didáticos alinhados à BNCC
+              </p>
+            </div>
+            {disciplinas.length > 0 && (
+              <Button onClick={() => navigate('/disciplina/nova')} className="gap-2">
+                <Plus className="h-4 w-4" />
+                Nova Disciplina
+              </Button>
+            )}
+          </div>
         </div>
 
         <GuidanceMessage variant="info">
@@ -68,10 +78,6 @@ const Dashboard: React.FC = () => {
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                       <BookOpen className="h-5 w-5" />
                     </div>
-                    <span className="bncc-badge">
-                      <Sparkles className="h-3 w-3" />
-                      BNCC
-                    </span>
                   </div>
                   <CardTitle className="mt-3 text-lg">{disciplina.nome}</CardTitle>
                   <CardDescription className="flex items-center gap-1">

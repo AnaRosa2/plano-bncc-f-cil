@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, Home, ChevronRight } from 'lucide-react';
+import { BookOpen, Home, ChevronRight, Sun, Moon, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTheme } from '@/components/theme-provider';
 
 interface BreadcrumbItem {
   label: string;
@@ -14,6 +15,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ breadcrumbs = [] }) => {
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
   const isHome = location.pathname === '/';
 
   return (
@@ -52,15 +54,34 @@ const Header: React.FC<HeaderProps> = ({ breadcrumbs = [] }) => {
           </nav>
         )}
 
-        {/* Ação Principal */}
-        {!isHome && (
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/">
-              <Home className="h-4 w-4 mr-1" />
-              Início
-            </Link>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            title="Alternar Tema"
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
-        )}
+
+          {!isHome && (
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/">
+                <Home className="h-4 w-4 mr-1" />
+                Início
+              </Link>
+            </Button>
+          )}
+
+          {isHome && (
+            <Button size="sm" asChild className="hidden sm:flex">
+              <Link to="/disciplina/nova">
+                <Plus className="h-4 w-4 mr-1" />
+                Disciplina
+              </Link>
+            </Button>
+          )}
+        </div>
       </div>
     </header>
   );

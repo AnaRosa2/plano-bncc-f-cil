@@ -72,15 +72,20 @@ const VisualizarDisciplina: React.FC = () => {
   };
 
   const handleAdicionarSugestao = (sugestao: { tema: string; objetivo: string }) => {
+    // Tenta extrair códigos BNCC como [EF05LP20]
+    const bnccMatch = sugestao.objetivo.match(/\[([A-Z0-9, ]+)\]/);
+    const habilidades = bnccMatch ? bnccMatch[1] : '';
+    const objetivoLimpo = sugestao.objetivo.replace(/\[.*?\]/g, '').trim();
+
     addUnidade({
       disciplinaId: disciplina.id,
       tema: sugestao.tema,
-      objetivoGeral: sugestao.objetivo,
-      habilidadesBNCC: '',
+      objetivoGeral: objetivoLimpo,
+      habilidadesBNCC: habilidades,
     });
     toast({
       title: 'Unidade adicionada!',
-      description: `A unidade "${sugestao.tema}" foi criada.`,
+      description: `A unidade "${sugestao.tema}" foi criada com recomendações BNCC.`,
     });
   };
 

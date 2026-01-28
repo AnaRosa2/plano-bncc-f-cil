@@ -62,56 +62,52 @@ export async function gerarSlides(tema: string, disciplina: string, anoSerie: st
   const fw = getSlideFramework(anoSerie);
 
   const prompt = `
-=== DESIGNER INSTRUCIONAL IA (MODO SLIDES) ===
-Você é um designer instrucional sênior. Crie uma apresentação de slides DENSA e EDUCATIVA.
+=== DESIGNER INSTRUCIONAL IA (MODO SLIDES PEDAGÓGICOS) ===
+Você é um designer instrucional sênior especializado em Cultura Digital.
+Crie uma apresentação de slides CRIATIVA, DENSA e PROFISSIONAL.
 
 === CONTEXTO ===
 - Tema: "${tema}"
 - Disciplina: "${disciplina}"
-- Estilo Visual: ${fw.estilo}
-- Cores de Destaque: ${fw.cores}
+- Etapa: "${anoSerie}"
+- Estilo: ${fw.estilo}
 
-=== REGRAS DE OURO ===
-1. PROIBIDO o uso de caracteres Markdown como "**" ou "###" dentro dos textos. Use texto limpo.
-2. Cada slide deve ter conteúdo educativo real, não apenas tópicos vazios.
-3. No campo "conteudo", forneça o texto que o aluno verá + um "ROTEIRO PARA O PROFESSOR" explicando como apresentar aquele slide.
-4. Use os tons HEX (${fw.cores}) no roteiro de design.
+=== REQUISITOS CRIATIVOS ===
+1. CONTEÚDO REAL: Cada slide deve ensinar algo concreto. Proibido tópicos vazios.
+2. STORYTELLING: Se for EF I/II, use uma narrativa ou mascote. Se for EM, use problemas reais da sociedade.
+3. ROTEIRO: Inclua um "[ROTEIRO PROFESSOR]" detalhado no campo "conteudo" após o texto do slide.
+4. BNCC: No primeiro ou último slide, cite as Habilidades BNCC trabalhadas.
+5. PROIBIDO: Markdown (** ou ###) ou chaves/colchetes soltos. Use texto limpo.
 
-=== ESTRUTURA JSON (ARRAY OBRIGATÓRIO) ===
-Retorne apenas um ARRAY JSON conforme o exemplo:
+=== ESTRUTURA JSON (ARRAY) ===
 [
   {
     "numero": 1,
-    "titulo": "Título Impactante",
-    "conteudo": "Conteúdo educativo detalhado... \\n\\n[ROTEIRO PROFESSOR]: Dicas de fala e interação.",
+    "titulo": "Título Criativo do Slide",
+    "conteudo": "Texto educativo para o aluno... \\n\\n[ROTEIRO PROFESSOR]: Sugestão de fala e dinâmica.",
     "tipo": "titulo|conteudo|pratica|questao|conclusao",
     "icon": "nome-do-icone-lucide"
   }
 ]
 
-=== DATA SOURCE (BNCC) ===
-${bncc}
-
 RESPOSTA (APENAS O ARRAY JSON):`;
 
   try {
     const respostaBruta = await gerarComRetry(prompt);
-    console.log('[geracao.service] slides response received');
-
     const firstBracket = respostaBruta.indexOf('[');
     const lastBracket = respostaBruta.lastIndexOf(']');
-
-    if (firstBracket === -1 || lastBracket === -1) {
-      throw new Error('JSON não encontrado na resposta dos slides');
-    }
+    if (firstBracket === -1 || lastBracket === -1) throw new Error('JSON não encontrado');
 
     const jsonStr = respostaBruta.substring(firstBracket, lastBracket + 1);
     const slides = JSON.parse(jsonStr);
 
-    if (!Array.isArray(slides)) throw new Error('Resposta não é um array');
+    const clean = (val: string) => val.replace(/\*\*/g, '').replace(/[#{}]/g, '').trim();
 
-    console.log('[geracao.service] slides gerados:', slides.length);
-    return slides;
+    return slides.map((s: any) => ({
+      ...s,
+      titulo: clean(s.titulo || ''),
+      conteudo: clean(s.conteudo || '')
+    }));
   } catch (error) {
     console.error('❌ Erro ao gerar slides:', error);
 

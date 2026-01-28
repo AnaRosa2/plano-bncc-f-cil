@@ -75,6 +75,8 @@ const VisualizarUnidade: React.FC = () => {
     gerarAtividadeAvaliativa,
     updatePlanoAula,
     updateAtividadeAvaliativa,
+    getSlides,
+    saveSlides,
     isLoading,
   } = useApp();
 
@@ -85,7 +87,7 @@ const VisualizarUnidade: React.FC = () => {
   const [metodologiaSelecionada, setMetodologiaSelecionada] = useState('tradicional');
 
   // Estados para slides
-  const [slides, setSlides] = useState<SlideAPI[]>([]);
+  const [slides, setSlides] = useState<SlideAPI[]>(getSlides(unidadeId || '') || []);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loadingSlides, setLoadingSlides] = useState(false);
 
@@ -166,6 +168,7 @@ const VisualizarUnidade: React.FC = () => {
     try {
       const slidesGerados = await gerarSlidesAPI(unidade.tema, disciplina.nome, disciplina.anoSerie);
       setSlides(slidesGerados);
+      saveSlides(unidade.id, slidesGerados);
       setCurrentSlide(0);
       toast({
         title: 'Slides gerados!',
@@ -708,10 +711,10 @@ const VisualizarUnidade: React.FC = () => {
             ) : (
               <div className="space-y-6">
                 {/* Slide Atual - Design Profissional */}
-                <div className="relative">
+                <div className="relative max-w-4xl mx-auto">
                   {/* Container do Slide com aspecto 16:9 */}
                   <div
-                    className="relative w-full overflow-hidden rounded-2xl shadow-2xl"
+                    className="relative w-full overflow-hidden rounded-2xl shadow-2xl border"
                     style={{ aspectRatio: '16/9' }}
                   >
                     {/* Background Gradiente baseado no tipo do slide */}

@@ -15,6 +15,7 @@ interface AppContextType {
   unidades: Unidade[];
   planosAula: PlanoAula[];
   atividadesAvaliativas: AtividadeAvaliativa[];
+  slidesData: Record<string, any[]>; // unidadeId -> slides[]
   isLoading: boolean;
 
   addDisciplina: (disciplina: Omit<Disciplina, 'id' | 'criadoEm'>) => void;
@@ -36,6 +37,9 @@ interface AppContextType {
   gerarAtividadeAvaliativa: (unidadeId: string, tipo: TipoAtividade) => Promise<AtividadeAvaliativa>;
   updateAtividadeAvaliativa: (id: string, data: Partial<AtividadeAvaliativa>) => void;
   getAtividadeAvaliativa: (unidadeId: string) => AtividadeAvaliativa | undefined;
+
+  getSlides: (unidadeId: string) => any[] | undefined;
+  saveSlides: (unidadeId: string, slides: any[]) => void;
 
   resetData: () => void;
 }
@@ -88,6 +92,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return atividadesAvaliativasIniciais;
   });
 
+  const [slidesData, setSlidesData] = useState<Record<string, any[]>>(() => {
+    const saved = localStorage.getItem(`${STORAGE_KEY}-slides`);
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { return {}; }
+    }
+    return {};
+  });
+
   const [isLoading, setIsLoading] = useState(false);
 
   // Hook para salvar no LocalStorage sempre que os estados mudarem
@@ -95,6 +107,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   useEffect(() => { localStorage.setItem(`${STORAGE_KEY}-unidades`, JSON.stringify(unidades)); }, [unidades]);
   useEffect(() => { localStorage.setItem(`${STORAGE_KEY}-planos`, JSON.stringify(planosAula)); }, [planosAula]);
   useEffect(() => { localStorage.setItem(`${STORAGE_KEY}-atividades`, JSON.stringify(atividadesAvaliativas)); }, [atividadesAvaliativas]);
+  useEffect(() => { localStorage.setItem(`${STORAGE_KEY}-slides`, JSON.stringify(slidesData)); }, [slidesData]);
 
   const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
 
@@ -185,6 +198,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const getAtividadeAvaliativa = useCallback((unidadeId: string) => atividadesAvaliativas.find(a => a.unidadeId === unidadeId), [atividadesAvaliativas]);
 
+  const getSlides = useCallback((unidadeId: string) => slidesData[unidadeId], [slidesData]);
+  const saveSlides = useCallback((unidadeId: string, slides: any[]) => {
+    setSlidesData(prev => ({ ...prev, [unidadeId]: slides }));
+  }, []);
+
   const resetData = useCallback(() => {
     if (window.confirm('Resetar todos os dados?')) {
       localStorage.clear();
@@ -193,11 +211,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }, []);
 
   const value: AppContextType = {
-    disciplinas, unidades, planosAula, atividadesAvaliativas, isLoading,
+    disciplinas, unidades, planosAula, atividadesAvaliativas, slidesData, isLoading,
     addDisciplina, updateDisciplina, deleteDisciplina, getDisciplina,
     addUnidade, updateUnidade, deleteUnidade, getUnidade, getUnidadesByDisciplina, sugerirUnidades,
     gerarPlanoAula, updatePlanoAula, getPlanoAula,
-    gerarAtividadeAvaliativa, updateAtividadeAvaliativa, getAtividadeAvaliativa, resetData
+    gerarAtividadeAvaliativa, updateAtividadeAvaliativa, getAtividadeAvaliativa,
+    getSlides, saveSlides,
+    resetData
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

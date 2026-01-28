@@ -74,79 +74,73 @@ Instrução: Adapte TODO o plano de aula para seguir RIGOROSAMENTE esta metodolo
   }
 
   const prompt = `
-=== SISTEMA DE GERAÇÃO PEDAGÓGICA AVANÇADA ===
-Você é um consultor pedagógico sênior especialista em BNCC e Metodologias Ativas.
-Sua missão é criar um PLANO DE AULA DENSO, DETALHADO e PROFISSIONAL.
+=== ESPECIALISTA EM CURRÍCULO E PEDAGOGIA (BNCC/MEC) ===
+Você é um consultor sênior com expertise na BNCC e nas Diretrizes Curriculares Nacionais (CNE/CP nº 2/2022).
 
-=== CONTEXTO DA TURMA ===
+=== TAREFA ===
+Gerar um PLANO DE AULA COMPLETO e DIFERENCIADO.
+- Tema: "${tema}"
+- Disciplina: "${disciplina}"
 - Etapa: ${fw.etapa}
-- Nível de Maturidade: ${fw.foco}
-- Tempo de Aula: ${fw.atencao} (Divida as atividades para não cansar o aluno)
-- Recursos Disponíveis: ${fw.materiais}
+
+=== REQUISITOS OBRIGATÓRIOS ===
+1. ALINHAMENTO BNCC EXPLÍCITO: Liste 3-4 habilidades específicas com CÓDIGOS COMPLETOS (ex: EF05LP20, EM13LGG101).
+2. DIRETRIZES DE CULTURA DIGITAL (MEC): Integre os eixos (Cidadania Ética, Pensamento Computacional, Comunicação, Alfabetização Midiática). Cite Resolução CNE/CP nº 2/2022 quando aplicável.
+3. DIFERENCIAÇÃO POR FAIXA ETÁRIA:
+   - EF I: Lúdico, concreto, storytelling.
+   - EF II: Projetos colaborativos, lógica sem código.
+   - EM: Problematização social, prototipagem real.
+4. RIGOR TÉCNICO: Use verbos da Taxonomia de Bloom. Nada de generalizações. Passo a passo detalhado.
+5. PROIBIDO markdown (** ou ###) ou colchetes extras. Use texto limpo.
 
 ${metodologiaContexto}
 
-=== TEMA E DISCIPLINA ===
-- Tema: "${tema}"
-- Disciplina: "${disciplina}"
+=== ESTRUTURA JSON OBRIGATÓRIA ===
+{
+  "objetivo": "Objetivo de aprendizagem com verbos de Bloom",
+  "metodologia": "Passo a passo detalhado (Introdução, Desenv., Conclusão) + Adaptações de inclusão",
+  "meta": "Quadro resumo: [Tema] | [Série] | [Habilidades BNCC com CÓDIGOS] | [Eixos Cultura Digital]",
+  "atividade": "Atividade prática detalhada com Recursos (ferramentas gratuitas)",
+  "tempo": "Duração em aulas de 50min"
+}
 
-=== REGRAS CRÍTICAS DE FORMATAÇÃO E CONTEÚDO ===
-1. PROIBIDO o uso de caracteres de formatação Markdown como "**" (negrito), "###" (títulos) ou qualquer outro símbolo fora de texto simples dentro dos valores do JSON.
-2. O conteúdo deve ser RICO e DETALHADO. Não seja superficial. Descreva o passo a passo de cada momento da aula.
-3. Use linguagem adequada à Etapa (${fw.etapa}), mas mantenha o rigor técnico para o professor.
-4. Integre a BNCC (Cultura Digital) de forma orgânica no texto.
+RESPOSTA (APENAS O JSON):`;
 
-=== ESTRUTURA OBRIGATÓRIA (JSON) ===
-Retorne estritamente um objeto JSON com as seguintes chaves (em letras minúsculas):
-- "objetivo": Descreva 3 objetivos claros (Geral e Específicos).
-- "metodologia": Detalhe o passo a passo da aula (Introdução, Desenvolvimento, Conclusão). Use listas numeradas se necessário (ex: 1. Início..., 2. Prática...).
-- "meta": Explique as competências da BNCC desenvolvidas nesta aula.
-- "atividade": Descreva uma atividade prática "mão na massa" usando os materiais recomendados (${fw.materiais}).
-
-=== DATA SOURCE (BNCC) ===
-${bncc}
-
-RESPOSTA (APENAS O JSON, SEM TEXTO ADICIONAL):`;
-
-  console.log(`[gerarConteudo] Gerando plano DENSO para: ${tema} (${fw.etapa}) ${metodologiaId ? `usando ${metodologiaId}` : ''}`);
+  console.log(`[gerarConteudo] Gerando plano PEDAGÓGICO RIGOROSO para: ${tema}`);
 
   try {
     const respostaBruta = await gerarComRetry(prompt);
-
-    // Extração robusta de JSON
     const firstBrace = respostaBruta.indexOf('{');
     const lastBrace = respostaBruta.lastIndexOf('}');
-
-    if (firstBrace === -1 || lastBrace === -1) {
-      console.warn('[gerarConteudo] Resposta não contém JSON válido:', respostaBruta);
-      throw new Error('Formato de resposta inválido da IA');
-    }
+    if (firstBrace === -1 || lastBrace === -1) throw new Error('JSON inválido');
 
     const jsonStr = respostaBruta.substring(firstBrace, lastBrace + 1);
     const conteudo = JSON.parse(jsonStr);
 
-    const asString = (val: any) => {
+    const clean = (val: any) => {
       if (!val) return '';
-      if (typeof val === 'string') return val;
-      return JSON.stringify(val, null, 2);
+      let s = typeof val === 'string' ? val : JSON.stringify(val);
+      return s.replace(/\*\*/g, '').replace(/[#{}]/g, '').replace(/\\n/g, '\n').trim();
     };
 
     return {
       planoDeAula: `Plano: ${tema}`,
-      objetivo: asString(conteudo.objetivo),
-      metodologia: asString(conteudo.metodologia),
-      meta: asString(conteudo.meta),
-      atividade: asString(conteudo.atividade),
-      metodologiaId // Retorna o ID para o frontend saber o que foi usado
+      objetivo: clean(conteudo.objetivo),
+      metodologia: clean(conteudo.metodologia),
+      meta: clean(conteudo.meta),
+      atividade: clean(conteudo.atividade),
+      tempoEstimado: clean(conteudo.tempo),
+      metodologiaId
     };
   } catch (error: any) {
     console.error('❌ Erro em gerarConteudo:', error.message);
     return {
-      planoDeAula: `Plano: ${tema} (Fallback)`,
-      objetivo: `[Aviso: Falha na IA - ${error.message}]\n\nOBJETIVO GERAL: Desenvolver conhecimento crítico sobre ${tema}.\n\nOBJETIVOS ESPECÍFICOS:\n• Analisar impactos de ${tema} na sociedade digital.\n• Aplicar ferramentas práticas alinhadas à BNCC.`,
-      metodologia: `1. Introdução dialogada (10min)\n2. Atividade prática dirigida (30min)\n3. Síntese e avaliação (10min)`,
-      meta: `Competências BNCC: CG05 (Cultura Digital). O aluno será capaz de mobilizar conhecimentos de ${tema} com ética e responsabilidade.`,
-      atividade: `Utilizar recursos multimídia para explorar o tema ${tema} em sala.`,
+      planoDeAula: `Plano: ${tema}`,
+      objetivo: `Desenvolver competências de ${tema} conforme BNCC.`,
+      metodologia: `1. Acolhimento\n2. Atividade prática\n3. Reflexão final`,
+      meta: `BNCC: Cultura Digital aplicada a ${fw.etapa}.`,
+      atividade: `Atividade prática sobre ${tema}.`,
+      tempoEstimado: '50 min',
       metodologiaId
     };
   }
@@ -154,20 +148,23 @@ RESPOSTA (APENAS O JSON, SEM TEXTO ADICIONAL):`;
 
 export async function gerarAtividade(tema: string, tipo: string, anoSerie?: string, quantidade = 1) {
   const prompt = `
-=== SISTEMA DE GERAÇÃO DE ATIVIDADES ===
-Crie uma atividade educacional do tipo "${tipo}" sobre o tema "${tema}" para a etapa "${anoSerie || 'Ensino Fundamental'}".
+=== SISTEMA DE GERAÇÃO DE ATIVIDADES PEDAGÓGICAS ===
+Crie uma atividade avaliativa profissional.
+- Tema: "${tema}"
+- Tipo: "${tipo}"
+- Etapa: "${anoSerie}"
 
-=== REGRAS OBRIGATÓRIAS ===
-1. PROIBIDO o uso de markdown como "**" ou "###". Use apenas texto simples.
-2. Seja detalhado e criativo. A atividade deve ser desafiadora e pedagógica.
-3. Inclua critérios de avaliação claros e objetivos para o professor.
+=== REGRAS ===
+1. QUALIDADE: Atividade desafiadora, com rigor técnico e linguagem adequada.
+2. ESTRUTURA: Enunciado detalhado + Critérios de avaliação claros.
+3. PROIBIDO: Markdown (** ou ###) ou chaves/colchetes extras no texto.
+4. INCLUSÃO: Sugira uma pequena adaptação para alunos com necessidades.
 
 === ESTRUTURA JSON (ARRAY) ===
-Retorne apenas um array JSON:
 [
   {
-    "enunciado": "Texto completo da questão ou descrição da atividade prática...",
-    "criteriosAvaliacao": "O que o professor deve observar ao corrigir..."
+    "enunciado": "Texto completo da questão ou atividade prática...",
+    "criteriosAvaliacao": "Critérios objetivos para o professor (incluindo adaptação)"
   }
 ]
 
@@ -178,12 +175,17 @@ RESPOSTA (APENAS O ARRAY JSON):`;
     const jsonMatch = respostaBruta.match(/\[[\s\S]*\]/);
     const jsonStr = jsonMatch ? jsonMatch[0] : (respostaBruta.match(/\{[\s\S]*\}/)?.[0] || '[]');
     const parsed = JSON.parse(jsonStr.replace(/```json/g, '').replace(/```/g, '').trim());
-    return Array.isArray(parsed) ? parsed : [parsed];
+    const items = Array.isArray(parsed) ? parsed : [parsed];
+
+    return items.map(it => ({
+      enunciado: it.enunciado?.replace(/\*\*/g, '').replace(/[#{}]/g, '').trim() || '',
+      criteriosAvaliacao: it.criteriosAvaliacao?.replace(/\*\*/g, '').replace(/[#{}]/g, '').trim() || ''
+    }));
   } catch (error) {
-    console.error('❌ Usando Fallback para Atividade:', error);
+    console.error('❌ Falha ao gerar atividade:', error);
     return [{
-      enunciado: `ATIVIDADE SOBRE ${tema.toUpperCase()}\n\n1. Qual a importância de ${tema} para a Cultura Digital?\n2. Como aplicar os conceitos de ${tema} com ética?`,
-      criteriosAvaliacao: `Avaliação (0-10pts): Domínio de conteúdo e clareza argumentativa.`
+      enunciado: `Atividade sobre ${tema}.`,
+      criteriosAvaliacao: `Avaliar compreensão do tema.`
     }];
   }
 }
@@ -237,21 +239,21 @@ RESPOSTA (APENAS O JSON):`;
 export async function sugerirUnidades(disciplina: string, anoSerie: string = '', quantidade = 3) {
   const fw = getFramework(anoSerie);
   const prompt = `
-=== CONSULTOR PEDAGÓGICO (SUGESTÃO DE UNIDADES) ===
-Sugira ${quantidade} temas de unidades de ensino verdadeiramente INOVADORES e PEDAGÓGICOS.
+=== CONSULTOR PEDAGÓGICO (INICIALIZADOR DE CURRÍCULO) ===
+Sugira ${quantidade} temas de unidades inovadores alinhados à BNCC e Cultura Digital.
 
 - Disciplina: "${disciplina}"
 - Etapa: ${fw.etapa}
-- Foco: ${fw.foco}
 
 === REGRAS CRÍTICAS ===
-1. PROIBIDO markdown (** ou ###).
-2. Cada objetivo deve ser uma frase completa, densa e profissional, explicando O QUE o aluno aprenderá.
-3. Não use temas genéricos. Seja específico para a etapa ${fw.etapa}.
+1. RIGOR: Cada tema deve ter um objetivo DENSE e PROFISSIONAL.
+2. BNCC: Inclua a RECOMENDAÇÃO do CÓDIGO DA HABILIDADE BNCC no objetivo (ex: [EF05LP20]).
+3. PROIBIDO: Markdown (** ou ###) ou chaves/colchetes soltos.
+4. DIFERENCIAÇÃO: Use temas específicos para ${fw.etapa}.
 
 === ESTRUTURA JSON (ARRAY) ===
 [
-  { "tema": "Título do Tema", "objetivo": "Objetivo pedagógico denso e detalhado..." }
+  { "tema": "Título do Tema", "objetivo": "Objetivo pedagógico detalhado + [CÓDIGO BNCC RECOMENDADO]" }
 ]
 
 RESPOSTA (APENAS O ARRAY JSON):`;
