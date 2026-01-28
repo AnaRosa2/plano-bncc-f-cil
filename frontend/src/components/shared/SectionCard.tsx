@@ -25,7 +25,7 @@ const SectionCard: React.FC<SectionCardProps> = ({
         </div>
         {headerAction}
       </div>
-      <div className="text-base leading-relaxed text-muted-foreground whitespace-pre-line antialiased">
+      <div className="text-base leading-relaxed text-muted-foreground whitespace-pre-line antialiased text-justify">
         {children}
       </div>
     </div>

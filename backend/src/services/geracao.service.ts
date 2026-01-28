@@ -74,34 +74,34 @@ Instrução: Adapte TODO o plano de aula para seguir RIGOROSAMENTE esta metodolo
   }
 
   const prompt = `
-=== ESPECIALISTA EM CURRÍCULO E PEDAGOGIA (BNCC/MEC) ===
-Você é um consultor sênior com expertise na BNCC e nas Diretrizes Curriculares Nacionais (CNE/CP nº 2/2022).
+=== MASTER EDUCADOR IA: PLANEJAMENTO BNCC/MEC ===
+Você é um consultor pedagógico sênior. Crie um plano de aula DEEP DIVE (PROFUNDO), TÉCNICO e PROFISSIONAL.
+O plano DEVE conter termos técnicos da disciplina e ser rigorosamente adaptado para "${anoSerie}".
 
-=== TAREFA ===
-Gerar um PLANO DE AULA COMPLETO e DIFERENCIADO.
-- Tema: "${tema}"
+--- DADOS DO PLANO ---
 - Disciplina: "${disciplina}"
-- Etapa: ${fw.etapa}
+- Tema: "${tema}"
+- Etapa/Ano: "${anoSerie}"
+${metodologiaId ? `- Foco em Metodologia Ativa: "${metodologiaId}"` : ''}
 
-=== REQUISITOS OBRIGATÓRIOS ===
-1. ALINHAMENTO BNCC EXPLÍCITO: Liste 3-4 habilidades específicas com CÓDIGOS COMPLETOS (ex: EF05LP20, EM13LGG101).
-2. DIRETRIZES DE CULTURA DIGITAL (MEC): Integre os eixos (Cidadania Ética, Pensamento Computacional, Comunicação, Alfabetização Midiática). Cite Resolução CNE/CP nº 2/2022 quando aplicável.
-3. DIFERENCIAÇÃO POR FAIXA ETÁRIA:
-   - EF I: Lúdico, concreto, storytelling.
-   - EF II: Projetos colaborativos, lógica sem código.
-   - EM: Problematização social, prototipagem real.
-4. RIGOR TÉCNICO: Use verbos da Taxonomia de Bloom. Nada de generalizações. Passo a passo detalhado.
-5. PROIBIDO markdown (** ou ###) ou colchetes extras. Use texto limpo.
+--- DIRETRIZES DE CONTEÚDO (RIGOR MÁXIMO) ---
+1. PROFUNDIDADE: Não seja genérico. Use terminologia técnica da disciplina. Detalhe os conceitos.
+2. DIFERENCIAÇÃO POR NÍVEL: 
+   - EF I: Foco em ludicidade e pensamento computacional concreto.
+   - EF II: Foco em lógica, resolução de problemas e colaboração.
+   - EM: Foco em ética algorítmica, impactos sociais e autonomia técnica.
+3. FORMATAÇÃO:
+   - PROIBIDO: Markdown (#, **, ###) ou colchetes extras [[ ]]. Use TEXTO LIMPO.
+   - METODOLOGIA: Divida em fases: "INÍCIO:", "DESENVOLVIMENTO:" e "ENCERRAMENTO:". Use \n\n entre elas.
 
-${metodologiaContexto}
-
-=== ESTRUTURA JSON OBRIGATÓRIA ===
+--- ESTRUTURA JSON OBRIGATÓRIA (APENAS O JSON) ---
 {
-  "objetivo": "Objetivo de aprendizagem com verbos de Bloom",
-  "metodologia": "Passo a passo detalhado (Introdução, Desenv., Conclusão) + Adaptações de inclusão",
-  "meta": "Quadro resumo: [Tema] | [Série] | [Habilidades BNCC com CÓDIGOS] | [Eixos Cultura Digital]",
-  "atividade": "Atividade prática detalhada com Recursos (ferramentas gratuitas)",
-  "tempo": "Duração em aulas de 50min"
+  "objetivo": "Objetivos claros (Bloom). Detalhe o que o aluno saberá ao final.",
+  "metodologia": "INÍCIO: [Contexto]\n\nDESENVOLVIMENTO: [Atividades Centrais]\n\nENCERRAMENTO: [Síntese]",
+  "recursos": "Texto corrido descrevendo materiais, softwares e apps necessários.",
+  "meta": "Habilidades BNCC (Códigos) | Eixos Cultura Digital (MEC) | Diretrizes de Inclusão. (TEXTO LIMPO, SEM COLCHETES)",
+  "atividade": "Detalhe uma atividade prática que consolide o aprendizado.",
+  "tempo": "Duração sugerida (ex: 2 aulas de 50min)"
 }
 
 RESPOSTA (APENAS O JSON):`;
@@ -115,21 +115,22 @@ RESPOSTA (APENAS O JSON):`;
     if (firstBrace === -1 || lastBrace === -1) throw new Error('JSON inválido');
 
     const jsonStr = respostaBruta.substring(firstBrace, lastBrace + 1);
-    const conteudo = JSON.parse(jsonStr);
+    const c = JSON.parse(jsonStr);
 
     const clean = (val: any) => {
       if (!val) return '';
-      let s = typeof val === 'string' ? val : JSON.stringify(val);
+      let s = typeof val === 'string' ? val : (Array.isArray(val) ? val.join(', ') : JSON.stringify(val));
       return s.replace(/\*\*/g, '').replace(/[#{}]/g, '').replace(/\\n/g, '\n').trim();
     };
 
     return {
       planoDeAula: `Plano: ${tema}`,
-      objetivo: clean(conteudo.objetivo),
-      metodologia: clean(conteudo.metodologia),
-      meta: clean(conteudo.meta),
-      atividade: clean(conteudo.atividade),
-      tempoEstimado: clean(conteudo.tempo),
+      objetivo: clean(c.objetivo),
+      metodologia: clean(c.metodologia),
+      recursos: clean(c.recursos),
+      meta: clean(c.meta),
+      atividade: clean(c.atividade),
+      tempoEstimado: clean(c.tempo || c.tempoEstimado),
       metodologiaId
     };
   } catch (error: any) {
@@ -138,6 +139,7 @@ RESPOSTA (APENAS O JSON):`;
       planoDeAula: `Plano: ${tema}`,
       objetivo: `Desenvolver competências de ${tema} conforme BNCC.`,
       metodologia: `1. Acolhimento\n2. Atividade prática\n3. Reflexão final`,
+      recursos: `Materiais básicos da sala de aula.`,
       meta: `BNCC: Cultura Digital aplicada a ${fw.etapa}.`,
       atividade: `Atividade prática sobre ${tema}.`,
       tempoEstimado: '50 min',
@@ -148,23 +150,26 @@ RESPOSTA (APENAS O JSON):`;
 
 export async function gerarAtividade(tema: string, tipo: string, anoSerie?: string, quantidade = 1) {
   const prompt = `
-=== SISTEMA DE GERAÇÃO DE ATIVIDADES PEDAGÓGICAS ===
-Crie uma atividade avaliativa profissional.
+=== MASTER EDUCADOR IA: GERAÇÃO DE ATIVIDADES AVALIATIVAS ===
+Você é um especialista em avaliação educacional. Crie uma atividade TÉCNICA, PROFISSIONAL e DESAFIADORA.
+A atividade deve testar o conhecimento do aluno em profundidade, não apenas superficialmente.
+
+--- DADOS DA ATIVIDADE ---
 - Tema: "${tema}"
 - Tipo: "${tipo}"
-- Etapa: "${anoSerie}"
+- Público-alvo: "${anoSerie}"
 
-=== REGRAS ===
-1. QUALIDADE: Atividade desafiadora, com rigor técnico e linguagem adequada.
-2. ESTRUTURA: Enunciado detalhado + Critérios de avaliação claros.
-3. PROIBIDO: Markdown (** ou ###) ou chaves/colchetes extras no texto.
-4. INCLUSÃO: Sugira uma pequena adaptação para alunos com necessidades.
+--- REGRAS DE OURO ---
+1. QUALIDADE: Use terminologia técnica. Proponha situações-problema e análise crítica.
+2. EXTENSÃO: Gere exatamente 10 questões (objetivas ou dissertativas) ou um roteiro de desafio prático com 10 etapas claras de execução.
+3. FORMATAÇÃO: PROIBIDO Markdown (#, **, ###) ou colchetes extras. Use TEXTO LIMPO.
+4. INCLUSÃO: Adicione uma pequena nota técnica sobre como adaptar esta atividade para alunos com Dificuldades de Aprendizagem.
 
-=== ESTRUTURA JSON (ARRAY) ===
+--- ESTRUTURA JSON OBRIGATÓRIA (ARRAY) ---
 [
   {
-    "enunciado": "Texto completo da questão ou atividade prática...",
-    "criteriosAvaliacao": "Critérios objetivos para o professor (incluindo adaptação)"
+    "enunciado": "1. [Questão/Etapa]... \n\n2. [Questão/Etapa]... \n\n(PROSSIGA ATÉ A 10)",
+    "criteriosAvaliacao": "Critérios de correção detalhados e nota técnica de inclusão."
   }
 ]
 
@@ -176,6 +181,14 @@ RESPOSTA (APENAS O ARRAY JSON):`;
     const jsonStr = jsonMatch ? jsonMatch[0] : (respostaBruta.match(/\{[\s\S]*\}/)?.[0] || '[]');
     const parsed = JSON.parse(jsonStr.replace(/```json/g, '').replace(/```/g, '').trim());
     const items = Array.isArray(parsed) ? parsed : [parsed];
+
+    // Se a IA retornou vários itens (um para cada questão), vamos concatenar
+    if (items.length > 1) {
+      return [{
+        enunciado: items.map((it, idx) => it.enunciado || `Questão ${idx + 1}`).join('\n\n'),
+        criteriosAvaliacao: items.map(it => it.criteriosAvaliacao).filter(Boolean).join('\n')
+      }];
+    }
 
     return items.map(it => ({
       enunciado: it.enunciado?.replace(/\*\*/g, '').replace(/[#{}]/g, '').trim() || '',

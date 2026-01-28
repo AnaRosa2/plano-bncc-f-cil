@@ -35,6 +35,7 @@ export interface PlanoAula {
 export interface AtividadeAvaliativa {
   id: string;
   unidadeId: string;
+  titulo?: string;
   enunciado: string;
   tipo: 'objetiva' | 'discursiva' | 'pratica';
   criteriosAvaliacao: string;

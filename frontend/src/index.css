@@ -43,13 +43,13 @@
     /* Cores específicas do sistema educacional */
     --bncc: 262 83% 58%;
     --bncc-foreground: 0 0% 100%;
-    
+
     --ai-gradient-start: 217 91% 45%;
     --ai-gradient-end: 262 83% 58%;
-    
+
     --success: 152 60% 42%;
     --success-foreground: 0 0% 100%;
-    
+
     --warning: 38 92% 50%;
     --warning-foreground: 38 92% 15%;
 
@@ -95,10 +95,10 @@
 
     --bncc: 262 83% 65%;
     --bncc-foreground: 0 0% 100%;
-    
+
     --success: 152 60% 50%;
     --success-foreground: 0 0% 100%;
-    
+
     --warning: 38 92% 55%;
     --warning-foreground: 38 92% 10%;
 
@@ -129,7 +129,12 @@
   }
 
   /* Tipografia profissional com Poppins nos headings */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-heading font-semibold tracking-tight;
   }
 
@@ -147,6 +152,7 @@
 }
 
 @layer components {
+
   /* Gradiente AI para botões de geração */
   .ai-gradient {
     @apply bg-gradient-to-r from-primary to-[hsl(var(--bncc))];
@@ -167,9 +173,10 @@
     @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[hsl(var(--bncc)/0.1)] text-[hsl(var(--bncc))];
   }
 
-  /* Seção de conteúdo */
+  /* Seção de conteúdo com glass-morphism */
   .content-section {
-    @apply bg-muted/50 rounded-lg p-4 border border-border/50;
+    @apply bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/40 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-white/80 dark:bg-slate-900/60 dark:border-slate-800/40 dark:hover:bg-slate-900/80;
+    text-align: justify;
   }
 
   /* Botão AI com brilho */
@@ -195,6 +202,7 @@
 }
 
 @layer utilities {
+
   /* Animação shimmer para botões AI */
   @keyframes shimmer {
     100% {
@@ -208,6 +216,7 @@
       opacity: 0;
       transform: translateY(20px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -224,6 +233,7 @@
       opacity: 0;
       transform: translateX(-30px);
     }
+
     to {
       opacity: 1;
       transform: translateX(0);
@@ -240,6 +250,7 @@
       opacity: 0;
       transform: translateX(30px);
     }
+
     to {
       opacity: 1;
       transform: translateX(0);
@@ -252,9 +263,12 @@
 
   /* Animação pulse suave */
   @keyframes pulse-soft {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
     }
+
     50% {
       opacity: 0.7;
     }
@@ -270,6 +284,7 @@
       opacity: 0;
       transform: scale(0.95);
     }
+
     to {
       opacity: 1;
       transform: scale(1);

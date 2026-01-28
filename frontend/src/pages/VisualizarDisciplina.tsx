@@ -143,7 +143,7 @@ const VisualizarDisciplina: React.FC = () => {
         </div>
 
         {disciplina.descricao && (
-          <p className="text-muted-foreground mb-4">{disciplina.descricao}</p>
+          <p className="text-muted-foreground mb-4 text-justify">{disciplina.descricao}</p>
         )}
 
         <GuidanceMessage variant="info">

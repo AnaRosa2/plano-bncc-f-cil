@@ -144,18 +144,38 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       const u = unidades.find(x => x.id === unidadeId);
       const d = disciplinas.find(x => x.id === u?.disciplinaId);
       const res = await gerarPlanoAulaAPI(d?.nome || '', u?.tema || '', d?.anoSerie, metodologiaId);
+
+      const novoPlanoId = generateId();
       const novo: PlanoAula = {
-        id: generateId(),
+        id: novoPlanoId,
         unidadeId,
         objetivos: res.objetivo,
-        conteudos: res.meta,
+        conteudos: res.meta, // 'meta' contains BNCC/Eixos
         metodologia: res.metodologia,
-        recursosDidaticos: res.atividade,
+        recursosDidaticos: res.recursos || res.atividade,
         avaliacao: 'Contínua',
-        tempoEstimado: '50 min',
+        tempoEstimado: res.tempoEstimado || '50 min',
         geradoPorIA: true,
         metodologiaId: res.metodologiaId || metodologiaId
       };
+
+      // Se o plano mestre trouxe uma atividade, vamos populá-la também
+      if (res.atividadeCompleta) {
+        const novaAtiv: AtividadeAvaliativa = {
+          id: generateId(),
+          unidadeId,
+          titulo: res.atividadeCompleta.titulo,
+          enunciado: res.atividadeCompleta.enunciado,
+          tipo: (res.atividadeCompleta.tipo as any) || 'objetiva',
+          criteriosAvaliacao: res.atividadeCompleta.criteriosAvaliacao,
+          geradoPorIA: true
+        };
+        setAtividadesAvaliativas(prev => {
+          const filtered = prev.filter(p => p.unidadeId !== unidadeId);
+          return [...filtered, novaAtiv];
+        });
+      }
+
       setPlanosAula(prev => {
         const filtered = prev.filter(p => p.unidadeId !== unidadeId);
         return [...filtered, novo];
@@ -179,6 +199,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       const nova: AtividadeAvaliativa = {
         id: generateId(),
         unidadeId,
+        titulo: `Atividade de ${u?.tema || 'Unidade'}`,
         enunciado: res.enunciado,
         tipo,
         criteriosAvaliacao: res.criteriosAvaliacao,

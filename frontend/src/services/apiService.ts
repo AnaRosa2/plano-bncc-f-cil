@@ -7,6 +7,14 @@ export interface PlanoAulaAPI {
     metodologia: string;
     meta: string;
     atividade: string;
+    recursos?: string;
+    tempoEstimado?: string;
+    atividadeCompleta?: {
+        titulo: string;
+        enunciado: string;
+        criteriosAvaliacao: string;
+        tipo: string;
+    };
 }
 
 export interface AtividadeAPI {
@@ -60,7 +68,7 @@ export async function gerarAtividadeAPI(
     const response = await fetch(`${API_BASE_URL}/atividades/gerar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tema, tipo, anoSerie, quantidade: 1 }),
+        body: JSON.stringify({ tema, tipo, anoSerie, quantidade: 10 }),
     });
     const result = await handleApiResponse(response, 'Falha ao gerar atividade');
     return Array.isArray(result) ? result[0] : result;

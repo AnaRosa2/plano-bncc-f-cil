@@ -259,7 +259,7 @@ const VisualizarUnidade: React.FC = () => {
               Cultura Digital
             </span>
             <h1 className="text-2xl md:text-3xl font-bold text-foreground">{unidade.tema}</h1>
-            <p className="text-muted-foreground mt-1">{unidade.objetivoGeral}</p>
+            <p className="text-muted-foreground mt-1 text-justify">{unidade.objetivoGeral}</p>
             {unidade.habilidadesBNCC && (
               <p className="text-sm text-bncc mt-2">
                 <BookOpen className="h-3.5 w-3.5 inline mr-1" />
@@ -269,14 +269,7 @@ const VisualizarUnidade: React.FC = () => {
           </div>
 
           <div className="flex shrink-0 gap-2">
-            <Button
-              variant="outline"
-              className="gap-2"
-              onClick={() => generateUnitPDF(unidade, disciplina, planoAula, atividadeAvaliativa)}
-            >
-              <Download className="h-4 w-4" />
-              <span className="hidden sm:inline">Baixar PDF</span>
-            </Button>
+            {/* Botão PDF movido para a aba de Slides por solicitação do usuário */}
           </div>
         </div>
       </div>
@@ -308,6 +301,30 @@ const VisualizarUnidade: React.FC = () => {
 
           {/* Tab: Plano de Aula */}
           <TabsContent value="plano" className="space-y-4">
+            {planoAula && (
+              <div className="bg-bncc/5 border border-bncc/20 rounded-2xl overflow-hidden mb-6 shadow-sm">
+                <div className="bg-bncc/10 px-4 py-2 border-b border-bncc/20 flex items-center gap-2 text-bncc font-bold text-[10px] uppercase tracking-widest">
+                  <Target className="h-3.5 w-3.5" />
+                  Diretrizes Pedagógicas (BNCC & MEC)
+                </div>
+                <div className="p-4 bg-white/40 dark:bg-slate-900/40">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                    {(() => {
+                      const metaText = typeof planoAula.conteudos === 'string' ? planoAula.conteudos : (planoAula.conteudos ? JSON.stringify(planoAula.conteudos) : unidade.habilidadesBNCC);
+                      const parts = metaText.includes('|') ? metaText.split('|') : [metaText];
+                      const labels = ['BNCC', 'Cultura Digital', 'Inclusão'];
+
+                      return parts.map((part, i) => (
+                        <div key={i} className="space-y-1">
+                          <span className="text-[10px] font-bold text-bncc/60 uppercase">{labels[i] || 'Info'}</span>
+                          <p className="text-muted-foreground leading-tight text-justify">{part.trim()}</p>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                </div>
+              </div>
+            )}
             {!planoAula ? (
               <Card className="edu-card">
                 <CardContent className="pt-6">
@@ -317,20 +334,20 @@ const VisualizarUnidade: React.FC = () => {
                     description="Gere um plano de aula completo utilizando nossa IA como assistente pedagógico. O plano será alinhado à BNCC e à metodologia escolhida."
                   />
 
-                  <div className="max-w-md mx-auto p-6 border-2 border-dashed rounded-2xl bg-slate-50/50 space-y-6 -mt-4 mb-8">
+                  <div className="max-w-md mx-auto p-5 border shadow-sm rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 space-y-5 -mt-2 mb-8 border-primary/20">
                     <div className="space-y-3">
-                      <Label className="text-sm font-bold flex items-center gap-2 text-primary">
-                        <Wrench className="h-4 w-4" />
+                      <Label className="text-xs font-bold flex items-center gap-2 text-primary uppercase tracking-wider">
+                        <Wrench className="h-3.5 w-3.5" />
                         Estratégia Pedagógica
                       </Label>
                       <Select
-                        value={metodologiaSelecionada}
+                        value={metodologiaSelecionada || 'tradicional'}
                         onValueChange={setMetodologiaSelecionada}
                       >
-                        <SelectTrigger className="bg-white h-12 text-base">
+                        <SelectTrigger className="bg-white dark:bg-slate-950 h-10 text-sm">
                           <SelectValue placeholder="Selecione uma metodologia" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="max-h-[300px]">
                           {METODOLOGIAS_ATIVAS.map((m) => (
                             <SelectItem key={m.id} value={m.id} className="text-base py-3">
                               {m.nome}
@@ -434,22 +451,40 @@ const VisualizarUnidade: React.FC = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <SectionCard title="Objetivos" icon={Target}>
+                  <SectionCard title="Objetivos e Competências" icon={Target}>
                     {typeof planoAula.objetivos === 'string' ? planoAula.objetivos : JSON.stringify(planoAula.objetivos)}
                   </SectionCard>
-                  <SectionCard title="Conteúdos" icon={BookOpen}>
-                    {typeof planoAula.conteudos === 'string' ? planoAula.conteudos : JSON.stringify(planoAula.conteudos)}
+
+                  <SectionCard title="Caminho Pedagógico (Metodologia)" icon={Wrench}>
+                    <div className="space-y-4">
+                      {(typeof planoAula.metodologia === 'string' ? planoAula.metodologia : JSON.stringify(planoAula.metodologia))
+                        .split('\n\n')
+                        .map((phase, i) => {
+                          const [title, content] = phase.includes(':\n') ? phase.split(':\n') : [null, phase];
+                          return (
+                            <div key={i} className="bg-slate-50 border border-slate-100 p-4 rounded-xl">
+                              {title && (
+                                <div className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1.5 opacity-70">
+                                  {title}
+                                </div>
+                              )}
+                              <p className="text-muted-foreground text-sm leading-relaxed">{content}</p>
+                            </div>
+                          );
+                        })}
+                    </div>
                   </SectionCard>
-                  <SectionCard title="Metodologia" icon={Wrench}>
-                    {typeof planoAula.metodologia === 'string' ? planoAula.metodologia : JSON.stringify(planoAula.metodologia)}
-                  </SectionCard>
-                  <SectionCard title="Recursos Didáticos" icon={Layers}>
-                    {typeof planoAula.recursosDidaticos === 'string' ? planoAula.recursosDidaticos : JSON.stringify(planoAula.recursosDidaticos)}
-                  </SectionCard>
-                  <SectionCard title="Avaliação" icon={CheckCircle}>
-                    {typeof planoAula.avaliacao === 'string' ? planoAula.avaliacao : JSON.stringify(planoAula.avaliacao)}
-                  </SectionCard>
-                  <SectionCard title="Tempo Estimado" icon={Clock}>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <SectionCard title="Recursos Didáticos" icon={Layers}>
+                      {typeof planoAula.recursosDidaticos === 'string' ? planoAula.recursosDidaticos : JSON.stringify(planoAula.recursosDidaticos)}
+                    </SectionCard>
+                    <SectionCard title="Avaliação" icon={CheckCircle}>
+                      {typeof planoAula.avaliacao === 'string' ? planoAula.avaliacao : JSON.stringify(planoAula.avaliacao)}
+                    </SectionCard>
+                  </div>
+
+                  <SectionCard title="Gestão do Tempo" icon={Clock}>
                     {typeof planoAula.tempoEstimado === 'string' ? planoAula.tempoEstimado : JSON.stringify(planoAula.tempoEstimado)}
                   </SectionCard>
 
@@ -556,7 +591,7 @@ const VisualizarUnidade: React.FC = () => {
                     <div>
                       <CardTitle className="flex items-center gap-2">
                         <ClipboardCheck className="h-5 w-5 text-primary" />
-                        Atividade Avaliativa
+                        {atividadeAvaliativa.titulo || 'Atividade Avaliativa'}
                       </CardTitle>
                       <CardDescription className="flex items-center gap-2">
                         <span className="capitalize">
@@ -639,22 +674,63 @@ const VisualizarUnidade: React.FC = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <SectionCard title="Objetivos" icon={Target}>
-                    {planoAula.objetivos}
+                    {typeof planoAula.objetivos === 'string' ? planoAula.objetivos : JSON.stringify(planoAula.objetivos)}
                   </SectionCard>
-                  <SectionCard title="Conteúdos" icon={BookOpen}>
-                    {planoAula.conteudos}
+                  <div className="bg-bncc/5 border border-bncc/20 rounded-2xl overflow-hidden mb-8">
+                    <div className="bg-bncc/10 px-4 py-2 border-b border-bncc/20 flex items-center gap-2 text-bncc font-bold text-[10px] uppercase tracking-widest">
+                      <BookOpen className="h-3.5 w-3.5" />
+                      Referencial Curricular (BNCC & MEC)
+                    </div>
+                    <div className="p-5 bg-white/40 dark:bg-slate-900/40">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+                        {(() => {
+                          const metaText = typeof planoAula.conteudos === 'string' ? planoAula.conteudos : JSON.stringify(planoAula.conteudos);
+                          const parts = metaText.includes('|') ? metaText.split('|') : [metaText];
+                          const labels = ['Habilidades BNCC', 'Cultura Digital', 'Inclusão'];
+
+                          return parts.map((part, i) => (
+                            <div key={i} className="space-y-1.5 border-l-2 border-bncc/10 pl-4 first:border-0 first:pl-0">
+                              <span className="text-[10px] font-bold text-bncc/60 uppercase">{labels[i] || 'Informações'}</span>
+                              <p className="text-muted-foreground leading-relaxed italic text-justify">{part.trim()}</p>
+                            </div>
+                          ));
+                        })()}
+                      </div>
+                    </div>
+                  </div>
+                  <SectionCard title="Caminho Pedagógico (Metodologia)" icon={Wrench}>
+                    <div className="space-y-4">
+                      {(typeof planoAula.metodologia === 'string' ? planoAula.metodologia : JSON.stringify(planoAula.metodologia))
+                        .split('\n\n')
+                        .map((phase, i) => {
+                          const [title, content] = phase.includes(':\n') ? phase.split(':\n') : [null, phase];
+                          return (
+                            <div key={i} className="bg-slate-50 border border-slate-100 p-4 rounded-xl">
+                              {title && (
+                                <div className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1.5 opacity-70">
+                                  {title}
+                                </div>
+                              )}
+                              <p className="text-muted-foreground text-sm leading-relaxed">{content}</p>
+                            </div>
+                          );
+                        })}
+                    </div>
                   </SectionCard>
-                  <SectionCard title="Metodologia" icon={Wrench}>
-                    {planoAula.metodologia}
-                  </SectionCard>
-                  <SectionCard title="Recursos Didáticos" icon={Layers}>
-                    {planoAula.recursosDidaticos}
-                  </SectionCard>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <SectionCard title="Recursos Didáticos" icon={Layers}>
+                      {typeof planoAula.recursosDidaticos === 'string' ? planoAula.recursosDidaticos : JSON.stringify(planoAula.recursosDidaticos)}
+                    </SectionCard>
+                    <SectionCard title="Metodologia ID" icon={Target}>
+                      {planoAula.metodologiaId || 'Padrão'}
+                    </SectionCard>
+                  </div>
                   <SectionCard title="Avaliação" icon={CheckCircle}>
-                    {planoAula.avaliacao}
+                    {typeof planoAula.avaliacao === 'string' ? planoAula.avaliacao : JSON.stringify(planoAula.avaliacao)}
                   </SectionCard>
                   <SectionCard title="Tempo Estimado" icon={Clock}>
-                    {planoAula.tempoEstimado}
+                    {typeof planoAula.tempoEstimado === 'string' ? planoAula.tempoEstimado : JSON.stringify(planoAula.tempoEstimado)}
                   </SectionCard>
                 </CardContent>
               </Card>
@@ -666,7 +742,7 @@ const VisualizarUnidade: React.FC = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <ClipboardCheck className="h-5 w-5 text-primary" />
-                    Atividade Avaliativa
+                    {atividadeAvaliativa.titulo || 'Atividade Avaliativa'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -710,6 +786,16 @@ const VisualizarUnidade: React.FC = () => {
               </Card>
             ) : (
               <div className="space-y-6">
+                <div className="flex justify-end">
+                  <Button
+                    variant="outline"
+                    className="gap-2 border-primary/20 hover:bg-primary/5"
+                    onClick={() => generateUnitPDF(unidade, disciplina, planoAula, atividadeAvaliativa)}
+                  >
+                    <Download className="h-4 w-4" />
+                    Baixar PDF do Material
+                  </Button>
+                </div>
                 {/* Slide Atual - Design Profissional */}
                 <div className="relative max-w-4xl mx-auto">
                   {/* Container do Slide com aspecto 16:9 */}
@@ -746,7 +832,7 @@ const VisualizarUnidade: React.FC = () => {
                       {/* Logo/Marca */}
                       <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6">
                         <span className="text-white/40 text-xs font-medium">
-                          Plano BNCC • Cultura Digital
+                          Slides de {unidade.tema} • Plano BNCC
                         </span>
                       </div>
 
