@@ -38,6 +38,8 @@ O **Plano BNCC** é uma aplicação web desenvolvida para apoiar professores do 
 - ✅ **Single-user** - Sem necessidade de login (dados salvos localmente)
 - ✅ **Persistência Local** - Dados preservados via LocalStorage (não perde no F5)
 - ✅ **Console Clean** - Sem erros ou avisos de acessibilidade/semântica
+- ✅ **Modo Escuro Suave** - Paleta de cores refinada para reduzir cansaço visual
+- ✅ **Gestão de Disciplinas** - Funcionalidade de exclusão com modal de segurança
 
 ---
 
@@ -62,6 +64,7 @@ O **Plano BNCC** é uma aplicação web desenvolvida para apoiar professores do 
 - 💬 **Feedback visual** - Loading states e toasts informativos
 - 📱 **Totalmente responsivo** - Funciona em desktop, tablet e mobile
 - 🧪 **Testes unitários** - 23 testes com Vitest
+- 🛡️ **Segurança de exclusão** - Modal customizado para evitar erros acidentais
 
 ---
 
