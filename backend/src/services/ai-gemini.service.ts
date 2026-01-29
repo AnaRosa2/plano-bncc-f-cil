@@ -13,7 +13,7 @@ export async function gerarTextoComIA(prompt: string) {
 
   try {
     // Seguindo a documentação oficial do Gemini
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -22,7 +22,7 @@ export async function gerarTextoComIA(prompt: string) {
     return text.trim();
   } catch (error: any) {
     console.error("Erro na API do Gemini:", error.message);
-    
+
     // Se for erro de rate limit
     if (error.message && error.message.includes('retry')) {
       throw new Error('⏱️ Rate limit atingido. Aguarde alguns segundos e tente novamente.');

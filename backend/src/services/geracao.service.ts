@@ -19,7 +19,7 @@ export async function gerarComRetry(prompt: string, maxRetries = 2): Promise<str
   throw lastError;
 }
 
-// === FRAMEWORK PEDAGÓGICO (FORA DA FUNÇÃO - CORRIGIDO) ===
+
 const FRAMEWORK_PEDAGOGICO = {
   FUND_I: {
     etapa: 'Ensino Fundamental I (1º ao 5º ano)',
@@ -205,7 +205,24 @@ RESPOSTA (APENAS O JSON, NADA ANTES/DEPOIS):
 
     const clean = (val: any) => {
       if (!val) return '';
-      let s = typeof val === 'string' ? val : (Array.isArray(val) ? val.join(', ') : JSON.stringify(val));
+
+      let s = '';
+      if (typeof val === 'string') {
+        s = val;
+      } else if (Array.isArray(val)) {
+        s = val.map(v => {
+          if (typeof v === 'string') return v;
+          if (typeof v === 'object' && v !== null) {
+            // Tenta extrair valores legíveis ou usa JSON
+            return Object.values(v).join('. ');
+          }
+          return String(v);
+        }).join('\n');
+      } else {
+        s = Object.values(val).join('\n'); // Se for objeto solto, tenta flat
+        if (s === '[object Object]') s = JSON.stringify(val);
+      }
+
       return s
         .replace(/\*\*/g, '')
         .replace(/###/g, '')

@@ -46,7 +46,13 @@ app.use((req, res) => {
 // Middleware de erro centralizado (deve ser o último)
 app.use(errorHandler);
 
+
+export { app };
+
 const PORT = process.env.PORT || 3333;
-app.listen(PORT, () => {
-  console.log(`API rodando na porta ${PORT}`);
-});
+
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`API rodando na porta ${PORT}`);
+  });
+}

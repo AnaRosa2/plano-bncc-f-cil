@@ -301,30 +301,7 @@ const VisualizarUnidade: React.FC = () => {
 
           {/* Tab: Plano de Aula */}
           <TabsContent value="plano" className="space-y-4">
-            {planoAula && (
-              <div className="bg-bncc/5 border border-bncc/20 rounded-2xl overflow-hidden mb-6 shadow-sm">
-                <div className="bg-bncc/10 px-4 py-2 border-b border-bncc/20 flex items-center gap-2 text-bncc font-bold text-[10px] uppercase tracking-widest">
-                  <Target className="h-3.5 w-3.5" />
-                  Diretrizes Pedagógicas (BNCC & MEC)
-                </div>
-                <div className="p-4 bg-white/40 dark:bg-slate-900/40">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-                    {(() => {
-                      const metaText = typeof planoAula.conteudos === 'string' ? planoAula.conteudos : (planoAula.conteudos ? JSON.stringify(planoAula.conteudos) : unidade.habilidadesBNCC);
-                      const parts = metaText.includes('|') ? metaText.split('|') : [metaText];
-                      const labels = ['BNCC', 'Cultura Digital', 'Inclusão'];
 
-                      return parts.map((part, i) => (
-                        <div key={i} className="space-y-1">
-                          <span className="text-[10px] font-bold text-bncc/60 uppercase">{labels[i] || 'Info'}</span>
-                          <p className="text-muted-foreground leading-tight text-justify">{part.trim()}</p>
-                        </div>
-                      ));
-                    })()}
-                  </div>
-                </div>
-              </div>
-            )}
             {!planoAula ? (
               <Card className="edu-card">
                 <CardContent className="pt-6">

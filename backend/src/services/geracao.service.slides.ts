@@ -12,85 +12,103 @@ async function getBnccSnippet() {
 }
 
 /**
- * RF06 - Gerar slides para unidade de ensino
- * Retorna conteúdo em formato Markdown pronto para apresentação
+ * Framework pedagógico por etapa escolar
  */
 const FRAMEWORK_SLIDES = {
   FUND_I: {
-    estilo: 'Lúdico, alfabetização inicial, coordenação motora direta.',
-    animacoes: {
-      entradas: '"Pular suave" (bounce) para personagens (0.8s), "Girar 360°" para elementos-chave, "Zoom suave de 110% a 100%"',
-      transicoes: '"Empurrar para direita" com som de "whoosh" leve, "Cortina de estrelinhas" (0.6s)',
-      interacoes: 'Ao clicar: "pisca 2x" + som de "pling!", Destaque: borda colorida que "pulsa" 1x'
-    },
-    cores: 'Fundo: amarelo-bebê (#FFF9C4) ou azul-claro (#E3F2FD). Destaque: laranja (#FF9800), verde-limão (#CDDC39), rosa-choque (#E91E63)',
-    obrigatorios: 'Personagens redondeados, ícones de materiais reais (tesoura ✂️, cola 🧴), setas em "rastro de formiga".'
+    estilo: 'Lúdico, visual atrativo, linguagem simples, personagens fofos, cores vivas.',
+    elementos: 'Ícones reais (tesoura ✂️, cola 🧴), mascotes, setas com "rastro de formiga".',
+    linguagem: 'Frases curtas, verbos de ação ("vamos descobrir", "vamos construir").',
+    tempo: 'Máximo 15 minutos por atividade.',
+    exemplos_habilidades: ['EI02CG05', 'EF03LP01']
   },
   FUND_II: {
-    estilo: 'Interativo, contextualizado, pegada redes sociais (TikTok educativo).',
-    animacoes: {
-      entradas: '"Fade suave" (0.5s) + "deslizar de baixo para cima", delay de 0.2s entre elementos',
-      transicoes: '"Morphing" suave entre conceitos, "Zoom panorâmico"',
-      interacoes: 'Hover: sombra suave + scale 1.03, Clique: mudança de cor + mini-ícone de "check"'
-    },
-    cores: 'Fundo: branco ou cinza claro (#FAFAFA). Destaque: azul-turquesa (#00BCD4), roxo (#9C27B0), verde (#4CAF50)',
-    obrigatorios: 'Ícones flat design, infográficos minimalistas, espaço para escolha do aluno.'
+    estilo: 'Interativo, contextualizado, inspirado em redes sociais (TikTok educativo), infográficos.',
+    elementos: 'QR Codes, vídeos curtos, gráficos simples, botões de interação.',
+    linguagem: 'Termos do cotidiano, desafios práticos, storytelling digital.',
+    tempo: '20-30 minutos por atividade.',
+    exemplos_habilidades: ['EF08CI01', 'EF09LP20']
   },
   MEDIO: {
-    estilo: 'Profissional, acadêmico, foco em ENEM e mercado de trabalho.',
-    animacoes: {
-      entradas: 'Fade simples (0.3s) SEM excessos, apenas em fórmulas/elementos-chave',
-      transicoes: 'Fade elegante ou corte seco (profissional)',
-      interacoes: 'Destaque por contraste, animação só com propósito didático'
-    },
-    cores: 'Fundo: branco ou off-white (#FDFDFD). Destaque: coral (#FF6B6B) + tons neutros',
-    obrigatorios: 'Gráficos com dados reais, citações de especialistas, conexão ENEM.'
+    estilo: 'Profissional, acadêmico, foco em ENEM e mercado de trabalho, dados reais.',
+    elementos: 'Gráficos com dados IBGE, estudos de caso, conexões com vestibulares.',
+    linguagem: 'Terminologia técnica, dilemas éticos, debates estruturados.',
+    tempo: '45-50 minutos por aula.',
+    exemplos_habilidades: ['EM13CO14', 'EM13LP09']
   }
 };
 
 function getSlideFramework(anoSerie: string = '') {
   const s = anoSerie.toLowerCase();
-  if (s.includes('médio') || s.includes('3º') || s.includes('ensino médio')) return FRAMEWORK_SLIDES.MEDIO;
-  if (s.includes('6') || s.includes('7') || s.includes('8') || s.includes('9')) return FRAMEWORK_SLIDES.FUND_II;
+  if (s.includes('médio') || s.includes('3º') || s.includes('ensino médio') || s.includes('2º') || s.includes('1º')) {
+    return FRAMEWORK_SLIDES.MEDIO;
+  }
+  if (s.includes('6') || s.includes('7') || s.includes('8') || s.includes('9')) {
+    return FRAMEWORK_SLIDES.FUND_II;
+  }
   return FRAMEWORK_SLIDES.FUND_I;
 }
 
 export async function gerarSlides(tema: string, disciplina: string, anoSerie: string = '') {
-  console.log(`[geracao.service] gerarSlides: tema=${tema} disciplina=${disciplina} anoSerie=${anoSerie}`);
+  console.log(`[geracao.service.slides] gerarSlides: tema=${tema} disciplina=${disciplina} anoSerie=${anoSerie}`);
 
   const bncc = await getBnccSnippet();
   const fw = getSlideFramework(anoSerie);
 
   const prompt = `
-=== DESIGNER INSTRUCIONAL IA (MODO SLIDES PEDAGÓGICOS) ===
-Você é um designer instrucional sênior especializado em Cultura Digital.
-Crie uma apresentação de slides CRIATIVA, DENSA e PROFISSIONAL.
+# DESIGNER INSTRUCIONAL IA (SLIDES EDUCACIONAIS + BNCC)
 
-=== CONTEXTO ===
+## 📌 OBJETIVO
+Você é um designer instrucional especializado em **Cultura Digital** e **BNCC**. Gere uma apresentação de slides **pedagogicamente sólida**, **diferenciada por etapa** e **com habilidades reais da BNCC**.
+
+## 🎯 DADOS DO SLIDE
 - Tema: "${tema}"
 - Disciplina: "${disciplina}"
 - Etapa: "${anoSerie}"
 - Estilo: ${fw.estilo}
 
-=== REQUISITOS CRIATIVOS ===
-1. CONTEÚDO REAL: Cada slide deve ensinar algo concreto. Proibido tópicos vazios.
-2. STORYTELLING: Se for EF I/II, use uma narrativa ou mascote. Se for EM, use problemas reais da sociedade.
-3. ROTEIRO: Inclua um "[ROTEIRO PROFESSOR]" detalhado no campo "conteudo" após o texto do slide.
-4. BNCC: No primeiro ou último slide, cite as Habilidades BNCC trabalhadas.
-5. PROIBIDO: Markdown (** ou ###) ou chaves/colchetes soltos. Use texto limpo.
+## 📚 BASE BNCC (trecho relevante)
+${bncc.substring(0, 2000)}
 
-=== ESTRUTURA JSON (ARRAY) ===
+## 🎨 REQUISITOS POR ETAPA
+### Ensino Fundamental I:
+- Linguagem: ${fw.linguagem}
+- Elementos: ${fw.elementos}
+- Tempo: ${fw.tempo}
+- Habilidades: Ex: ${fw.exemplos_habilidades.join(', ')}
+
+### Ensino Fundamental II:
+- Linguagem: ${fw.linguagem}
+- Elementos: ${fw.elementos}
+- Tempo: ${fw.tempo}
+- Habilidades: Ex: ${fw.exemplos_habilidades.join(', ')}
+
+### Ensino Médio:
+- Linguagem: ${fw.linguagem}
+- Elementos: ${fw.elementos}
+- Tempo: ${fw.tempo}
+- Habilidades: Ex: ${fw.exemplos_habilidades.join(', ')}
+
+## 📦 FORMATO DE RESPOSTA (APENAS JSON)
 [
   {
     "numero": 1,
-    "titulo": "Título Criativo do Slide",
-    "conteudo": "Texto educativo para o aluno... \\n\\n[ROTEIRO PROFESSOR]: Sugestão de fala e dinâmica.",
-    "tipo": "titulo|conteudo|pratica|questao|conclusao",
-    "icon": "nome-do-icone-lucide"
+    "titulo": "Título envolvente para o tema",
+    "conteudo": "Texto adequado ao nível de ensino. \\n\\n[ROTEIRO PROFESSOR]: Dicas de fala e dinâmica.",
+    "tipo": "titulo|conteudo|atividade|reflexao|conclusao",
+    "habilidadesBNCC": ["EF08CI01", "EM13CO14"], // Apenas se relevante
+    "icone": "ícone lucide relacionado (ex: lightbulb, users, globe)"
   }
 ]
 
-RESPOSTA (APENAS O ARRAY JSON):`;
+## ⚠️ REGRAS
+- Proibido conteúdo genérico
+- Use linguagem adequada à etapa
+- Cite habilidades reais da BNCC no slide final
+- Evite markdown (#, **, etc)
+
+RESPOSTA (APENAS O ARRAY JSON):
+`;
 
   try {
     const respostaBruta = await gerarComRetry(prompt);
@@ -111,37 +129,47 @@ RESPOSTA (APENAS O ARRAY JSON):`;
   } catch (error) {
     console.error('❌ Erro ao gerar slides:', error);
 
-    // Fallback com slides básicos
+    // Fallback com slides diferenciados por etapa
+    const fw = getSlideFramework(anoSerie);
     return [
       {
         numero: 1,
-        titulo: tema,
-        conteudo: `Apresentação sobre ${tema}\\n\\nDisciplina: ${disciplina}${anoSerie ? `\\nAno/Série: ${anoSerie}` : ''}`,
-        tipo: 'titulo'
+        titulo: `Introdução: ${tema}`,
+        conteudo: `Vamos aprender sobre ${tema}!\n\n[ROTEIRO PROFESSOR]: Inicie com uma pergunta provocadora.`,
+        tipo: 'titulo',
+        icone: 'book-open'
       },
       {
         numero: 2,
-        titulo: 'Objetivo da Aula',
-        conteudo: `- Compreender conceitos de ${tema}\\n- Desenvolver pensamento crítico\\n- Aplicar conhecimentos na prática`,
-        tipo: 'conteudo'
+        titulo: 'O que é?',
+        conteudo: fw.linguagem.includes('Frases curtas')
+          ? `Descubra o que é ${tema} de forma divertida!`
+          : `Entenda o conceito de ${tema} e sua importância.`,
+        tipo: 'conteudo',
+        icone: 'info'
       },
       {
         numero: 3,
-        titulo: 'Contextualização',
-        conteudo: `${tema} é fundamental para:\\n- Formação cidadã\\n- Uso consciente de tecnologias\\n- Desenvolvimento de competências BNCC`,
-        tipo: 'conteudo'
+        titulo: 'Aplicação Prática',
+        conteudo: fw.linguagem.includes('Frases curtas')
+          ? `Vamos praticar juntos!`
+          : `Como aplicar ${tema} no dia a dia?`,
+        tipo: 'atividade',
+        icone: 'clipboard-list'
       },
       {
         numero: 4,
-        titulo: 'Reflexão',
-        conteudo: `Como você aplica ${tema} no seu dia a dia?\\n\\nQual a importância para a sociedade?`,
-        tipo: 'questao'
+        titulo: 'Reflexão Final',
+        conteudo: `O que aprendemos hoje?\n\n[ROTEIRO PROFESSOR]: Promova uma roda de conversa.`,
+        tipo: 'reflexao',
+        icone: 'refresh-cw'
       },
       {
         numero: 5,
-        titulo: 'Conclusão',
-        conteudo: `- Revisão dos conceitos-chave\\n- Aplicação prática\\n- Próximos passos`,
-        tipo: 'conclusao'
+        titulo: 'Habilidades Trabalhadas',
+        conteudo: `BNCC: ${fw.exemplos_habilidades.join(', ')}\n\nConexão com a Cultura Digital.`,
+        tipo: 'conclusao',
+        icone: 'award'
       }
     ];
   }
