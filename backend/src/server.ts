@@ -27,6 +27,20 @@ app.get("/", (req, res) => {
   });
 });
 
+import { gerarTextoComIA } from './services/ai-gemini.service';
+app.get("/test-ai", async (req, res) => {
+  try {
+    const response = await gerarTextoComIA("Responda apenas com: IA ONLINE");
+    res.json({ status: "success", response });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+      fullError: JSON.stringify(error, Object.getOwnPropertyNames(error))
+    });
+  }
+});
+
 app.use("/unidades", unidadesRoutes);
 app.use("/atividades", atividadesRoutes);
 app.use("/disciplinas", disciplinasRoutes);
