@@ -245,12 +245,12 @@ RESPOSTA (APENAS O JSON, NADA ANTES/DEPOIS):
   } catch (error: any) {
     console.error('❌ Erro em gerarConteudo robusto:', error.message);
     return {
-      planoDeAula: `Plano: ${tema}`,
-      objetivo: `Desenvolver competências críticas sobre ${tema} com foco em Cultura Digital.`,
-      metodologia: `INÍCIO: Contextualização com exemplo do cotidiano.\n\nDESENVOLVIMENTO: Atividade prática com materiais concretos.\n\nENCERRAMENTO: Reflexão coletiva e produção de regra de convivência digital.`,
-      recursos: `Materiais básicos + dispositivo com acesso à internet.`,
-      meta: `BNCC: Habilidades gerais | Eixos CD: Cidadania Digital, Segurança | Estratégias: Investigação, Experimentação, Colaboração`,
-      atividade: `Produção de cartaz com regras para uso seguro da internet.`,
+      planoDeAula: `ERRO CRÍTICO: CHAVE API FALTANDO`,
+      objetivo: `O backend não detectou a GEMINI_API_KEY no ambiente de produção (Render).`,
+      metodologia: `INÍCIO: Verifique as Variáveis de Ambiente.\n\nDESENVOLVIMENTO: Adicione GEMINI_API_KEY no painel do Render.\n\nENCERRAMENTO: Faça o Redeploy.`,
+      recursos: `Acesso ao painel do Render.`,
+      meta: `ERRO 401 | Falta Autenticação | Configure a Chave`,
+      atividade: `Configurar a chave de API imediatamente.`,
       tempoEstimado: '50 min',
       inclusao: `Oferecer suporte visual e verbal individualizado.`,
       metodologiaId
@@ -397,9 +397,9 @@ RESPOSTA (APENAS O ARRAY JSON):`;
   } catch (e: any) {
     console.error('❌ Erro em sugerirUnidades:', e.message);
     return [
-      { tema: `Fundamentos de ${disciplina}`, objetivo: `Explorar os conceitos essenciais de ${disciplina} aplicados à ${fw.etapa}.` },
-      { tema: `Inovação e ${disciplina}`, objetivo: `Desenvolver competências críticas e práticas em ${disciplina}.` },
-      { tema: `Desafios Contemporâneos`, objetivo: `Analisar o impacto de ${disciplina} na sociedade digital.` }
+      { tema: `ERRO: CHAVE API NÃO CONFIGURADA`, objetivo: `Acesse o painel do Render > Environment e adicione a GEMINI_API_KEY.` },
+      { tema: `FALHA DE CONEXÃO COM IA`, objetivo: `O backend não conseguiu contactar o Google Gemini. Verifique os logs.` },
+      { tema: `CONFIGURAÇÃO PENDENTE`, objetivo: `Se você está vendo isso, o deploy funcionou, mas a chave falta.` }
     ];
   }
 }
