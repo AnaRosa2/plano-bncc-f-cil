@@ -9,9 +9,9 @@ const router = Router();
 router.get("/status", (req, res) => {
   res.json({
     status: "ok",
-    version: "2026-01-29-19:10",
+    version: "2026-01-29-21:00-DEBUG",
     prompts: "DENSO_V2_LIMPEZA_MARCADORES",
-    message: "O cérebro está atualizado com sugestões de campos!"
+    message: "O cérebro está atualizado com logs de debug!"
   });
 });
 router.post("/", async (req, res) => {
@@ -63,6 +63,7 @@ router.post('/sugerir-tema', async (req, res) => {
 });
 
 router.post('/sugerir-detalhes', async (req, res) => {
+  console.log(`[POST] /unidades/sugerir-detalhes - Body:`, req.body);
   try {
     const { disciplina, tema, anoSerie, campo } = req.body;
 
