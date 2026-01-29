@@ -5,16 +5,31 @@ import { gerarSlides } from "../services/geracao.service.slides";
 
 const router = Router();
 
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> frontend
 // Rota de status para verificar se o deploy foi concluído
 router.get("/status", (req, res) => {
   res.json({
     status: "ok",
+<<<<<<< HEAD
     version: "2026-01-27-20:43",
     prompts: "DENSO_V2_LIMPEZA_MARCADORES",
     message: "O cérebro está atualizado!"
   });
 });
 
+=======
+    version: "2026-01-29-19:10",
+    prompts: "DENSO_V2_LIMPEZA_MARCADORES",
+    message: "O cérebro está atualizado com sugestões de campos!"
+  });
+});
+
+>>>>>>> Stashed changes
+>>>>>>> frontend
 router.post("/", async (req, res) => {
   try {
     const { disciplina, tema, anoSerie, metodologiaId } = req.body;

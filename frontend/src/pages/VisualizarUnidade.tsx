@@ -431,6 +431,13 @@ const VisualizarUnidade: React.FC = () => {
                   <SectionCard title="Objetivos e Competências" icon={Target}>
                     {typeof planoAula.objetivos === 'string' ? planoAula.objetivos : JSON.stringify(planoAula.objetivos)}
                   </SectionCard>
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+                  <SectionCard title="Conteúdos" icon={BookOpen}>
+                    {planoAula.conteudos}
+=======
+>>>>>>> frontend
 
                   <SectionCard title="Caminho Pedagógico (Metodologia)" icon={Wrench}>
                     <div className="space-y-4">
@@ -439,7 +446,11 @@ const VisualizarUnidade: React.FC = () => {
                         .map((phase, i) => {
                           const [title, content] = phase.includes(':\n') ? phase.split(':\n') : [null, phase];
                           return (
+<<<<<<< HEAD
                             <div key={i} className="bg-slate-50 border border-slate-100 p-4 rounded-xl">
+=======
+                            <div key={i} className="bg-muted/30 border border-muted/20 p-4 rounded-xl">
+>>>>>>> frontend
                               {title && (
                                 <div className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1.5 opacity-70">
                                   {title}
@@ -450,6 +461,10 @@ const VisualizarUnidade: React.FC = () => {
                           );
                         })}
                     </div>
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> frontend
                   </SectionCard>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -653,6 +668,19 @@ const VisualizarUnidade: React.FC = () => {
                   <SectionCard title="Objetivos" icon={Target}>
                     {typeof planoAula.objetivos === 'string' ? planoAula.objetivos : JSON.stringify(planoAula.objetivos)}
                   </SectionCard>
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+                  <SectionCard title="Conteúdos" icon={BookOpen}>
+                    {planoAula.conteudos}
+                  </SectionCard>
+                  <SectionCard title="Metodologia" icon={Wrench}>
+                    {planoAula.metodologia}
+                  </SectionCard>
+                  <SectionCard title="Recursos Didáticos" icon={Layers}>
+                    {planoAula.recursosDidaticos}
+=======
+>>>>>>> frontend
                   <div className="bg-bncc/5 border border-bncc/20 rounded-2xl overflow-hidden mb-8">
                     <div className="bg-bncc/10 px-4 py-2 border-b border-bncc/20 flex items-center gap-2 text-bncc font-bold text-[10px] uppercase tracking-widest">
                       <BookOpen className="h-3.5 w-3.5" />
@@ -682,7 +710,11 @@ const VisualizarUnidade: React.FC = () => {
                         .map((phase, i) => {
                           const [title, content] = phase.includes(':\n') ? phase.split(':\n') : [null, phase];
                           return (
+<<<<<<< HEAD
                             <div key={i} className="bg-slate-50 border border-slate-100 p-4 rounded-xl">
+=======
+                            <div key={i} className="bg-muted/30 border border-muted/20 p-4 rounded-xl">
+>>>>>>> frontend
                               {title && (
                                 <div className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1.5 opacity-70">
                                   {title}
@@ -693,6 +725,10 @@ const VisualizarUnidade: React.FC = () => {
                           );
                         })}
                     </div>
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> frontend
                   </SectionCard>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
