@@ -143,6 +143,7 @@ Você é um especialista sênior em pedagogia com 20+ anos de experiência. Sua 
 - Tema: "${tema}"
 - Etapa/Ano: "${anoSerie}"
 - Base Legal: BNCC + Diretrizes MEC para Cultura Digital
+- IDIOMA OBRIGATÓRIO: PORTUGUÊS BRASILEIRO (mesmo para aulas de Inglês/Espanhol).
 
 ## ⚙️ EXIGÊNCIAS TÉCNICAS (NÃO NEGOCIÁVEIS)
 ${diferenciacao}
@@ -370,8 +371,9 @@ Sugira ${quantidade} temas de unidades inovadores alinhados à BNCC e Cultura Di
 === REGRAS CRÍTICAS ===
 1. RIGOR: Cada tema deve ter um objetivo DENSE e PROFISSIONAL.
 2. BNCC: Inclua a RECOMENDAÇÃO do CÓDIGO DA HABILIDADE BNCC no objetivo (ex: [EF05LP20]).
-3. PROIBIDO: Markdown (** ou ###) ou chaves/colchetes soltos.
-4. DIFERENCIAÇÃO: Use temas específicos para ${fw.etapa}.
+3. IDIOMA: Responda obrigatoriamente em PORTUGUÊS BRASILEIRO. Mesmo que a disciplina seja INGLÊS, o "tema" e o "objetivo" devem ser em PORTUGUÊS.
+4. PROIBIDO: Markdown (** ou ###) ou chaves/colchetes soltos.
+5. DIFERENCIAÇÃO: Use temas específicos para ${fw.etapa}.
 
 === ESTRUTURA JSON (ARRAY) ===
 [

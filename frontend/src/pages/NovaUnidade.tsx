@@ -1,12 +1,12 @@
-import { gerarUnidade } from '@/services/api';
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Save, X, FileText, Sparkles } from 'lucide-react';
+import { Save, X, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import PageContainer from '@/components/layout/PageContainer';
 import GuidanceMessage from '@/components/shared/GuidanceMessage';
@@ -25,10 +25,7 @@ const NovaUnidade: React.FC = () => {
   const [objetivoGeral, setObjetivoGeral] = useState('');
   const [habilidadesBNCC, setHabilidadesBNCC] = useState('');
 
-  // Checkboxes de geração automática
-  const [gerarPlano, setGerarPlano] = useState(true);
-  const [gerarAtividade, setGerarAtividade] = useState(true);
-  const [gerarSlides, setGerarSlides] = useState(true);
+
 
   if (!disciplina) {
     navigate('/');
@@ -62,36 +59,7 @@ const NovaUnidade: React.FC = () => {
     navigate(`/disciplina/${disciplina.id}`);
   };
 
-  const handleGerarTemaIA = async () => {
-    if (!tema.trim()) {
-      toast({
-        title: 'Informe um tema',
-        description: 'Digite um tema base para a geração com IA.',
-        variant: 'destructive',
-      });
-      return;
-    }
 
-    try {
-      const resultado = await gerarUnidade(
-        disciplina.nome,
-        tema
-      );
-
-      setObjetivoGeral(resultado.planoDeAula);
-
-      toast({
-        title: 'Conteúdo gerado com IA',
-        description: 'O plano de aula foi gerado automaticamente.',
-      });
-    } catch (error) {
-      toast({
-        title: 'Erro ao gerar conteúdo',
-        description: 'Não foi possível gerar o conteúdo com IA.',
-        variant: 'destructive',
-      });
-    }
-  };
 
   return (
     <PageContainer
@@ -121,16 +89,7 @@ const NovaUnidade: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="tema">Tema da Aula *</Label>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleGerarTemaIA}
-                    className="h-7 text-xs"
-                  >
-                    <Sparkles className="h-3 w-3 mr-1" />
-                    Sugerir com IA
-                  </Button>
+
                 </div>
                 <Input
                   id="tema"
@@ -178,57 +137,7 @@ const NovaUnidade: React.FC = () => {
                 e alinhada às diretrizes nacionais.
               </GuidanceMessage>
 
-              {/* Gerar Materiais Automaticamente */}
-              <div className="space-y-3 pt-2">
-                <Label className="text-base">Gerar materiais automaticamente</Label>
-                <p className="text-sm text-muted-foreground">
-                  Selecione quais materiais você deseja gerar com IA ao criar esta unidade:
-                </p>
 
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="gerarPlano"
-                      checked={gerarPlano}
-                      onCheckedChange={(checked) => setGerarPlano(checked as boolean)}
-                    />
-                    <Label
-                      htmlFor="gerarPlano"
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      Gerar Plano de Aula
-                    </Label>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="gerarAtividade"
-                      checked={gerarAtividade}
-                      onCheckedChange={(checked) => setGerarAtividade(checked as boolean)}
-                    />
-                    <Label
-                      htmlFor="gerarAtividade"
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      Gerar Atividade
-                    </Label>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="gerarSlides"
-                      checked={gerarSlides}
-                      onCheckedChange={(checked) => setGerarSlides(checked as boolean)}
-                    />
-                    <Label
-                      htmlFor="gerarSlides"
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      Gerar Slides de Apoio
-                    </Label>
-                  </div>
-                </div>
-              </div>
 
               {/* Botões */}
               <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4">
