@@ -20,6 +20,10 @@ export async function gerarSlides(tema: string, disciplina: string, anoSerie?: s
   const bncc = await getBnccSnippet();
 
   const prompt = `
+=== DESIGNER INSTRUCIONAL IA (MODO SLIDES PEDAGÓGICOS) ===
+Você é um designer instrucional sênior especializado.  
+Crie uma apresentação de slides CRIATIVA, DENSA e PROFISSIONAL.
+
 === CONTEXTO ===
 Você é um DESIGNER INSTRUCIONAL com especialização em criar apresentações educacionais impactantes e engajadoras. Você domina técnicas de storytelling educacional.
 
@@ -71,7 +75,7 @@ Formato de resposta:
     const respostaBruta = await gerarTextoComIA(prompt);
     console.log('[geracao.service] slides response length:', respostaBruta?.length || 0);
 
-    const jsonMatch = respostaBruta.match(/\\[[\\s\\S]*\\]/);
+    const jsonMatch = respostaBruta.match(/\[[\s\S]*\]/);
     if (!jsonMatch) throw new Error('Nenhum array JSON encontrado');
 
     let jsonStr = jsonMatch[0].replace(/```json/g, '').replace(/```/g, '').trim();
@@ -89,31 +93,31 @@ Formato de resposta:
       {
         numero: 1,
         titulo: tema,
-        conteudo: `Apresentação sobre ${tema}\\n\\nDisciplina: ${disciplina}${anoSerie ? `\\nAno/Série: ${anoSerie}` : ''}`,
+        conteudo: `Apresentação sobre ${tema}\n\nDisciplina: ${disciplina}${anoSerie ? `\nAno/Série: ${anoSerie}` : ''}`,
         tipo: 'titulo'
       },
       {
         numero: 2,
         titulo: 'Objetivo da Aula',
-        conteudo: `- Compreender conceitos de ${tema}\\n- Desenvolver pensamento crítico\\n- Aplicar conhecimentos na prática`,
+        conteudo: `- Compreender conceitos de ${tema}\n- Desenvolver pensamento crítico\n- Aplicar conhecimentos na prática`,
         tipo: 'conteudo'
       },
       {
         numero: 3,
         titulo: 'Contextualização',
-        conteudo: `${tema} é fundamental para:\\n- Formação cidadã\\n- Uso consciente de tecnologias\\n- Desenvolvimento de competências BNCC`,
+        conteudo: `${tema} é fundamental para:\n- Formação cidadã\n- Uso consciente de tecnologias\n- Desenvolvimento de competências BNCC`,
         tipo: 'conteudo'
       },
       {
         numero: 4,
         titulo: 'Reflexão',
-        conteudo: `Como você aplica ${tema} no seu dia a dia?\\n\\nQual a importância para a sociedade?`,
+        conteudo: `Como você aplica ${tema} no seu dia a dia?\n\nQual a importância para a sociedade?`,
         tipo: 'questao'
       },
       {
         numero: 5,
         titulo: 'Conclusão',
-        conteudo: `- Revisão dos conceitos-chave\\n- Aplicação prática\\n- Próximos passos`,
+        conteudo: `- Revisão dos conceitos-chave\n- Aplicação prática\n- Próximos passos`,
         tipo: 'conclusao'
       }
     ];
