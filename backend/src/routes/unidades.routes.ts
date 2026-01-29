@@ -64,13 +64,13 @@ router.post('/sugerir-tema', async (req, res) => {
 
 router.post('/sugerir-detalhes', async (req, res) => {
   try {
-    const { disciplina, tema, anoSerie } = req.body;
+    const { disciplina, tema, anoSerie, campo } = req.body;
 
     if (!tema || !disciplina) {
       return res.status(400).json({ error: 'Tema e disciplina são obrigatórios.' });
     }
 
-    const resultado = await sugerirDetalhesUnidade(disciplina, tema, anoSerie);
+    const resultado = await sugerirDetalhesUnidade(disciplina, tema, anoSerie, campo);
     res.json(resultado);
   } catch (error: any) {
     console.error('Erro ao sugerir detalhes da unidade:', error?.message || error);

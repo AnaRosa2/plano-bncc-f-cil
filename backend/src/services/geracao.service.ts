@@ -410,13 +410,21 @@ RESPOSTA (APENAS O ARRAY JSON):`;
  * Sugere detalhes específicos (Objetivo e BNCC) para um tema informado.
  * Consultando estritamente a BNCC carregada.
  */
-export async function sugerirDetalhesUnidade(disciplina: string, tema: string, anoSerie: string = '') {
-  const bncc = await getBnccText(); // Ensure BNCC text is awaited
+export async function sugerirDetalhesUnidade(disciplina: string, tema: string, anoSerie: string = '', campo?: 'objetivo' | 'habilidades') {
+  const bncc = await getBnccText();
   const fw = getFramework(anoSerie);
+
+  const filterInstruction = campo === 'objetivo'
+    ? 'Foque APENAS em sugerir o Objetivo Geral. Deixe o campo habilidades vazio ou com texto padrão.'
+    : campo === 'habilidades'
+      ? 'Foque APENAS em sugerir as Habilidades BNCC. Deixe o campo objetivo vazio ou com texto padrão.'
+      : 'Sugira tanto o Objetivo Geral quanto as Habilidades BNCC.';
 
   const prompt = `
 === CONSULTOR PEDAGÓGICO BNCC ===
 Sua tarefa é sugerir o Objetivo Geral e as Habilidades BNCC para uma unidade específica.
+
+${filterInstruction}
 
 DADOS DA UNIDADE:
 - Disciplina: "${disciplina}"
@@ -440,7 +448,7 @@ ESTRUTURA JSON:
 
 RESPOSTA (APENAS O JSON, SEM MARKDOWN):`;
 
-  console.log(`[sugerirDetalhesUnidade] Buscando detalhes BNCC para tema: ${tema}`);
+  console.log(`[sugerirDetalhesUnidade] Buscando detalhes BNCC (campo: ${campo || 'ambos'}) para tema: ${tema}`);
 
   try {
     const res = await gerarComRetry(prompt);

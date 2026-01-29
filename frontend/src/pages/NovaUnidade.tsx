@@ -76,14 +76,17 @@ const NovaUnidade: React.FC = () => {
     else setIsSugerindoBNCC(true);
 
     try {
-      const result = await sugerirDetalhesUnidadeAPI(disciplina.nome, tema, disciplina.anoSerie);
+      const result = await sugerirDetalhesUnidadeAPI(disciplina.nome, tema, disciplina.anoSerie, tipo);
 
-      if (result.objetivo) setObjetivoGeral(result.objetivo);
-      if (result.habilidades) setHabilidadesBNCC(result.habilidades);
+      if (tipo === 'objetivo' && result.objetivo) {
+        setObjetivoGeral(result.objetivo);
+      } else if (tipo === 'habilidades' && result.habilidades) {
+        setHabilidadesBNCC(result.habilidades);
+      }
 
       toast({
-        title: 'Sugestões BNCC obtidas!',
-        description: 'Campos preenchidos com base no tema informado.',
+        title: `Sugestão de ${tipo === 'objetivo' ? 'Objetivo' : 'BNCC'} obtida!`,
+        description: 'Campo preenchido com base no tema informado.',
       });
     } catch (error: any) {
       toast({

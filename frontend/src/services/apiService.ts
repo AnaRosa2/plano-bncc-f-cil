@@ -129,14 +129,15 @@ export async function gerarSlidesAPI(
 export async function sugerirDetalhesUnidadeAPI(
     disciplina: string,
     tema: string,
-    anoSerie?: string
+    anoSerie?: string,
+    campo?: 'objetivo' | 'habilidades'
 ): Promise<DetalhesUnidadeAPI> {
     const response = await fetch(`${API_BASE_URL}/unidades/sugerir-detalhes`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ disciplina, tema, anoSerie }),
+        body: JSON.stringify({ disciplina, tema, anoSerie, campo }),
     });
 
     return handleApiResponse(response, 'Falha ao sugerir detalhes com IA');
