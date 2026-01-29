@@ -101,14 +101,14 @@ Eixo 5: Segurança e Privacidade
 - ATIVIDADE EXIGIDA: Estudo de caso com dados reais (IBGE, TIC Educação) + debate estruturado
 `
     : fw === FRAMEWORK_PEDAGOGICO.FUND_II
-    ? `
+      ? `
 === ENSINO FUNDAMENTAL II: EQUILÍBRIO ENTRE TÉCNICA E PRÁTICA ===
 - USE termos conceituais da disciplina (ex: "cadeia alimentar digital", "pegada de carbono de dados")
 - CONECTE com cotidiano: mostre como o tema impacta a vida do aluno
 - ATIVIDADE EXIGIDA: Experimento com materiais recicláveis + QR Code para simulador interativo
 - TEMPO: 20-30 min por fase
 `
-    : `
+      : `
 === ENSINO FUNDAMENTAL I: LUDICIDADE COM PROPÓSITO PEDAGÓGICO ===
 - EVITE abstração: use analogias concretas (ex: "Internet é como uma biblioteca gigante")
 - LINGUAGEM: frases curtas, verbos de ação ("vamos construir", "descobrir juntos")
@@ -229,7 +229,7 @@ RESPOSTA (APENAS O JSON, NADA ANTES/DEPOIS):
     console.error('❌ Erro em gerarConteudo robusto:', error.message);
     return {
       planoDeAula: `Plano: ${tema}`,
-      objetivo: `Desenvolver competências críticas sobre ${tema} with foco em Cultura Digital.`,
+      objetivo: `Desenvolver competências críticas sobre ${tema} com foco em Cultura Digital.`,
       metodologia: `INÍCIO: Contextualização com exemplo do cotidiano.\n\nDESENVOLVIMENTO: Atividade prática com materiais concretos.\n\nENCERRAMENTO: Reflexão coletiva e produção de regra de convivência digital.`,
       recursos: `Materiais básicos + dispositivo com acesso à internet.`,
       meta: `BNCC: Habilidades gerais | Eixos CD: Cidadania Digital, Segurança | Estratégias: Investigação, Experimentação, Colaboração`,
@@ -263,7 +263,7 @@ Você é um especialista em avaliação educacional. Crie uma atividade TÉCNICA
   {
     "enunciado": "1. [Questão/Etapa]... \\n\\n2. [Questão/Etapa]... \\n\\n(PROSSIGA ATÉ A 10)",
     "criteriosAvaliacao": "Critérios de correção detalhados e nota técnica de inclusão."
-  }
+  }q
 ]
 
 RESPOSTA (APENAS O ARRAY JSON):`;
@@ -301,7 +301,7 @@ export async function gerarDisciplina(anoSerie: string, tema: string) {
 Crie uma disciplina profissional e estruturada.
 
 - Etapa: ${anoSerie}
-- Foco Principal: ${tema} (Integrar with Cultura Digital e BNCC)
+- Foco Principal: ${tema} (Integrar com Cultura Digital e BNCC)
 
 === REGRAS OBRIGATÓRIAS ===
 1. PROIBIDO markdown (** ou ###). Use texto limpo.
@@ -342,7 +342,6 @@ RESPOSTA (APENAS O JSON):`;
 }
 
 export async function sugerirUnidades(disciplina: string, anoSerie: string = '', quantidade = 3) {
-  const { getFramework } = require('./geracao.service'); // self-reference for correct framework
   const fw = getFramework(anoSerie);
   const prompt = `
 === CONSULTOR PEDAGÓGICO (INICIALIZADOR DE CURRÍCULO) ===
