@@ -14,9 +14,7 @@ router.post('/gerar', async (req, res) => {
     const resultado = await gerarDisciplina(anoSerie, tema);
     res.json(resultado);
   } catch (error: any) {
-    console.error('❌ Erro ao gerar disciplina:');
-    console.error('Message:', error?.message || error);
-    console.error('Full error:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+    console.error('Erro ao gerar disciplina:', error?.message || error);
     res.status(500).json({ error: 'Falha ao gerar disciplina.' });
   }
 });

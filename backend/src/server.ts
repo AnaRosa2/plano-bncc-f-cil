@@ -16,7 +16,7 @@ app.use(cors({
 }));
 console.log(`CORS configured. Development mode: ${isDev}. FRONTEND_URL: ${process.env.FRONTEND_URL || 'not set'}`);
 
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 
 // Rota raiz para health check simples
 app.get("/", (req, res) => {

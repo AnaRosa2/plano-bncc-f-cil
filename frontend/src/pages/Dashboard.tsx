@@ -8,15 +8,17 @@ import GuidanceMessage from '@/components/shared/GuidanceMessage';
 import EmptyState from '@/components/shared/EmptyState';
 import { useApp } from '@/contexts/AppContext';
 
+const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
+  day: '2-digit',
+  month: 'short',
+});
+
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { disciplinas, getUnidadesByDisciplina } = useApp();
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: 'short',
-    }).format(date);
+    return dateFormatter.format(date);
   };
 
   return (

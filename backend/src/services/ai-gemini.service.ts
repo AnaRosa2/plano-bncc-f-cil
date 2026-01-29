@@ -21,14 +21,8 @@ export async function gerarTextoComIA(prompt: string) {
 
     return text.trim();
   } catch (error: any) {
-    console.error("\n🔥🔥🔥 ERRO DA API DO GEMINI 🔥🔥🔥");
-    console.error("Message:", error.message);
-    console.error("Status:", error?.status);
-    console.error("Code:", error?.code);
-    console.error("Name:", error?.name);
-    console.error("Full error object:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
-    console.error("Stack:", error?.stack);
-
+    console.error("Erro na API do Gemini:", error.message);
+    
     // Se for erro de rate limit
     if (error.message && error.message.includes('retry')) {
       throw new Error('⏱️ Rate limit atingido. Aguarde alguns segundos e tente novamente.');
