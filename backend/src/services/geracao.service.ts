@@ -405,3 +405,55 @@ RESPOSTA (APENAS O ARRAY JSON):`;
     ];
   }
 }
+
+/**
+ * Sugere detalhes específicos (Objetivo e BNCC) para um tema informado.
+ * Consultando estritamente a BNCC carregada.
+ */
+export async function sugerirDetalhesUnidade(disciplina: string, tema: string, anoSerie: string = '') {
+  const bncc = await getBnccText(); // Ensure BNCC text is awaited
+  const fw = getFramework(anoSerie);
+
+  const prompt = `
+=== CONSULTOR PEDAGÓGICO BNCC ===
+Sua tarefa é sugerir o Objetivo Geral e as Habilidades BNCC para uma unidade específica.
+
+DADOS DA UNIDADE:
+- Disciplina: "${disciplina}"
+- Tema: "${tema}"
+- Etapa: ${fw.etapa}
+
+REGRAS DE OURO:
+1. CONSULTE A BNCC: Use o texto abaixo como base PRINCIPAL. Não invente códigos inexistentes.
+2. IDIOMA: Responda obrigatoriamente em PORTUGUÊS BRASILEIRO. Mesmo que a disciplina seja INGLÊS, responda em PORTUGUÊS.
+3. OBJETIVO: Deve ser uma frase clara, curta e profissional, começando com verbo no infinitivo.
+4. HABILIDADES: Liste os códigos e descrições das habilidades BNCC mais aderentes ao tema (ex: [EF05LI01] ...).
+
+CONTEXTO BNCC (EXCERTO):
+${bncc.slice(0, 10000)}
+
+ESTRUTURA JSON:
+{
+  "objetivo": "Texto do objetivo...",
+  "habilidades": "CÓDIGO: Descrição da habilidade..."
+}
+
+RESPOSTA (APENAS O JSON, SEM MARKDOWN):`;
+
+  console.log(`[sugerirDetalhesUnidade] Buscando detalhes BNCC para tema: ${tema}`);
+
+  try {
+    const res = await gerarComRetry(prompt);
+    const jsonMatch = res.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('JSON não encontrado na resposta da IA');
+
+    const parsed = JSON.parse(jsonMatch[0]);
+    return {
+      objetivo: parsed.objetivo || '',
+      habilidades: parsed.habilidades || ''
+    };
+  } catch (e: any) {
+    console.error('❌ Erro em sugerirDetalhesUnidade:', e.message);
+    throw new Error('Falha ao consultar BNCC com IA.');
+  }
+}

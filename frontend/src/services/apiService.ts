@@ -27,6 +27,11 @@ export interface SugestaoUnidade {
     objetivo: string;
 }
 
+export interface DetalhesUnidadeAPI {
+    objetivo: string;
+    habilidades: string;
+}
+
 // Auxiliar para tratar erros da API
 async function handleApiResponse(response: Response, defaultMsg: string) {
     if (!response.ok) {
@@ -115,4 +120,21 @@ export async function gerarSlidesAPI(
     });
 
     return handleApiResponse(response, 'Falha ao gerar slides');
+}
+
+// Sugerir detalhes da unidade (Objetivo e BNCC) com IA
+export async function sugerirDetalhesUnidadeAPI(
+    disciplina: string,
+    tema: string,
+    anoSerie?: string
+): Promise<DetalhesUnidadeAPI> {
+    const response = await fetch(`${API_BASE_URL}/unidades/sugerir-detalhes`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ disciplina, tema, anoSerie }),
+    });
+
+    return handleApiResponse(response, 'Falha ao sugerir detalhes com IA');
 }

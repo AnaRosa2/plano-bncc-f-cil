@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Save, X, FileText } from 'lucide-react';
+import { Save, X, FileText, Sparkles, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { sugerirDetalhesUnidadeAPI } from '@/services/apiService';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import PageContainer from '@/components/layout/PageContainer';
@@ -24,6 +25,8 @@ const NovaUnidade: React.FC = () => {
   const [tema, setTema] = useState('');
   const [objetivoGeral, setObjetivoGeral] = useState('');
   const [habilidadesBNCC, setHabilidadesBNCC] = useState('');
+  const [isSugerindoObjetivo, setIsSugerindoObjetivo] = useState(false);
+  const [isSugerindoBNCC, setIsSugerindoBNCC] = useState(false);
 
 
 
@@ -57,6 +60,41 @@ const NovaUnidade: React.FC = () => {
     });
 
     navigate(`/disciplina/${disciplina.id}`);
+  };
+
+  const handleSugerirDetalhes = async (tipo: 'objetivo' | 'habilidades') => {
+    if (!tema.trim()) {
+      toast({
+        title: 'Tema necessário',
+        description: 'Digite um tema para que a IA possa consultar a BNCC.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (tipo === 'objetivo') setIsSugerindoObjetivo(true);
+    else setIsSugerindoBNCC(true);
+
+    try {
+      const result = await sugerirDetalhesUnidadeAPI(disciplina.nome, tema, disciplina.anoSerie);
+
+      if (result.objetivo) setObjetivoGeral(result.objetivo);
+      if (result.habilidades) setHabilidadesBNCC(result.habilidades);
+
+      toast({
+        title: 'Sugestões BNCC obtidas!',
+        description: 'Campos preenchidos com base no tema informado.',
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Erro na IA',
+        description: error.message || 'Falha ao consultar detalhes.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSugerindoObjetivo(false);
+      setIsSugerindoBNCC(false);
+    }
   };
 
 
@@ -102,7 +140,24 @@ const NovaUnidade: React.FC = () => {
 
               {/* Objetivo Geral */}
               <div className="space-y-2">
-                <Label htmlFor="objetivoGeral">Objetivo Geral *</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="objetivoGeral">Objetivo Geral *</Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/5 gap-1.5"
+                    onClick={() => handleSugerirDetalhes('objetivo')}
+                    disabled={isSugerindoObjetivo || isSugerindoBNCC}
+                  >
+                    {isSugerindoObjetivo ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <Sparkles className="h-3 w-3" />
+                    )}
+                    sugerir com ia
+                  </Button>
+                </div>
                 <Textarea
                   id="objetivoGeral"
                   placeholder="Descreva o objetivo principal que os alunos devem alcançar ao final desta aula..."
@@ -115,7 +170,24 @@ const NovaUnidade: React.FC = () => {
 
               {/* Habilidades BNCC */}
               <div className="space-y-2">
-                <Label htmlFor="habilidadesBNCC">Habilidades da BNCC</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="habilidadesBNCC">Habilidades da BNCC</Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/5 gap-1.5"
+                    onClick={() => handleSugerirDetalhes('habilidades')}
+                    disabled={isSugerindoObjetivo || isSugerindoBNCC}
+                  >
+                    {isSugerindoBNCC ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <Sparkles className="h-3 w-3" />
+                    )}
+                    sugerir com ia
+                  </Button>
+                </div>
                 <Textarea
                   id="habilidadesBNCC"
                   placeholder="Ex: EF08CI01 - Identificar e classificar diferentes fontes de informação digital..."
