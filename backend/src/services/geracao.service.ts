@@ -101,14 +101,14 @@ Eixo 5: Segurança e Privacidade
 - ATIVIDADE EXIGIDA: Estudo de caso com dados reais (IBGE, TIC Educação) + debate estruturado
 `
     : fw === FRAMEWORK_PEDAGOGICO.FUND_II
-      ? `
+    ? `
 === ENSINO FUNDAMENTAL II: EQUILÍBRIO ENTRE TÉCNICA E PRÁTICA ===
 - USE termos conceituais da disciplina (ex: "cadeia alimentar digital", "pegada de carbono de dados")
 - CONECTE com cotidiano: mostre como o tema impacta a vida do aluno
 - ATIVIDADE EXIGIDA: Experimento com materiais recicláveis + QR Code para simulador interativo
 - TEMPO: 20-30 min por fase
 `
-      : `
+    : `
 === ENSINO FUNDAMENTAL I: LUDICIDADE COM PROPÓSITO PEDAGÓGICO ===
 - EVITE abstração: use analogias concretas (ex: "Internet é como uma biblioteca gigante")
 - LINGUAGEM: frases curtas, verbos de ação ("vamos construir", "descobrir juntos")
@@ -136,7 +136,7 @@ ${meto.fases ? `FASES OBRIGATÓRIAS: ${meto.fases.join(' → ')}` : ''}
 # MESTRE PEDAGÓGICO IA: GERADOR DE PLANOS DE AULA BNCC + CULTURA DIGITAL
 
 ## 📌 CONTEXTO
-Você é um especialista sênior em pedagogia with 20+ anos de experiência. Sua tarefa é gerar um plano de aula **PROFUNDO, TÉCNICO E DIFERENCIADO**.
+Você é um especialista sênior em pedagogia com 20+ anos de experiência. Sua tarefa é gerar um plano de aula **PROFUNDO, TÉCNICO E DIFERENCIADO**.
 
 ## 🎯 DADOS DA SOLICITAÇÃO
 - Disciplina: "${disciplina}"
@@ -148,8 +148,8 @@ Você é um especialista sênior em pedagogia with 20+ anos de experiência. Sua
 ${diferenciacao}
 
 ### ESTRUTURA PEDAGÓGICA OBRIGATÓRIA
-1. INÍCIO (5-10 min): Gatilho emocional/conceitual + conexão with vivência prévia
-2. DESENVOLVIMENTO (20-35 min): 2-3 atividades PRÁTICAS sequenciais with materiais específicos
+1. INÍCIO (5-10 min): Gatilho emocional/conceitual + conexão com vivência prévia
+2. DESENVOLVIMENTO (20-35 min): 2-3 atividades PRÁTICAS sequenciais com materiais específicos
 3. ENCERRAMENTO (5-10 min): Síntese coletiva + produto tangível gerado
 
 ## 📚 BASES CURRICULARES
@@ -181,12 +181,12 @@ ${metodologiaContexto}
 {
   "objetivo": "Objetivo claro usando verbos de Bloom. Máx 2 frases.",
   "inicio": "Descrição detalhada da fase de início (5-10 min). Incluir gatilho + conexão prévia.",
-  "desenvolvimento": "2-3 atividades PRÁTICAS sequenciais with materiais específicos, estratégias pedagógicas usadas (cite 3) e eixos CD (cite 2).",
-  "encerramento": "Síntese coletiva + produto tangível gerado + conexão with próxima aula.",
-  "recursos": "Lista específica: 'Tablet with app X', 'Cartolina colorida'. Nada genérico.",
+  "desenvolvimento": "2-3 atividades PRÁTICAS sequenciais com materiais específicos, estratégias pedagógicas usadas (cite 3) e eixos CD (cite 2).",
+  "encerramento": "Síntese coletiva + produto tangível gerado + conexão com próxima aula.",
+  "recursos": "Lista específica: 'Tablet com app X', 'Cartolina colorida'. Nada genérico.",
   "tempoTotal": "Ex: '2 aulas de 50 min'",
   "meta": "Habilidades BNCC (códigos) + Eixos Cultura Digital (nomes) + Estratégias Pedagógicas (nomes). TEXTO LIMPO.",
-  "inclusao": "1 adaptação prática para alunos with dificuldades."
+  "inclusao": "1 adaptação prática para alunos com dificuldades."
 }
 
 RESPOSTA (APENAS O JSON, NADA ANTES/DEPOIS):
@@ -230,10 +230,10 @@ RESPOSTA (APENAS O JSON, NADA ANTES/DEPOIS):
     return {
       planoDeAula: `Plano: ${tema}`,
       objetivo: `Desenvolver competências críticas sobre ${tema} with foco em Cultura Digital.`,
-      metodologia: `INÍCIO: Contextualização with exemplo do cotidiano.\n\nDESENVOLVIMENTO: Atividade prática with materiais concretos.\n\nENCERRAMENTO: Reflexão coletiva e produção de regra de convivência digital.`,
-      recursos: `Materiais básicos + dispositivo with acesso à internet.`,
+      metodologia: `INÍCIO: Contextualização com exemplo do cotidiano.\n\nDESENVOLVIMENTO: Atividade prática com materiais concretos.\n\nENCERRAMENTO: Reflexão coletiva e produção de regra de convivência digital.`,
+      recursos: `Materiais básicos + dispositivo com acesso à internet.`,
       meta: `BNCC: Habilidades gerais | Eixos CD: Cidadania Digital, Segurança | Estratégias: Investigação, Experimentação, Colaboração`,
-      atividade: `Produção de cartaz with regras para uso seguro da internet.`,
+      atividade: `Produção de cartaz com regras para uso seguro da internet.`,
       tempoEstimado: '50 min',
       inclusao: `Oferecer suporte visual e verbal individualizado.`,
       metodologiaId
@@ -254,9 +254,9 @@ Você é um especialista em avaliação educacional. Crie uma atividade TÉCNICA
 
 --- REGRAS DE OURO ---
 1. QUALIDADE: Use terminologia técnica. Proponha situações-problema e análise crítica.
-2. EXTENSÃO: Gere exatamente 10 questões (objetivas ou dissertativas) ou um roteiro de desafio prático with 10 etapas claras.
+2. EXTENSÃO: Gere exatamente 10 questões (objetivas ou dissertativas) ou um roteiro de desafio prático com 10 etapas claras.
 3. FORMATAÇÃO: PROIBIDO Markdown (#, **, ###) ou colchetes extras. Use TEXTO LIMPO.
-4. INCLUSÃO: Adicione uma pequena nota técnica sobre como adaptar esta atividade para alunos with Dificuldades de Aprendizagem.
+4. INCLUSÃO: Adicione uma pequena nota técnica sobre como adaptar esta atividade para alunos com Dificuldades de Aprendizagem.
 
 --- ESTRUTURA JSON OBRIGATÓRIA (ARRAY) ---
 [

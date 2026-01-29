@@ -63,11 +63,7 @@ export async function gerarSlides(tema: string, disciplina: string, anoSerie: st
 
   const prompt = `
 === DESIGNER INSTRUCIONAL IA (MODO SLIDES PEDAGÓGICOS) ===
-<<<<<<< HEAD
 Você é um designer instrucional sênior especializado em Cultura Digital.
-=======
-Você é um designer instrucional sênior especializado.  
->>>>>>> backend
 Crie uma apresentação de slides CRIATIVA, DENSA e PROFISSIONAL.
 
 === CONTEXTO ===
@@ -102,14 +98,7 @@ RESPOSTA (APENAS O ARRAY JSON):`;
     const lastBracket = respostaBruta.lastIndexOf(']');
     if (firstBracket === -1 || lastBracket === -1) throw new Error('JSON não encontrado');
 
-<<<<<<< HEAD
     const jsonStr = respostaBruta.substring(firstBracket, lastBracket + 1);
-=======
-    const jsonMatch = respostaBruta.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) throw new Error('Nenhum array JSON encontrado');
-
-    let jsonStr = jsonMatch[0].replace(/```json/g, '').replace(/```/g, '').trim();
->>>>>>> backend
     const slides = JSON.parse(jsonStr);
 
     const clean = (val: string) => val.replace(/\*\*/g, '').replace(/[#{}]/g, '').trim();
@@ -127,31 +116,31 @@ RESPOSTA (APENAS O ARRAY JSON):`;
       {
         numero: 1,
         titulo: tema,
-        conteudo: `Apresentação sobre ${tema}\n\nDisciplina: ${disciplina}${anoSerie ? `\nAno/Série: ${anoSerie}` : ''}`,
+        conteudo: `Apresentação sobre ${tema}\\n\\nDisciplina: ${disciplina}${anoSerie ? `\\nAno/Série: ${anoSerie}` : ''}`,
         tipo: 'titulo'
       },
       {
         numero: 2,
         titulo: 'Objetivo da Aula',
-        conteudo: `- Compreender conceitos de ${tema}\n- Desenvolver pensamento crítico\n- Aplicar conhecimentos na prática`,
+        conteudo: `- Compreender conceitos de ${tema}\\n- Desenvolver pensamento crítico\\n- Aplicar conhecimentos na prática`,
         tipo: 'conteudo'
       },
       {
         numero: 3,
         titulo: 'Contextualização',
-        conteudo: `${tema} é fundamental para:\n- Formação cidadã\n- Uso consciente de tecnologias\n- Desenvolvimento de competências BNCC`,
+        conteudo: `${tema} é fundamental para:\\n- Formação cidadã\\n- Uso consciente de tecnologias\\n- Desenvolvimento de competências BNCC`,
         tipo: 'conteudo'
       },
       {
         numero: 4,
         titulo: 'Reflexão',
-        conteudo: `Como você aplica ${tema} no seu dia a dia?\n\nQual a importância para a sociedade?`,
+        conteudo: `Como você aplica ${tema} no seu dia a dia?\\n\\nQual a importância para a sociedade?`,
         tipo: 'questao'
       },
       {
         numero: 5,
         titulo: 'Conclusão',
-        conteudo: `- Revisão dos conceitos-chave\n- Aplicação prática\n- Próximos passos`,
+        conteudo: `- Revisão dos conceitos-chave\\n- Aplicação prática\\n- Próximos passos`,
         tipo: 'conclusao'
       }
     ];
