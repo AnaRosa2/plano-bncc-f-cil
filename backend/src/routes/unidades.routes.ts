@@ -5,6 +5,19 @@ import { gerarSlides } from "../services/geracao.service.slides";
 
 const router = Router();
 
+<<<<<<< Updated upstream
+=======
+// Rota de status para verificar se o deploy foi concluído
+router.get("/status", (req, res) => {
+  res.json({
+    status: "ok",
+    version: "2026-01-29-19:10",
+    prompts: "DENSO_V2_LIMPEZA_MARCADORES",
+    message: "O cérebro está atualizado com sugestões de campos!"
+  });
+});
+
+>>>>>>> Stashed changes
 router.post("/", async (req, res) => {
   try {
     const { disciplina, tema } = req.body;

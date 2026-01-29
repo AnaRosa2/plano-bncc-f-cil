@@ -1,8 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, BookOpen, GraduationCap, Calendar, Sparkles } from 'lucide-react';
+import { Plus, BookOpen, GraduationCap, Calendar, Sparkles, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import PageContainer from '@/components/layout/PageContainer';
 import GuidanceMessage from '@/components/shared/GuidanceMessage';
 import EmptyState from '@/components/shared/EmptyState';
@@ -10,7 +21,7 @@ import { useApp } from '@/contexts/AppContext';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { disciplinas, getUnidadesByDisciplina } = useApp();
+  const { disciplinas, getUnidadesByDisciplina, deleteDisciplina } = useApp();
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('pt-BR', {
@@ -68,10 +79,37 @@ const Dashboard: React.FC = () => {
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                       <BookOpen className="h-5 w-5" />
                     </div>
-                    <span className="bncc-badge">
-                      <Sparkles className="h-3 w-3" />
-                      BNCC
-                    </span>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                          onClick={(e) => e.stopPropagation()}
+                          title="Excluir Disciplina"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Tem certeza que deseja excluir esta disciplina? Todas as unidades,
+                            planos de aula e atividades serão permanentemente removidos.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => deleteDisciplina(disciplina.id)}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            Excluir
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                   <CardTitle className="mt-3 text-lg">{disciplina.nome}</CardTitle>
                   <CardDescription className="flex items-center gap-1">

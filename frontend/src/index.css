@@ -65,51 +65,63 @@
   }
 
   .dark {
-    --background: 222 47% 8%;
-    --foreground: 210 40% 98%;
+    /* Fundo suave - Azul marinho muito profundo e dessaturado */
+    --background: 222 47% 4%;
+    --foreground: 210 20% 85%;
+    /* Cinza azulado suave, muito confortável */
 
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
+    --card: 222 47% 7%;
+    --card-foreground: 210 20% 85%;
 
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 222 47% 7%;
+    --popover-foreground: 210 20% 85%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 8%;
+    /* Azul primário suavizado para não "queimar" a retina no escuro */
+    --primary: 217 70% 60%;
+    --primary-foreground: 222 47% 4%;
 
-    --secondary: 152 44% 15%;
-    --secondary-foreground: 152 60% 80%;
+    --secondary: 217 33% 12%;
+    --secondary-foreground: 210 20% 85%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 217 33% 12%;
+    --muted-foreground: 215 20% 55%;
 
-    --accent: 38 92% 55%;
-    --accent-foreground: 38 92% 10%;
+    --accent: 38 70% 50%;
+    --accent-foreground: 38 92% 5%;
 
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 60% 45%;
+    --destructive-foreground: 210 20% 98%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 217 91% 60%;
+    --border: 217 33% 12%;
+    --input: 217 33% 12%;
+    --ring: 217 70% 60%;
 
-    --bncc: 262 83% 65%;
+    --bncc: 262 60% 60%;
     --bncc-foreground: 0 0% 100%;
+<<<<<<< Updated upstream
     
     --success: 152 60% 50%;
     --success-foreground: 0 0% 100%;
     
     --warning: 38 92% 55%;
     --warning-foreground: 38 92% 10%;
+=======
 
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 222 47% 8%;
-    --sidebar-accent: 217 33% 20%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 217 91% 60%;
+    --success: 152 50% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 70% 50%;
+    --warning-foreground: 38 92% 5%;
+>>>>>>> Stashed changes
+
+    --sidebar-background: 222 47% 7%;
+    --sidebar-foreground: 210 20% 85%;
+    --sidebar-primary: 217 70% 60%;
+    --sidebar-primary-foreground: 222 47% 4%;
+    --sidebar-accent: 217 33% 15%;
+    --sidebar-accent-foreground: 210 20% 85%;
+    --sidebar-border: 217 33% 12%;
+    --sidebar-ring: 217 70% 60%;
   }
 }
 

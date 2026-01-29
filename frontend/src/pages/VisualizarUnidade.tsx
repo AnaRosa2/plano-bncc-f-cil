@@ -384,8 +384,30 @@ const VisualizarUnidade: React.FC = () => {
                   <SectionCard title="Objetivos" icon={Target}>
                     {planoAula.objetivos}
                   </SectionCard>
+<<<<<<< Updated upstream
                   <SectionCard title="Conteúdos" icon={BookOpen}>
                     {planoAula.conteudos}
+=======
+
+                  <SectionCard title="Caminho Pedagógico (Metodologia)" icon={Wrench}>
+                    <div className="space-y-4">
+                      {(typeof planoAula.metodologia === 'string' ? planoAula.metodologia : JSON.stringify(planoAula.metodologia))
+                        .split('\n\n')
+                        .map((phase, i) => {
+                          const [title, content] = phase.includes(':\n') ? phase.split(':\n') : [null, phase];
+                          return (
+                            <div key={i} className="bg-muted/30 border border-muted/20 p-4 rounded-xl">
+                              {title && (
+                                <div className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1.5 opacity-70">
+                                  {title}
+                                </div>
+                              )}
+                              <p className="text-muted-foreground text-sm leading-relaxed">{content}</p>
+                            </div>
+                          );
+                        })}
+                    </div>
+>>>>>>> Stashed changes
                   </SectionCard>
                   <SectionCard title="Metodologia" icon={Wrench}>
                     {planoAula.metodologia}
@@ -588,6 +610,7 @@ const VisualizarUnidade: React.FC = () => {
                   <SectionCard title="Objetivos" icon={Target}>
                     {planoAula.objetivos}
                   </SectionCard>
+<<<<<<< Updated upstream
                   <SectionCard title="Conteúdos" icon={BookOpen}>
                     {planoAula.conteudos}
                   </SectionCard>
@@ -596,6 +619,48 @@ const VisualizarUnidade: React.FC = () => {
                   </SectionCard>
                   <SectionCard title="Recursos Didáticos" icon={Layers}>
                     {planoAula.recursosDidaticos}
+=======
+                  <div className="bg-bncc/5 border border-bncc/20 rounded-2xl overflow-hidden mb-8">
+                    <div className="bg-bncc/10 px-4 py-2 border-b border-bncc/20 flex items-center gap-2 text-bncc font-bold text-[10px] uppercase tracking-widest">
+                      <BookOpen className="h-3.5 w-3.5" />
+                      Referencial Curricular (BNCC & MEC)
+                    </div>
+                    <div className="p-5 bg-white/40 dark:bg-slate-900/40">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+                        {(() => {
+                          const metaText = typeof planoAula.conteudos === 'string' ? planoAula.conteudos : JSON.stringify(planoAula.conteudos);
+                          const parts = metaText.includes('|') ? metaText.split('|') : [metaText];
+                          const labels = ['Habilidades BNCC', 'Cultura Digital', 'Inclusão'];
+
+                          return parts.map((part, i) => (
+                            <div key={i} className="space-y-1.5 border-l-2 border-bncc/10 pl-4 first:border-0 first:pl-0">
+                              <span className="text-[10px] font-bold text-bncc/60 uppercase">{labels[i] || 'Informações'}</span>
+                              <p className="text-muted-foreground leading-relaxed italic text-justify">{part.trim()}</p>
+                            </div>
+                          ));
+                        })()}
+                      </div>
+                    </div>
+                  </div>
+                  <SectionCard title="Caminho Pedagógico (Metodologia)" icon={Wrench}>
+                    <div className="space-y-4">
+                      {(typeof planoAula.metodologia === 'string' ? planoAula.metodologia : JSON.stringify(planoAula.metodologia))
+                        .split('\n\n')
+                        .map((phase, i) => {
+                          const [title, content] = phase.includes(':\n') ? phase.split(':\n') : [null, phase];
+                          return (
+                            <div key={i} className="bg-muted/30 border border-muted/20 p-4 rounded-xl">
+                              {title && (
+                                <div className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1.5 opacity-70">
+                                  {title}
+                                </div>
+                              )}
+                              <p className="text-muted-foreground text-sm leading-relaxed">{content}</p>
+                            </div>
+                          );
+                        })}
+                    </div>
+>>>>>>> Stashed changes
                   </SectionCard>
                   <SectionCard title="Avaliação" icon={CheckCircle}>
                     {planoAula.avaliacao}
