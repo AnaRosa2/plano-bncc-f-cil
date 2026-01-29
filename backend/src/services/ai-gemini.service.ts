@@ -33,6 +33,6 @@ export async function gerarTextoComIA(prompt: string) {
       throw new Error('Quota da API excedida. Aguarde alguns minutos ou use outra chave.');
     }
 
-    throw new Error('Falha ao gerar conteúdo com IA.');
+    throw new Error(`Falha ao gerar conteúdo com IA: ${error.message} (Status: ${error.status || 'unknown'})`);
   }
 }
