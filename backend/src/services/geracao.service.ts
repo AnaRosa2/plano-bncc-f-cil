@@ -2,14 +2,10 @@
 import { gerarTextoComIA } from './ai-gemini.service';
 import { getBnccText } from '../utils/bncc';
 
-async function getBnccSnippet() {
-  return await getBnccText();
-}
-
 /**
  * Função utilitária para tentar gerar texto com retry
  */
-export async function gerarComRetry(prompt: string, maxRetries = 1): Promise<string> {
+export async function gerarComRetry(prompt: string, maxRetries = 2): Promise<string> {
   let lastError: any;
   for (let i = 0; i <= maxRetries; i++) {
     try {
@@ -17,12 +13,13 @@ export async function gerarComRetry(prompt: string, maxRetries = 1): Promise<str
     } catch (error) {
       console.warn(`[geracao.service] Tentativa ${i + 1} falhou.`, error);
       lastError = error;
-      if (i < maxRetries) await new Promise(r => setTimeout(r, 1000));
+      if (i < maxRetries) await new Promise(r => setTimeout(r, 1000 * (i + 1)));
     }
   }
   throw lastError;
 }
 
+// === FRAMEWORK PEDAGÓGICO (FORA DA FUNÇÃO - CORRIGIDO) ===
 const FRAMEWORK_PEDAGOGICO = {
   FUND_I: {
     etapa: 'Ensino Fundamental I (1º ao 5º ano)',
@@ -47,16 +44,78 @@ const FRAMEWORK_PEDAGOGICO = {
   }
 };
 
+// === FUNÇÃO getFramework (FORA - CORRIGIDO) ===
 function getFramework(anoSerie: string = '') {
   const s = anoSerie.toLowerCase();
-  if (s.includes('médio') || s.includes('3º') || s.includes('ensino médio')) return FRAMEWORK_PEDAGOGICO.MEDIO;
+  if (s.includes('médio') || s.includes('3º') || s.includes('ensino médio') || s.includes('3')) return FRAMEWORK_PEDAGOGICO.MEDIO;
   if (s.includes('6') || s.includes('7') || s.includes('8') || s.includes('9')) return FRAMEWORK_PEDAGOGICO.FUND_II;
   return FRAMEWORK_PEDAGOGICO.FUND_I;
 }
 
+// === FUNÇÃO PRINCIPAL CORRIGIDA ===
 export async function gerarConteudo(disciplina: string, tema: string, anoSerie: string = '', metodologiaId?: string) {
-  const bncc = await getBnccSnippet();
+  // Carrega BNCC com fallback seguro
+  let bncc = '';
+  try {
+    bncc = await getBnccText();
+  } catch (e) {
+    console.warn('[gerarConteudo] Falha ao carregar BNCC, usando fallback');
+    bncc = `BNCC para ${disciplina} - ${anoSerie}: Habilidades gerais de Cultura Digital e pensamento computacional.`;
+  }
+
   const fw = getFramework(anoSerie);
+
+  // === 13 ESTRATÉGIAS PEDAGÓGICAS DO MEC ===
+  const ESTRATEGIAS_MEC = `
+1. Investigação (questionamento guiado)
+2. Experimentação (mãos na massa)
+3. Colaboração (trabalho em grupo)
+4. Mediação (professor como facilitador)
+5. Contextualização (conexão com realidade)
+6. Interdisciplinaridade (ligação com outras disciplinas)
+7. Resolução de Problemas (desafios reais)
+8. Aprendizagem Baseada em Projetos (ABP)
+9. Gamificação (elementos lúdicos com propósito)
+10. Storytelling (narrativas envolventes)
+11. Aprendizagem Híbrida (presencial + digital)
+12. Pensamento Computacional (decomposição, padrões, algoritmos)
+13. Alfabetização Midiática (crítica à informação digital)
+`;
+
+  // === 5 EIXOS CULTURA DIGITAL (MEC) ===
+  const EIXOS_CD = `
+Eixo 1: Cidadania e Ética Digital
+Eixo 2: Pensamento Computacional
+Eixo 3: Cultura Digital e Mídias
+Eixo 4: Dados e Informação
+Eixo 5: Segurança e Privacidade
+`;
+
+  // === DIFERENCIAÇÃO POR ETAPA ===
+  const diferenciacao = fw === FRAMEWORK_PEDAGOGICO.MEDIO
+    ? `
+=== ENSINO MÉDIO: EXIGÊNCIA DE PROFUNDIDADE TÉCNICA ===
+- USE terminologia avançada da disciplina (ex: para História: "hegemonia cultural", "pós-verdade", "algoritmos de recomendação")
+- CONECTE com ENEM: cite competências específicas da matriz
+- PROBLEMATIZE: apresente dilemas reais (ex: "Como algoritmos reforçam bolhas informativas?")
+- ATIVIDADE EXIGIDA: Estudo de caso com dados reais (IBGE, TIC Educação) + debate estruturado
+`
+    : fw === FRAMEWORK_PEDAGOGICO.FUND_II
+      ? `
+=== ENSINO FUNDAMENTAL II: EQUILÍBRIO ENTRE TÉCNICA E PRÁTICA ===
+- USE termos conceituais da disciplina (ex: "cadeia alimentar digital", "pegada de carbono de dados")
+- CONECTE com cotidiano: mostre como o tema impacta a vida do aluno
+- ATIVIDADE EXIGIDA: Experimento com materiais recicláveis + QR Code para simulador interativo
+- TEMPO: 20-30 min por fase
+`
+      : `
+=== ENSINO FUNDAMENTAL I: LUDICIDADE COM PROPÓSITO PEDAGÓGICO ===
+- EVITE abstração: use analogias concretas (ex: "Internet é como uma biblioteca gigante")
+- LINGUAGEM: frases curtas, verbos de ação ("vamos construir", "descobrir juntos")
+- ATIVIDADE EXIGIDA: Caixa surpresa com objetos que representam conceitos
+- MATERIAL: Tesoura de ponta redonda, EVA, massinha — NADA abstrato
+- TEMPO: máximo 15 min por atividade
+`;
 
   let metodologiaContexto = '';
   if (metodologiaId) {
@@ -64,55 +123,82 @@ export async function gerarConteudo(disciplina: string, tema: string, anoSerie: 
     const meto = METODOLOGIAS_ATIVAS.find((m: any) => m.id === metodologiaId);
     if (meto) {
       metodologiaContexto = `
-=== ESTRATÉGIA PEDAGÓGICA (METODOLOGIA ATIVA) ===
-Nome: ${meto.nome}
-Descrição: ${meto.descricao}
-${meto.fases ? `Fases a incluir: ${meto.fases.join(', ')}` : ''}
-Instrução: Adapte TODO o plano de aula para seguir RIGOROSAMENTE esta metodologia.
+=== METODOLOGIA ATIVA SELECIONADA ===
+${meto.nome.toUpperCase()}
+${meto.descricao}
+${meto.fases ? `FASES OBRIGATÓRIAS: ${meto.fases.join(' → ')}` : ''}
+→ ADAPTE RIGOROSAMENTE TODO O PLANO PARA ESTA METODOLOGIA.
 `;
     }
   }
 
   const prompt = `
-=== MASTER EDUCADOR IA: PLANEJAMENTO BNCC/MEC ===
-Você é um consultor pedagógico sênior. Crie um plano de aula DEEP DIVE (PROFUNDO), TÉCNICO e PROFISSIONAL.
-O plano DEVE conter termos técnicos da disciplina e ser rigorosamente adaptado para "${anoSerie}".
+# MESTRE PEDAGÓGICO IA: GERADOR DE PLANOS DE AULA BNCC + CULTURA DIGITAL
 
---- DADOS DO PLANO ---
+## 📌 CONTEXTO
+Você é um especialista sênior em pedagogia with 20+ anos de experiência. Sua tarefa é gerar um plano de aula **PROFUNDO, TÉCNICO E DIFERENCIADO**.
+
+## 🎯 DADOS DA SOLICITAÇÃO
 - Disciplina: "${disciplina}"
 - Tema: "${tema}"
 - Etapa/Ano: "${anoSerie}"
-${metodologiaId ? `- Foco em Metodologia Ativa: "${metodologiaId}"` : ''}
+- Base Legal: BNCC + Diretrizes MEC para Cultura Digital
 
---- DIRETRIZES DE CONTEÚDO (RIGOR MÁXIMO) ---
-1. PROFUNDIDADE: Não seja genérico. Use terminologia técnica da disciplina. Detalhe os conceitos.
-2. DIFERENCIAÇÃO POR NÍVEL: 
-   - EF I: Foco em ludicidade e pensamento computacional concreto.
-   - EF II: Foco em lógica, resolução de problemas e colaboração.
-   - EM: Foco em ética algorítmica, impactos sociais e autonomia técnica.
-3. FORMATAÇÃO:
-   - PROIBIDO: Markdown (#, **, ###) ou colchetes extras [[ ]]. Use TEXTO LIMPO.
-   - METODOLOGIA: Divida em fases: "INÍCIO:", "DESENVOLVIMENTO:" e "ENCERRAMENTO:". Use \n\n entre elas.
+## ⚙️ EXIGÊNCIAS TÉCNICAS (NÃO NEGOCIÁVEIS)
+${diferenciacao}
 
---- ESTRUTURA JSON OBRIGATÓRIA (APENAS O JSON) ---
+### ESTRUTURA PEDAGÓGICA OBRIGATÓRIA
+1. INÍCIO (5-10 min): Gatilho emocional/conceitual + conexão with vivência prévia
+2. DESENVOLVIMENTO (20-35 min): 2-3 atividades PRÁTICAS sequenciais with materiais específicos
+3. ENCERRAMENTO (5-10 min): Síntese coletiva + produto tangível gerado
+
+## 📚 BASES CURRICULARES
+BNCC Relevante:
+${bncc.slice(0, 800)}
+
+13 Estratégias Pedagógicas MEC:
+${ESTRATEGIAS_MEC}
+
+5 Eixos Cultura Digital (MEC):
+${EIXOS_CD}
+
+${metodologiaContexto}
+
+## 🚫 PROIBIDO
+- Conteúdo genérico ("vamos aprender sobre internet")
+- Listas sem contexto
+- Termos vagos ("atividade divertida")
+- Markdown (**, #, ###) ou colchetes extras
+
+## ✅ EXIGIDO
+- Termos técnicos DA DISCIPLINA
+- Exemplos CONCRETOS de atividades
+- Tempo explícito por fase
+- Materiais específicos e acessíveis
+- Adaptação para inclusão (1 frase prática)
+
+## 📦 SAÍDA JSON (APENAS O JSON)
 {
-  "objetivo": "Objetivos claros (Bloom). Detalhe o que o aluno saberá ao final.",
-  "metodologia": "INÍCIO: [Contexto]\n\nDESENVOLVIMENTO: [Atividades Centrais]\n\nENCERRAMENTO: [Síntese]",
-  "recursos": "Texto corrido descrevendo materiais, softwares e apps necessários.",
-  "meta": "Habilidades BNCC (Códigos) | Eixos Cultura Digital (MEC) | Diretrizes de Inclusão. (TEXTO LIMPO, SEM COLCHETES)",
-  "atividade": "Detalhe uma atividade prática que consolide o aprendizado.",
-  "tempo": "Duração sugerida (ex: 2 aulas de 50min)"
+  "objetivo": "Objetivo claro usando verbos de Bloom. Máx 2 frases.",
+  "inicio": "Descrição detalhada da fase de início (5-10 min). Incluir gatilho + conexão prévia.",
+  "desenvolvimento": "2-3 atividades PRÁTICAS sequenciais with materiais específicos, estratégias pedagógicas usadas (cite 3) e eixos CD (cite 2).",
+  "encerramento": "Síntese coletiva + produto tangível gerado + conexão with próxima aula.",
+  "recursos": "Lista específica: 'Tablet with app X', 'Cartolina colorida'. Nada genérico.",
+  "tempoTotal": "Ex: '2 aulas de 50 min'",
+  "meta": "Habilidades BNCC (códigos) + Eixos Cultura Digital (nomes) + Estratégias Pedagógicas (nomes). TEXTO LIMPO.",
+  "inclusao": "1 adaptação prática para alunos with dificuldades."
 }
 
-RESPOSTA (APENAS O JSON):`;
+RESPOSTA (APENAS O JSON, NADA ANTES/DEPOIS):
+`;
 
-  console.log(`[gerarConteudo] Gerando plano PEDAGÓGICO RIGOROSO para: ${tema}`);
+  console.log(`[gerarConteudo] Gerando plano PROFUNDO para: ${tema} (${anoSerie})`);
 
   try {
-    const respostaBruta = await gerarComRetry(prompt);
+    const respostaBruta = await gerarComRetry(prompt, 2);
     const firstBrace = respostaBruta.indexOf('{');
     const lastBrace = respostaBruta.lastIndexOf('}');
-    if (firstBrace === -1 || lastBrace === -1) throw new Error('JSON inválido');
+    if (firstBrace === -1 || lastBrace === -1) throw new Error('JSON não encontrado na resposta');
 
     const jsonStr = respostaBruta.substring(firstBrace, lastBrace + 1);
     const c = JSON.parse(jsonStr);
@@ -120,39 +206,46 @@ RESPOSTA (APENAS O JSON):`;
     const clean = (val: any) => {
       if (!val) return '';
       let s = typeof val === 'string' ? val : (Array.isArray(val) ? val.join(', ') : JSON.stringify(val));
-      return s.replace(/\*\*/g, '').replace(/[#{}]/g, '').replace(/\\n/g, '\n').trim();
+      return s
+        .replace(/\*\*/g, '')
+        .replace(/###/g, '')
+        .replace(/\\n/g, '\n')
+        .replace(/\[|\]/g, '')
+        .trim();
     };
 
     return {
       planoDeAula: `Plano: ${tema}`,
       objetivo: clean(c.objetivo),
-      metodologia: clean(c.metodologia),
+      metodologia: `INÍCIO:\n${clean(c.inicio)}\n\nDESENVOLVIMENTO:\n${clean(c.desenvolvimento)}\n\nENCERRAMENTO:\n${clean(c.encerramento)}`,
       recursos: clean(c.recursos),
       meta: clean(c.meta),
-      atividade: clean(c.atividade),
-      tempoEstimado: clean(c.tempo || c.tempoEstimado),
+      atividade: clean(c.encerramento),
+      tempoEstimado: clean(c.tempoTotal || c.tempoEstimado),
+      inclusao: clean(c.inclusao),
       metodologiaId
     };
   } catch (error: any) {
-    console.error('❌ Erro em gerarConteudo:', error.message);
+    console.error('❌ Erro em gerarConteudo robusto:', error.message);
     return {
       planoDeAula: `Plano: ${tema}`,
-      objetivo: `Desenvolver competências de ${tema} conforme BNCC.`,
-      metodologia: `1. Acolhimento\n2. Atividade prática\n3. Reflexão final`,
-      recursos: `Materiais básicos da sala de aula.`,
-      meta: `BNCC: Cultura Digital aplicada a ${fw.etapa}.`,
-      atividade: `Atividade prática sobre ${tema}.`,
+      objetivo: `Desenvolver competências críticas sobre ${tema} with foco em Cultura Digital.`,
+      metodologia: `INÍCIO: Contextualização with exemplo do cotidiano.\n\nDESENVOLVIMENTO: Atividade prática with materiais concretos.\n\nENCERRAMENTO: Reflexão coletiva e produção de regra de convivência digital.`,
+      recursos: `Materiais básicos + dispositivo with acesso à internet.`,
+      meta: `BNCC: Habilidades gerais | Eixos CD: Cidadania Digital, Segurança | Estratégias: Investigação, Experimentação, Colaboração`,
+      atividade: `Produção de cartaz with regras para uso seguro da internet.`,
       tempoEstimado: '50 min',
+      inclusao: `Oferecer suporte visual e verbal individualizado.`,
       metodologiaId
     };
   }
 }
 
+// === FUNÇÕES RESTANTES (sem alterações críticas) ===
 export async function gerarAtividade(tema: string, tipo: string, anoSerie?: string, quantidade = 1) {
   const prompt = `
 === MASTER EDUCADOR IA: GERAÇÃO DE ATIVIDADES AVALIATIVAS ===
 Você é um especialista em avaliação educacional. Crie uma atividade TÉCNICA, PROFISSIONAL e DESAFIADORA.
-A atividade deve testar o conhecimento do aluno em profundidade, não apenas superficialmente.
 
 --- DADOS DA ATIVIDADE ---
 - Tema: "${tema}"
@@ -161,14 +254,14 @@ A atividade deve testar o conhecimento do aluno em profundidade, não apenas sup
 
 --- REGRAS DE OURO ---
 1. QUALIDADE: Use terminologia técnica. Proponha situações-problema e análise crítica.
-2. EXTENSÃO: Gere exatamente 10 questões (objetivas ou dissertativas) ou um roteiro de desafio prático com 10 etapas claras de execução.
+2. EXTENSÃO: Gere exatamente 10 questões (objetivas ou dissertativas) ou um roteiro de desafio prático with 10 etapas claras.
 3. FORMATAÇÃO: PROIBIDO Markdown (#, **, ###) ou colchetes extras. Use TEXTO LIMPO.
-4. INCLUSÃO: Adicione uma pequena nota técnica sobre como adaptar esta atividade para alunos com Dificuldades de Aprendizagem.
+4. INCLUSÃO: Adicione uma pequena nota técnica sobre como adaptar esta atividade para alunos with Dificuldades de Aprendizagem.
 
 --- ESTRUTURA JSON OBRIGATÓRIA (ARRAY) ---
 [
   {
-    "enunciado": "1. [Questão/Etapa]... \n\n2. [Questão/Etapa]... \n\n(PROSSIGA ATÉ A 10)",
+    "enunciado": "1. [Questão/Etapa]... \\n\\n2. [Questão/Etapa]... \\n\\n(PROSSIGA ATÉ A 10)",
     "criteriosAvaliacao": "Critérios de correção detalhados e nota técnica de inclusão."
   }
 ]
@@ -182,7 +275,6 @@ RESPOSTA (APENAS O ARRAY JSON):`;
     const parsed = JSON.parse(jsonStr.replace(/```json/g, '').replace(/```/g, '').trim());
     const items = Array.isArray(parsed) ? parsed : [parsed];
 
-    // Se a IA retornou vários itens (um para cada questão), vamos concatenar
     if (items.length > 1) {
       return [{
         enunciado: items.map((it, idx) => it.enunciado || `Questão ${idx + 1}`).join('\n\n'),
@@ -209,7 +301,7 @@ export async function gerarDisciplina(anoSerie: string, tema: string) {
 Crie uma disciplina profissional e estruturada.
 
 - Etapa: ${anoSerie}
-- Foco Principal: ${tema} (Integrar com Cultura Digital e BNCC)
+- Foco Principal: ${tema} (Integrar with Cultura Digital e BNCC)
 
 === REGRAS OBRIGATÓRIAS ===
 1. PROIBIDO markdown (** ou ###). Use texto limpo.
@@ -250,6 +342,7 @@ RESPOSTA (APENAS O JSON):`;
 }
 
 export async function sugerirUnidades(disciplina: string, anoSerie: string = '', quantidade = 3) {
+  const { getFramework } = require('./geracao.service'); // self-reference for correct framework
   const fw = getFramework(anoSerie);
   const prompt = `
 === CONSULTOR PEDAGÓGICO (INICIALIZADOR DE CURRÍCULO) ===
