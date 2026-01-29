@@ -98,25 +98,12 @@
 
     --bncc: 262 60% 60%;
     --bncc-foreground: 0 0% 100%;
-<<<<<<< HEAD
-
-=======
-<<<<<<< Updated upstream
-    
->>>>>>> frontend
-    --success: 152 60% 50%;
-    --success-foreground: 0 0% 100%;
-
-    --warning: 38 92% 55%;
-    --warning-foreground: 38 92% 10%;
-=======
 
     --success: 152 50% 45%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 70% 50%;
     --warning-foreground: 38 92% 5%;
->>>>>>> Stashed changes
 
     --sidebar-background: 222 47% 7%;
     --sidebar-foreground: 210 20% 85%;
