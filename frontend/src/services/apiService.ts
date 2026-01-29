@@ -37,9 +37,12 @@ async function handleApiResponse(response: Response, defaultMsg: string) {
     if (!response.ok) {
         try {
             const errorData = await response.json();
-            throw new Error(errorData.message || errorData.error || defaultMsg);
+            const message = errorData.message ||
+                (typeof errorData.error === 'object' ? JSON.stringify(errorData.error) : errorData.error) ||
+                defaultMsg;
+            throw new Error(message);
         } catch (e: any) {
-            if (e.message) throw e;
+            if (e.name === 'Error' && e.message !== '[object Object]') throw e;
             const text = await response.text().catch(() => defaultMsg);
             throw new Error(text || defaultMsg);
         }
