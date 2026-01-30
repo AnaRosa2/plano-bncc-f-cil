@@ -9,9 +9,9 @@ const router = Router();
 router.get("/status", (req, res) => {
   res.json({
     status: "ok",
-    version: "2026-01-30-00:20-FIX",
+    version: "2026-01-30-00:30-2.5-PROD",
     prompts: "DENSO_V2_LIMPEZA_MARCADORES",
-    message: "IA Restaurada - Modelo corrigido para 2.0-flash!"
+    message: "O cérebro está atualizado com o modelo 2.5-flash!"
   });
 });
 router.post("/", async (req, res) => {
