@@ -130,7 +130,6 @@ O **Plano BNCC** é uma aplicação web desenvolvida para apoiar professores do 
 - Arquitetura do sistema (frontend/backend separados)
 - Fluxo de dados e estado da aplicação
 - Integração com API do Google Gemini
-- Geração de PDFs e manipulação de componentes
 - Capacidade de explicar, modificar e estender qualquer parte do código
 
 > **Importante:** A IA foi utilizada como **ferramenta de produtividade**, não como substituto do conhecimento técnico. Todo código gerado foi revisado, compreendido, testado e adaptado às necessidades específicas do projeto.
@@ -265,13 +264,10 @@ plano-bncc-f-cil/
    - Escolha tipo: Objetiva / Discursiva / Prática
    - IA gera atividade coerente com o plano
 
-5. **Exportar em PDF**
+5. **Exportar em PDF para slide**
    - Clique em "Baixar PDF"
-   - Documento completo com unidade, plano e atividade
 
-### Screenshots
-
-_(Adicionar screenshots aqui antes da apresentação)_
+### 
 
 ---
 
@@ -301,7 +297,6 @@ Este projeto foi desenvolvido para fins educacionais no contexto do Hackathon IF
 - ✅ **RAG com BNCC** - Base de conhecimento oficial carregada
 - ✅ **Código profissional** - TypeScript, organização clara, separação frontend/backend
 - ✅ **UX moderna** - shadcn/ui, responsivo, feedback visual
-- ✅ **Funcionalidade extra** - Exportação PDF (não solicitada no edital)
 - ✅ **Persistência robusta** - Uso de LocalStorage para simular banco de dados local
 
 ### Decisões Técnicas
@@ -310,13 +305,6 @@ Este projeto foi desenvolvido para fins educacionais no contexto do Hackathon IF
 2. **TypeScript** - Reduz bugs, melhora DX
 3. **Context API** - Gerenciamento de estado simples e eficaz
 4. **pdfmake** - Gera PDFs no cliente, sem dependência do backend
-
-### Próximos Passos (Opcional)
-
-- [x] ~~Implementar RF06 (geração de slides)~~ ✅
-- [x] ~~Testes automatizados~~ ✅
-- [x] ~~Adicionar histórico de gerações (via LocalStorage)~~ ✅
-- [ ] Melhorar RAG com embeddings semânticos
 
 ### Executar Testes
 
