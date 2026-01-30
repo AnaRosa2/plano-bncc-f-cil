@@ -119,7 +119,7 @@ const NovaUnidade: React.FC = () => {
               <div>
                 <CardTitle>Nova Unidade de Ensino</CardTitle>
                 <CardDescription>
-                  Crie uma aula para a disciplina {disciplina.nome}
+                  Crie uma aula para a disciplina {disciplina.nome} ({disciplina.anoSerie})
                 </CardDescription>
               </div>
             </div>
